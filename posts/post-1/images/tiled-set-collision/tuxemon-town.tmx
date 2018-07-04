@@ -5,7 +5,7 @@
  </properties>
  <tileset firstgid="1" name="tuxmon-sample-32px-extruded" tilewidth="32" tileheight="32" spacing="2" margin="1" tilecount="720" columns="24">
   <grid orientation="orthogonal" width="16" height="16"/>
-  <image source="../../code/assets/tilesets/tuxmon-sample-32px-extruded.png" width="816" height="1020"/>
+  <image source="../../../../code/assets/tilesets/tuxmon-sample-32px-extruded.png" width="816" height="1020"/>
   <terraintypes>
    <terrain name="Path" tile="173"/>
    <terrain name="Grass" tile="125"/>
