@@ -2,6 +2,8 @@
 
 Author: [Mike Hadley](https://www.mikewesthad.com/)
 
+Reading this on GitHub? Check out the [Medium Post](https://medium.com/@michaelwesthadley/modular-game-worlds-in-phaser-3-tilemaps-1-958fc7e6bbd6)
+
 This is a series of blog posts about creating modular worlds with tilemaps in the [Phaser 3](http://phaser.io/) game engine. In this first post, we'll go from zero to creating a Pokemon-style top down game world that a player can explore:
 
 ![](./images/final-demo/final-example-demo-optimized.gif)
