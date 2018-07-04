@@ -10,7 +10,7 @@ const config = {
   type: Phaser.AUTO,
   width: 800,
   height: 600,
-  parent: "phaser-container",
+  parent: "game-container",
   pixelArt: true,
   scene: {
     preload: preload,
