@@ -1,7 +1,5 @@
 /**
  * Author: Michael Hadley, mikewesthad.com
- * Codepen Link:
- * Github Source:
  * Asset Credits:
  *  - Tuxemon, https://github.com/Tuxemon/Tuxemon
  */
@@ -10,7 +8,7 @@ const config = {
   type: Phaser.AUTO,
   width: 800,
   height: 600,
-  parent: "phaser-container",
+  parent: "game-container",
   pixelArt: true,
   scene: {
     preload: preload,

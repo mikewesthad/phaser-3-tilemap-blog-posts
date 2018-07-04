@@ -1,3 +1,9 @@
+/**
+ * Author: Michael Hadley, mikewesthad.com
+ * Asset Credits:
+ *  - Subtle Patterns
+ */
+
 const config = {
   type: Phaser.AUTO,
   width: 800,

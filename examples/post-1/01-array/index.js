@@ -1,7 +1,5 @@
 /**
  * Author: Michael Hadley, mikewesthad.com
- * Codepen Link:
- * Github Source:
  * Asset Credits:
  *  - Nintendo Mario Tiles, Educational use only
  */
@@ -12,7 +10,7 @@ const config = {
   height: 160,
   zoom: 4, // Since we're working with 16x16 pixel tiles, let's scale up the canvas by 4x
   pixelArt: true, // Force the game to scale images up crisply
-  parent: "phaser-container",
+  parent: "game-container",
   scene: {
     preload: preload,
     create: create
@@ -22,7 +20,7 @@ const config = {
 const game = new Phaser.Game(config);
 
 function preload() {
-  this.load.image("mario-tiles", "../assets/tilesets/super-mario-tiles.png");
+  this.load.image("tiles", "../assets/tilesets/super-mario-tiles.png");
 }
 
 function create() {
@@ -43,6 +41,6 @@ function create() {
 
   // When loading from an array, make sure to specify the tileWidth and tileHeight
   const map = this.make.tilemap({ data: level, tileWidth: 16, tileHeight: 16 });
-  const tiles = map.addTilesetImage("mario-tiles");
+  const tiles = map.addTilesetImage("tiles");
   const layer = map.createStaticLayer(0, tiles, 0, 0);
 }
