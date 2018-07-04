@@ -1,0 +1,19 @@
+{
+  "name": "phaser-3-tilemap-blog-posts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "serve": "browser-sync start --server examples --directory"
+  },
+  "prettier": {
+    "printWidth": 100
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "browser-sync": "^2.24.5"
+  }
+}
