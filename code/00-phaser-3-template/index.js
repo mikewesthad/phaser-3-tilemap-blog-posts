@@ -1,5 +1,3 @@
-/// <reference path="../../types/phaser.d.ts"/>
-
 const config = {
   type: Phaser.AUTO,
   width: 800,
