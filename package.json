@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "serve": "browser-sync start --server examples --directory"
+    "serve": "browser-sync start --server examples --directory",
+    "deploy": "gh-pages --branch gh-pages --dist examples"
   },
   "prettier": {
     "printWidth": 100
@@ -15,5 +16,8 @@
   "license": "ISC",
   "devDependencies": {
     "browser-sync": "^2.24.5"
+  },
+  "dependencies": {
+    "gh-pages": "^1.2.0"
   }
 }
