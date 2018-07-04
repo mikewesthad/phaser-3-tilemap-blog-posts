@@ -306,7 +306,7 @@ function update(time, delta) {
 }
 ```
 
-The last step is to collide the player and the tilemap layer against one another. You've got two options. Inside of `setup`:
+The last step is to collide the player and the tilemap layer against one another. We could use [`collide`](https://photonstorm.github.io/phaser3-docs/Phaser.Physics.Arcade.World.html#collide__anchor) or [`addCollider`](https://photonstorm.github.io/phaser3-docs/Phaser.Physics.Arcade.World.html#addCollider__anchor). We'll go with the latter:
 
 ```js
 function setup() {
@@ -317,43 +317,23 @@ function setup() {
 }
 ```
 
-Or inside of `update`:
-
-```js
-function update() {
-  // ...
-
-  // This approach is useful when you need a bit more fine-grained control about when collisions
-  // happen or the order in which they happen
-  this.physics.world.collide(player, worldLayer);
-}
-```
-
-And putting it all together, with a few extras like loading a player spawn point from Tiled and adding in player animations:
+And putting it all together, with a few extras like adding in player animations:
 
 **embedd codepen**
 
 See the corresponding source code [here](../../code/05-physics/index.js).
 
-## Addendum 1: Layers ↔ Tilesets
+There's a whole lot of powerful stuff you can do with Tiled and Phaser to make the creative process of developing a game world easier. For example, the code for this section uses an [object layer](http://docs.mapeditor.org/en/stable/manual/objects/) to embed the player's spawn point directly in the map.
 
-The Phaser renderer is set up to batch render as much as possible. One limit of this is that each tilemap layer can only have _one_ tileset that it renders. That means the whole layer can be rendered in one speedy pass. So if you are looking to render a map that has a bunch of different tilesets, you'll want to create a separate layer for each tileset. That might look something like this:
+![](./images/objects-demo/objects-demo-optimized.gif)
 
 ```js
-var map = this.make.tilemap({ key: "map" });
-
-var groundTiles = map.addTilesetImage("kenny_ground_64x64", "ground");
-map.createStaticLayer("Tile Layer 1", groundTiles, 0, 0);
-
-var itemTiles = map.addTilesetImage("kenny_items_64x64", "items");
-map.createStaticLayer("Tile Layer 2", itemTiles, 0, 0);
-
-var platformTiles = map.addTilesetImage("kenny_platformer_64x64", "platformer");
-map.createStaticLayer("Tile Layer 3", platformTiles, 0, 0);
+const spawnPoint = map.findObject("Objects", obj => obj.name === "Spawn Point");
+player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, "atlas", "misa-front");
 ```
 
-This limit may go away in the future, but as of v3.10, this is still true.
+But that's just scratching the surface! Keep an eye out for the next post, where we'll dive into dynamic tilemap layers and creating a procedural dungeon.
 
-## Addendum 2: Tile Bleeding
+## Addendum on Tile Bleeding
 
-At some point, you may encounter a common issue...
+You may have noticed the word "extruded" in the name of the tileset in the last two sections. If you ever notice a slight "bleeding" in your tilemap where you start to see the seams between your tiles, one way to solve that is to extrude your tiles using a small command line utility I wrote called [tile-extruder](https://github.com/sporadic-labs/tile-extruder).
