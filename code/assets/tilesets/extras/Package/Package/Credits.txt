@@ -1,0 +1,12 @@
+--Note-- 
+These credits are for the game maker file. It contains the assets below that I did not make. These assets were
+used to make the example game.
+--------
+
+Radio effect: https://www.youtube.com/user/Jojikiba/about
+
+Trailer Music: https://www.youtube.com/watch?v=0ewQiU3q5jM
+
+Dialogue System: https://friendlycosmonaut.itch.io/dialoguesystem
+
+Blur Shader: https://marketplace.yoyogames.com/assets/261/free-shaders
