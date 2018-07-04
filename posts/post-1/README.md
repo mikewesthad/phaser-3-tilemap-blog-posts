@@ -1,5 +1,7 @@
 # Blog Post 1: Static Maps
 
+Author: [Mike Hadley](https://www.mikewesthad.com/)
+
 This is a series of blog posts about creating modular worlds with tilemaps in the [Phaser 3](http://phaser.io/) game engine. In this first post, we'll go from zero to creating a Pokemon-style top down game world that a player can explore.
 
 The next post will cover how to create procedurally generated and dynamic maps, and the final post will show you how to create a physics-y platformer with Matter.js.
