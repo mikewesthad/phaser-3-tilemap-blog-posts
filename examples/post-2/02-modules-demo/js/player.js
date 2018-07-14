@@ -1,6 +1,6 @@
 /**
  * A class that wraps up our 2D platforming player logic. It creates, animates and moves a sprite in
- * response to WASD/arrow keys. Call it's update method from the scene's update and call its destroy
+ * response to WASD/arrow keys. Call its update method from the scene's update and call its destroy
  * method when you're done with the player.
  *
  * Note: this example only have a single scene that gets loaded, so we don't use destroy here, but
