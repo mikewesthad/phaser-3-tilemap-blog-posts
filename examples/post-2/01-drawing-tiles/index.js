@@ -79,20 +79,18 @@ function update(time, delta) {
   // Convert the mouse position to world position within the camera
   const worldPoint = this.input.activePointer.positionToCamera(this.cameras.main);
 
-  // Rounds world position down to nearest tile
-  const pointerTileX = groundLayer.worldToTileX(worldPoint.x);
-  const pointerTileY = groundLayer.worldToTileY(worldPoint.y);
-
-  // Place the marker in world space, but snap it to the tile grid
-  marker.x = groundLayer.tileToWorldX(pointerTileX);
-  marker.y = groundLayer.tileToWorldY(pointerTileY);
+  // Place the marker in world space, but snap it to the tile grid. If we convert world -> tile and
+  // then tile -> world, we end up with the position of the tile under the pointer
+  const pointerTileXY = groundLayer.worldToTileXY(worldPoint.x, worldPoint.y);
+  const snappedWorldPoint = groundLayer.tileToWorldXY(pointerTileXY.x, pointerTileXY.y);
+  marker.setPosition(snappedWorldPoint.x, snappedWorldPoint.y);
 
   // Draw or erase tiles (only within the groundLayer)
   if (this.input.manager.activePointer.isDown) {
     if (shiftKey.isDown) {
-      groundLayer.removeTileAt(pointerTileX, pointerTileY);
+      groundLayer.removeTileAtWorldXY(worldPoint.x, worldPoint.y);
     } else {
-      groundLayer.putTileAt(353, pointerTileX, pointerTileY);
+      groundLayer.putTileAtWorldXY(353, worldPoint.x, worldPoint.y);
     }
   }
 }
