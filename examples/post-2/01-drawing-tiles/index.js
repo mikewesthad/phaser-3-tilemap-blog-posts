@@ -19,7 +19,6 @@ const config = {
 };
 
 const game = new Phaser.Game(config);
-let map;
 let controls;
 let marker;
 let shiftKey;
