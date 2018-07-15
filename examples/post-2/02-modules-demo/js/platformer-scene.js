@@ -16,7 +16,7 @@ export default class PlatformerScene extends Phaser.Scene {
       }
     );
     this.load.image("tiles", "../assets/tilesets/0x72-industrial-tileset-32px-extruded.png");
-    this.load.tilemapTiledJSON("map", "../assets/tilemaps/platformer.json");
+    this.load.tilemapTiledJSON("map", "../assets/tilemaps/platformer-simple.json");
   }
 
   create() {
@@ -24,7 +24,7 @@ export default class PlatformerScene extends Phaser.Scene {
     const tiles = map.addTilesetImage("0x72-industrial-tileset-32px-extruded", "tiles");
 
     map.createDynamicLayer("Background", tiles);
-    const groundLayer = map.createDynamicLayer("Ground", tiles);
+    this.groundLayer = map.createDynamicLayer("Ground", tiles);
     map.createDynamicLayer("Foreground", tiles);
 
     // Instantiate a player instance at the location of the "Spawn Point" object in the Tiled map.
@@ -35,8 +35,8 @@ export default class PlatformerScene extends Phaser.Scene {
 
     // Collide the player against the ground layer - here we are grabbing the sprite property from
     // the player (since the Player class is not a Phaser.Sprite).
-    groundLayer.setCollisionByProperty({ collides: true });
-    this.physics.world.addCollider(this.player.sprite, groundLayer);
+    this.groundLayer.setCollisionByProperty({ collides: true });
+    this.physics.world.addCollider(this.player.sprite, this.groundLayer);
 
     this.cameras.main.startFollow(this.player.sprite);
     this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
@@ -55,5 +55,10 @@ export default class PlatformerScene extends Phaser.Scene {
   update(time, delta) {
     // Allow the player to respond to key presses and move itself
     this.player.update();
+
+    if (this.player.sprite.y > this.groundLayer.height) {
+      this.player.destroy();
+      this.scene.restart();
+    }
   }
 }
