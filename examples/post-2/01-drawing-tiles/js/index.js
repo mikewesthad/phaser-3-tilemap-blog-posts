@@ -26,7 +26,7 @@ let groundLayer;
 
 function preload() {
   this.load.image("tiles", "../assets/tilesets/0x72-industrial-tileset-32px-extruded.png");
-  this.load.tilemapTiledJSON("map", "../assets/tilemaps/platformer.json");
+  this.load.tilemapTiledJSON("map", "../assets/tilemaps/platformer-simple.json");
 }
 
 function create() {
