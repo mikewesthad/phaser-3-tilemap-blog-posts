@@ -1,7 +1,5 @@
 # Modular Game Worlds in Phaser 3 (Tilemaps #2)
 
-**CREDITS!**
-
 Author: [Mike Hadley](https://www.mikewesthad.com/)
 
 Reading this on GitHub? Check out the Medium Post (_coming soon..._)
@@ -48,6 +46,8 @@ You can also convert a dynamic layer into a static layer, allowing you to genera
 For the first example, we'll dive into making the humble beginnings of a level editor. We will load up a level made with Tiled and then paint & erase tiles from a layer dynamically:
 
 ![](./images/paint-tiles-demo.gif)
+
+_↳ Tileset by 0x72 under CC-0, https://0x72.itch.io/16x16-industrial-tileset_
 
 You set up dynamic layers in the same way as static layers, except using [`map.createDynamicLayer`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.Tilemap.html#createDynamicLayer__anchor) instead of [`map.createStaticLayer`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.Tilemap.html#createStaticLayer__anchor):
 
