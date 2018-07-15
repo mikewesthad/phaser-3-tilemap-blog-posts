@@ -11,7 +11,7 @@ const config = {
   width: 800,
   height: 600,
   parent: "game-container",
-  pixelArt: false,
+  pixelArt: true,
   backgroundColor: "#1d212d",
   scene: PlatformerScene,
   physics: {
