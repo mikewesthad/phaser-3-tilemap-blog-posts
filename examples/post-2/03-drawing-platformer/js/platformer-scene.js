@@ -48,7 +48,14 @@ export default class PlatformerScene extends Phaser.Scene {
     this.groundLayer.forEachTile(tile => {
       if (tile.index === 77) {
         const spike = this.spikeGroup.create(tile.getCenterX(), tile.getCenterY(), "spike");
-        spike.body.setSize(32, 6).setOffset(0, 26);
+
+        // The map has spikes rotated in Tiled (z key), so parse out that angle to the correct body
+        // placement
+        spike.rotation = tile.rotation;
+        if (spike.angle === 0) spike.body.setSize(32, 6).setOffset(0, 26);
+        else if (spike.angle === -90) spike.body.setSize(6, 32).setOffset(26, 0);
+        else if (spike.angle === 90) spike.body.setSize(6, 32).setOffset(0, 0);
+
         this.groundLayer.removeTileAt(tile.x, tile.y);
       }
     });
