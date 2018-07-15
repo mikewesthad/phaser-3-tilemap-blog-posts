@@ -12,6 +12,8 @@ _↳ Final example that we'll create_
 
 The next planned post will cover how to create procedurally generated and dynamic maps, and the final post will show you how to create a physics-y platformer with [Matter.js](http://brm.io/matter-js/).
 
+Before we dive in, all the code that goes along with this post is in [this repository](https://github.com/mikewesthad/phaser-3-tilemap-blog-posts/tree/master/examples/post-1).
+
 ## Why
 
 I'm a creative developer and educator at [Convergence Design Lab](https://convergencedesignlab.org/), but I was brought on to the Phaser team in the sprint leading up to the initial public v3 release to develop the Tilemap API. I created ~40 guided examples and wrote weekly newsletter updates, but I wanted to collect all of that information into a more guided and digestible format so that people can more easily jump into Phaser 3.
