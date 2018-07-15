@@ -1,5 +1,7 @@
 # Modular Game Worlds in Phaser 3 (Tilemaps #2)
 
+**CREDITS!**
+
 Author: [Mike Hadley](https://www.mikewesthad.com/)
 
 Reading this on GitHub? Check out the Medium Post (_coming soon..._)
@@ -96,13 +98,13 @@ function update() {
 
 The following example puts all of this together and allows you to paint tiles with by clicking/tapping and erase tiles clicking while holding shift. `worldToTileXY` & `tileToWorldXY` are used to create a simple graphic overlay to visualize which tile the mouse is currently over.
 
-(Note: you'll want to click on the "Edit on CodeSandbox" button and check out the code in full screen.)
+Note: you'll want to click on the "Edit on CodeSandbox" button and check out the code in full screen where you can see all the files easily.
 
-[![Run "Phaser Tilemap Post 2: Example 01"](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/31xpvv85om?module=%2Fjs%2Findex.js)
+[![Edit Phaser Tilemap Post 2: 01-drawing-tiles](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/31xpvv85om?hidenavigation=1&module=%2Fjs%2Findex.js&moduleview=1)
 
-<!-- Embed link for medium: https://codesandbox.io/s/31xpvv85om?module=%2Fjs%2Findex.js -->
+<!-- Embed link for medium: https://codesandbox.io/s/31xpvv85om?hidenavigation=1&module=%2Fjs%2Findex.js&moduleview=1 -->
 
-_↳ Check out the [codesandbox](https://codesandbox.io/s/31xpvv85om?module=%2Fjs%2Findex.js), [live example](https://www.mikewesthad.com/phaser-3-tilemap-blog-posts/post-2/01-drawing-tiles) or the source code [here](https://github.com/mikewesthad/phaser-3-tilemap-blog-posts/blob/master/examples/post-2/01-drawing-tiles)._
+_↳ Check out the [CodeSandbox](https://codesandbox.io/s/31xpvv85om?hidenavigation=1&module=%2Fjs%2Findex.js&moduleview=1), [live example](https://www.mikewesthad.com/phaser-3-tilemap-blog-posts/post-2/01-drawing-tiles) or the source code [here](https://github.com/mikewesthad/phaser-3-tilemap-blog-posts/blob/master/examples/post-2/01-drawing-tiles)._
 
 ## Modularizing Our Code
 
@@ -147,11 +149,11 @@ Here's what our new project structure looks like:
 
 Check out the code below, starting with index.js. From there, when you see an `import`, look at the file that's being referenced to follow the thread. This will be the basis we build upon for the next section.
 
-[![Run "Phaser Tilemap Post 2: Example 02"](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/p5pqqjk6q0?module=%2Fjs%2Findex.js&view=preview)
+[![Edit Phaser Tilemap Post 2: 02-modules-demo](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/p5pqqjk6q0?hidenavigation=1&module=%2Fjs%2Findex.js&moduleview=1)
 
-<!-- Embed link for medium:https://codesandbox.io/s/p5pqqjk6q0?module=%2Fjs%2Findex.js&view=preview -->
+<!-- Embed link for medium: https://codesandbox.io/s/p5pqqjk6q0?hidenavigation=1&module=%2Fjs%2Findex.js&moduleview=1 -->
 
-_↳ Check out the [codesandbox](https://codesandbox.io/s/p5pqqjk6q0?module=%2Fjs%2Findex.js), [live example](https://www.mikewesthad.com/phaser-3-tilemap-blog-posts/post-2/02-modules-demo) or the source code [here](https://github.com/mikewesthad/phaser-3-tilemap-blog-posts/blob/master/examples/post-2/02-modules-demo)_
+_↳ Check out the [CodeSandbox](https://codesandbox.io/s/31xpvv85om?hidenavigation=1&module=%2Fjs%2Findex.js&moduleview=1), [live example](https://www.mikewesthad.com/phaser-3-tilemap-blog-posts/post-2/02-modules-demo) or the source code [here](https://github.com/mikewesthad/phaser-3-tilemap-blog-posts/blob/master/examples/post-2/02-modules-demo)._
 
 There's a lot more that we could do to make this code more modular (e.g. taking advantage of Phaser's event system), but this is modular enough without introducing too many new concepts.
 
@@ -233,8 +235,8 @@ And we'll end up with nice hitboxes like:
 
 Now for everything in context, where we reset the game when the player touches the spikes:
 
-[![Run "Phaser Tilemap Post 2: Example 03"](https://codesandbox.io/static/img/play-codesandbox.svg)]()
+[![Edit Phaser Tilemap Post 2: 03-drawing-platformer](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/mo2j4nvkxy?hidenavigation=1&module=%2Fjs%2Findex.js&moduleview=1)
 
-<!-- Embed link for medium:  -->
+<!-- Embed link for medium: https://codesandbox.io/s/mo2j4nvkxy?hidenavigation=1&module=%2Fjs%2Findex.js&moduleview=1 -->
 
-_↳ Check out the [codesandbox](), [live example](https://www.mikewesthad.com/phaser-3-tilemap-blog-posts/post-2/03-drawing-platformer) or the source code [here](https://github.com/mikewesthad/phaser-3-tilemap-blog-posts/blob/master/examples/post-2/03-drawing-platformer)._
+_↳ Check out the [CodeSandbox](https://codesandbox.io/s/mo2j4nvkxy?hidenavigation=1&module=%2Fjs%2Findex.js&moduleview=1), [live example](https://www.mikewesthad.com/phaser-3-tilemap-blog-posts/post-2/03-drawing-platformer) or the source code [here](https://github.com/mikewesthad/phaser-3-tilemap-blog-posts/blob/master/examples/post-2/03-drawing-platformer)._
