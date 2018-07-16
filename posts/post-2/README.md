@@ -1,4 +1,4 @@
-# Modular Game Worlds in Phaser 3 (Tilemaps #2)
+# Modular Game Worlds in Phaser 3 (Tilemaps #2) - Dynamic Platformer
 
 Author: [Mike Hadley](https://www.mikewesthad.com/)
 
