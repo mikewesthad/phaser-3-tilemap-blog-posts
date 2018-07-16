@@ -10,13 +10,19 @@ This is a series of blog posts about creating modular worlds with tilemaps in th
 
 _↳ Final example that we'll create_
 
-The next planned post will cover how to create procedurally generated and dynamic maps, and the final post will show you how to create a physics-y platformer with [Matter.js](http://brm.io/matter-js/).
+The [next post](link) covers how to create procedurally generated and dynamic maps, and the final post will show you how to create a physics-y platformer with [Matter.js](http://brm.io/matter-js/).
 
 Before we dive in, all the code that goes along with this post is in [this repository](https://github.com/mikewesthad/phaser-3-tilemap-blog-posts/tree/master/examples/post-1).
 
 ## Why
 
 I'm a creative developer and educator at [Convergence Design Lab](https://convergencedesignlab.org/), but I was brought on to the Phaser team in the sprint leading up to the initial public v3 release to develop the Tilemap API. I created ~40 guided examples and wrote weekly newsletter updates, but I wanted to collect all of that information into a more guided and digestible format so that people can more easily jump into Phaser 3.
+
+## Intended Audience
+
+This post will make the most sense if you have some experience with JavaScript, Phaser and the [Tiled](https://www.mapeditor.org/) map editor. If you don't, keep reading but also keep Google, the Phaser [tutorial](https://phaser.io/tutorials/making-your-first-phaser-3-game) and the Phaser [examples](https://labs.phaser.io/) & [documentation](https://photonstorm.github.io/phaser3-docs/index.html) handy to fill in any gaps.
+
+Alright, Let’s get into it!
 
 ## What is a Tilemap
 
@@ -36,7 +42,7 @@ The tilemap approach defines a set of modular, regularly-sized _tiles_ that we c
 
 _↳ [Source](http://rmrk.net/index.php?topic=37002.0): Tileset by Nintendo, remixed by Arrow_
 
-So that 304px x 192px image holds the possibility of recreating all the levels of the original mario game, plus any new levels you can imagine. (*Of course, you'd still be missing a mustached man and a bipedal turtle, among other things.) Each tile is just 16 x 16 pixels. An arrangement of those tiles into a level is called a _tilemap_. With tilemap editing software, we can easily configure properties of the tiles too. For example, we can mark some tiles - like the ground tiles - as solid tiles that Mario can stand on.
+So that 304px x 192px image holds the possibility of recreating all the levels of the original mario game, plus any new levels you can imagine. (\*Of course, you'd still be missing a mustached man and a bipedal turtle, among other things.) Each tile is just 16 x 16 pixels. An arrangement of those tiles into a level is called a _tilemap_. With tilemap editing software, we can easily configure properties of the tiles too. For example, we can mark some tiles - like the ground tiles - as solid tiles that Mario can stand on.
 
 So with tilemaps, we've got a smaller image (performance & memory win) that we can use to easily create and iterate on level designs (creative win).
 
@@ -71,6 +77,7 @@ function update(time, delta) {
   // Runs once per frame for the duration of the scene
 }
 ```
+
 <!-- https://gist.github.com/mikewesthad/bdcebf6276a1b3affb457fcbbe238d4a -->
 
 This is a template that you'll see throughout the Phaser examples repository. It's an easy way to get started. It creates a game and defines a scene as a collection of functions - `preload`, `create` and `update`.
@@ -96,6 +103,7 @@ function preload() {
   this.load.image("mario-tiles", "../assets/tilesets/super-mario-tiles.png");
 }
 ```
+
 <!-- https://gist.github.com/mikewesthad/2df3f7aee2bfe9f9b240f07e4fb788aa -->
 
 `this` refers to our current scene and `this.load` is the scene's loader which handles, well, the loading of assets. The `create` function won't get run until after all the assets in `preload` are done loading.
@@ -123,6 +131,7 @@ function create() {
   const layer = map.createStaticLayer(0, tiles, 0, 0);
 }
 ```
+
 <!-- https://gist.github.com/mikewesthad/4db65ee45e0cd9a6905e95f5323eaa9c -->
 
 `level` is just a 2D array of numbers, or _indices_, that point to a specific tile from our tileset. 0 is the top left tile, 1 is the one next to it, etc.
@@ -158,6 +167,7 @@ function create() {
   const layer = map.createStaticLayer(0, tileset, 0, 0); // layer index, tileset, x, y
 }
 ```
+
 <!-- https://gist.github.com/mikewesthad/9dd70a10b84d1d4cd13a71a5059106d1 -->
 
 Note: this example is basically a copy of a Phaser [example](https://labs.phaser.io/view.html?src=src/game%20objects/tilemap/static/csv-map.js) which features Rich Davey & Ilija Melentijević's [Cat Astro Phi](http://www.photonstorm.com/games/cat-astro-phi) assets.
@@ -180,9 +190,9 @@ We won't dive into how to use Tiled - that's an expansive topic by itself - so c
 
 When working with Tiled to generate maps for Phaser, there are a few things you'll want to make sure to do:
 
-1. When you load a tileset into your map, make sure to check the "Embed in map" option. (If you forget to do this, then you can click the embed tileset button the bottom of the screen.) See first two images below.
-2. Make sure you aren't using a compressed "Tile Layer Format." You can adjust that in map properties sidebar... which you can open by hitting "Map → Map Properties" in the top toolbar. See third image below.
-3. When you export your map, save it as a JSON file.
+1.  When you load a tileset into your map, make sure to check the "Embed in map" option. (If you forget to do this, then you can click the embed tileset button the bottom of the screen.) See first two images below.
+2.  Make sure you aren't using a compressed "Tile Layer Format." You can adjust that in map properties sidebar... which you can open by hitting "Map → Map Properties" in the top toolbar. See third image below.
+3.  When you export your map, save it as a JSON file.
 
 ![](./images/tiled-embed-tileset.png)
 
@@ -217,6 +227,7 @@ function create() {
   const aboveLayer = map.createStaticLayer("Above Player", tileset, 0, 0);
 }
 ```
+
 <!-- https://gist.github.com/mikewesthad/1a97793b85bedaea004298ac3328e2f9 -->
 
 This step is mainly about connecting up data. To help making the naming slightly more clear, here's where the names come from:
@@ -243,10 +254,10 @@ In AP, you can create physics bodies that are either rectangles or circles. Rect
 
 There are four things we'll need to do:
 
-1. Mark certain tiles in the `worldLayer` as colliding so that AP knows to use them for collisions.
-2. Enable the AP physics engine.
-3. Create a physics-based sprite for the player.
-4. Set the player to collide with the `worldLayer`.
+1.  Mark certain tiles in the `worldLayer` as colliding so that AP knows to use them for collisions.
+2.  Enable the AP physics engine.
+3.  Create a physics-based sprite for the player.
+4.  Set the player to collide with the `worldLayer`.
 
 The first step to use a tilemap with physics is that you need to mark which tiles should be solid ("colliding"). One way to do that would be to mark certain tile indices as colliding within a layer:
 
@@ -254,6 +265,7 @@ The first step to use a tilemap with physics is that you need to mark which tile
 // The 13th tile through and including the 45th tile will be marked as colliding
 worldLayer.setCollisionBetween(12, 44);
 ```
+
 <!-- https://gist.github.com/mikewesthad/12615aff87a16c1baa3f1919cbf04d24 -->
 
 If you are working with tile indices, then there's [`setCollision`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.Tilemap.html#setCollision__anchor), [`setCollisionBetween`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.Tilemap.html#setCollisionBetween__anchor) and [`setCollisionByExclusion`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.Tilemap.html#setCollisionByExclusion__anchor). But thinking in terms of indices is hard, so there's a better way: [`setCollisionByProperty`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.Tilemap.html#setCollisionByProperty__anchor). Tiled allows you to add properties to a tileset via the [Tileset Editor](http://docs.mapeditor.org/en/latest/manual/editing-tilesets/), so we can just mark which tiles collide directly in Tiled.
@@ -273,6 +285,7 @@ Back inside of Phaser, we can simply do the following to mark our colliding tile
 ```js
 worldLayer.setCollisionByProperty({ collides: true });
 ```
+
 <!-- https://gist.github.com/mikewesthad/6e131f6ed11c18114aa482715e8a4779 -->
 
 If you want to verify that you've got the right tiles marked as colliding, use the layer's debug rendering:
@@ -285,6 +298,7 @@ worldLayer.renderDebug(debugGraphics, {
   faceColor: new Phaser.Display.Color(40, 39, 37, 255) // Color of colliding face edges
 });
 ```
+
 <!-- https://gist.github.com/mikewesthad/6f9a777bf8e7c5ae37436558e81a6673 -->
 
 Which will look like this:
@@ -304,6 +318,7 @@ var config = {
   }
 };
 ```
+
 <!-- https://gist.github.com/mikewesthad/4aad4dad2f610ac61b7ed8f4bffa1827 -->
 
 We can create a simple player sprite that moves around using physics:
@@ -337,6 +352,7 @@ function update(time, delta) {
   player.body.velocity.normalize().scale(speed);
 }
 ```
+
 <!-- https://gist.github.com/mikewesthad/b8e145be9b1dc7230663a951b219f523 -->
 
 Note: I'm using a texture atlas here. See this [tutorial](https://www.codeandweb.com/texturepacker/tutorials/how-to-create-sprite-sheets-for-phaser3) for more info.
@@ -351,6 +367,7 @@ function setup() {
   this.physics.add.collider(player, worldLayer);
 }
 ```
+
 <!-- https://gist.github.com/mikewesthad/39dc31804710addeeeeffe3a3df362d8 -->
 
 And putting it all together, with a few extras like adding in player animations:
@@ -367,10 +384,21 @@ There's a whole lot of powerful stuff you can do with Tiled and Phaser to make t
 const spawnPoint = map.findObject("Objects", obj => obj.name === "Spawn Point");
 player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, "atlas", "misa-front");
 ```
+
 <!-- https://gist.github.com/mikewesthad/da659a2dc99f67f9f7388f6c7f0ee146 -->
 
-But that's just scratching the surface! Keep an eye out for the next post, where we'll dive into dynamic tilemap layers and creating a procedural dungeon.
+## Next Up
+
+This is all just scratching the surface. Check out the next [post](https://medium.com/@michaelwesthadley/modular-game-worlds-in-phaser-3-tilemaps-2-dynamic-platformer-3d68e73d494a) where we dive into dynamic tilemap layers to create a puzzle-y platformer:
+
+![](../post-2/images/paint-platformer-demo-optimized.gif)
+
+Thanks for reading, and if there's something you'd like to see in future posts, let me know!
 
 ## Addendum on Tile Bleeding
 
 You may have noticed the word "extruded" in the name of the tileset in the last two sections. If you ever notice a slight "bleeding" in your tilemap where you start to see the seams between your tiles, one way to solve that is to extrude your tiles using a small command line utility I wrote called [tile-extruder](https://github.com/sporadic-labs/tile-extruder).
+
+## About Me
+
+I’m a creative developer & educator. You can see more of my work and get in touch [here](https://www.mikewesthad.com/).
