@@ -2,7 +2,7 @@
 
 Author: [Mike Hadley](https://www.mikewesthad.com/)
 
-Reading this on GitHub? Check out the Medium Post (_coming soon..._)
+Reading this on GitHub? Check out the [Medium Post](https://medium.com/@michaelwesthadley/modular-game-worlds-in-phaser-3-tilemaps-2-dynamic-platformer-3d68e73d494a)
 
 This is a series of blog posts about creating modular worlds with tilemaps in the [Phaser 3](http://phaser.io/) game engine. If you haven't, check out the first [post](https://medium.com/@michaelwesthadley/modular-game-worlds-in-phaser-3-tilemaps-1-958fc7e6bbd6) where we used static tilemaps to create a Pokémon-style game world. In this post, we'll dive into dynamic tilemaps and create a puzzle-y platformer where you can draw platforms to help get around obstacles:
 
@@ -14,9 +14,11 @@ In the next posts in the series, we'll create a procedural dungeon world and int
 
 Before we dive in, all the source code and assets that go along with this post can be found in [this repository](https://github.com/mikewesthad/phaser-3-tilemap-blog-posts/tree/master/examples/post-2).
 
-## Background Knowledge
+## Intended Audience
 
-This post will make the most sense if you have some experience with JavaScript (classes, arrow functions & modules), Phaser and the [Tiled](https://www.mapeditor.org/) map editor. If you don't, you might want to start at the beginning of the [series](https://medium.com/@michaelwesthadley/modular-game-worlds-in-phaser-3-tilemaps-1-958fc7e6bbd6), or continue reading and keep the [Phaser tutorial](https://phaser.io/tutorials/making-your-first-phaser-3-game) & Google handy.
+This post will make the most sense if you have some experience with JavaScript (classes, arrow functions & modules), Phaser and the [Tiled](https://www.mapeditor.org/) map editor. If you don't, you might want to start at the beginning of the [series](https://medium.com/@michaelwesthadley/modular-game-worlds-in-phaser-3-tilemaps-1-958fc7e6bbd6), or continue reading and keep Google, the Phaser tutorial and the Phaser [examples](https://labs.phaser.io/) & [documentation](https://photonstorm.github.io/phaser3-docs/index.html) handy.
+
+Alright, Let's get into it!
 
 ## The Tilemap API
 
@@ -65,6 +67,8 @@ function create() {
 }
 ```
 
+<!-- https://gist.github.com/mikewesthad/1ec0d8bfdb27d52b5fb29d67fc1aee9a -->
+
 Once you've got a dynamic layer loaded up, you can start manipulating tiles using the [DynamicTilemapLayer API](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.DynamicTilemapLayer.html):
 
 ```js
@@ -75,6 +79,8 @@ groundLayer.putTileAt(1, 20, 10);
 // (This uses the main camera's coordinate system by default)
 groundLayer.putTileAtWorldXY(2, 200, 50);
 ```
+
+<!-- https://gist.github.com/mikewesthad/376bb39c3de856cd93b22f970bd765c8 -->
 
 The tilemap layer (and tilemap) methods that get or manipulate tiles often come in pairs. One method - like [`putTileAt`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.DynamicTilemapLayer.html#putTileAt__anchor) - will operate on tile grid units, e.g. (0, 2) would correspond to the first column and third row of the layer. The other method - like [`putTileAtWorldXY`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.DynamicTilemapLayer.html#putTileAtWorldXY__anchor) - will operate in world pixel units, making it easier to do things like find which tile is under the mouse. There are also methods for converting from tile grid units to world pixel coordinates and vice versa: [`worldToTileXY`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.DynamicTilemapLayer.html#worldToTileXY__anchor), [`tileToWorldXY`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.DynamicTilemapLayer.html#tileToWorldXY__anchor).
 
@@ -118,6 +124,8 @@ If you are using a modern browser (roughly anything late 2017 onward), you can u
 <script src="./js/index.js" type="module"></script>
 ```
 
+<!-- https://gist.github.com/mikewesthad/785ebd034485af6eb3f6f34a64cbd9f4 -->
+
 (Note: you won't see this in the CodeSandbox demos since they use the [Parcel bundler](https://parceljs.org/) to enable module support, but you will see it in the [source code](https://github.com/mikewesthad/phaser-3-tilemap-blog-posts/tree/master/examples/post-2) for this series.)
 
 Inside of index.js, you can now [`import`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import) functions, objects, or primitive values from other files that have at least one [`export`](https://developer.mozilla.org/en-US/docs/web/javascript/reference/statements/export). `import` and `export` provide ways for us to split our single file code into separate files. With them, here's what our new project structure looks like:
@@ -142,6 +150,8 @@ Inside of index.js, you can now [`import`](https://developer.mozilla.org/en-US/d
 └── index.html
       Loads up index.js
 ```
+
+<!-- https://gist.github.com/mikewesthad/ee22cce7dc345580425a15c18619c904 -->
 
 Check out the code below, starting with index.js. From there, when you see an `import`, look at the file that's being referenced to follow the thread. This will be the basis we build upon for the next section.
 
@@ -178,6 +188,8 @@ export default class Player {
   }
 }
 ```
+
+<!-- https://gist.github.com/mikewesthad/98f42b21c1830eeb63b986261f5875ea -->
 
 This sets up an important pattern by letting us separate the bulk of the player logic from platformer-scene.js. The scene just has to worry about how the player interacts with the rest of the world. As long as we call `update` and `destroy` at the right times, we could even bring this player file over to a completely separate project and it would work fine.
 
@@ -228,7 +240,7 @@ Tilemaps have methods for turning Tiled objects and tiles into sprites: [`create
 
 ![](./images/object-to-sprite/object-to-sprite-annotated.gif)
 
-_↳ Left side is the Phaser example running in the browser and the right side is Tiled. Note how width/height/flip etc. are copied over to the animated coin sprites._
+_↳ The left side is the Phaser example running in the browser and the right side is Tiled. Note how width/height/flip etc. are copied over to the animated coin sprites._
 
 In the context of our code, turning spikes into sprites is a little more complicated, so we can roll our own custom version of tile → sprite logic by looping over all the `Tile` objects in a layer using [`forEachTile`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.DynamicTilemapLayer.html#forEachTile__anchor):
 
@@ -258,6 +270,8 @@ this.groundLayer.forEachTile(tile => {
   }
 });
 ```
+
+<!-- https://gist.github.com/mikewesthad/8a9d2973aad8c98c847d31747953d514 -->
 
 And we'll end up with nice hitboxes like:
 
