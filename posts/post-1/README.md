@@ -10,7 +10,7 @@ This is a series of blog posts about creating modular worlds with tilemaps in th
 
 _↳ Final example that we'll create_
 
-The [next post](link) covers how to create procedurally generated and dynamic maps, and the final post will show you how to create a physics-y platformer with [Matter.js](http://brm.io/matter-js/).
+The [next post](https://medium.com/@michaelwesthadley/modular-game-worlds-in-phaser-3-tilemaps-2-dynamic-platformer-3d68e73d494a) covers how to create a dynamic platformer and the posts after that will cover procedurally generated dungeons and wall-jumping maps with [Matter.js](http://brm.io/matter-js/).
 
 Before we dive in, all the code that goes along with this post is in [this repository](https://github.com/mikewesthad/phaser-3-tilemap-blog-posts/tree/master/examples/post-1).
 
