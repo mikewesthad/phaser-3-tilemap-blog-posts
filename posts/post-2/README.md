@@ -98,7 +98,7 @@ function update() {
 }
 ```
 
-The following example puts all of this together and allows you to paint tiles with by clicking/tapping and erase tiles clicking while holding shift. `worldToTileXY` & `tileToWorldXY` are used to create a simple graphic overlay to visualize which tile the mouse is currently over.
+The following example puts all of this together and allows you to paint tiles by clicking and erase tiles by clicking while holding shift. `worldToTileXY` & `tileToWorldXY` are used to create a simple graphic overlay to visualize which tile the mouse is currently over.
 
 Note: you'll want to click on the "Edit on CodeSandbox" button and check out the code in full screen where you can see all the files easily.
 
@@ -118,7 +118,7 @@ Thus far, we've gotten up and running quickly with Phaser using a single file th
 
 To build our platforming foundation, we want to split up that monolithic file structure into easier-to-digest, isolated files called "modules." There are a lot of reasons go modular with your code. If used well, they help create portable & reusable chunks of code that are easier to think about. If you aren't familiar with modules, check out the [modules chapter](https://eloquentjavascript.net/10_modules.html) from _Eloquent JavaScript_ or [this overview](https://blog.cloud66.com/an-overview-of-es6-modules-in-javascript/).
 
-If you are using a modern browser (roughly anything late 2017 onward), you can use modules in your JS (without needing webpack, parcel, etc.) like this:
+If you are using a modern browser (roughly anything late 2017 onward), you can use modules in your project (without needing webpack, parcel, etc.) by adding the `type="module"` attribute in your HTML like this:
 
 ```html
 <script src="./js/index.js" type="module"></script>
@@ -128,7 +128,7 @@ If you are using a modern browser (roughly anything late 2017 onward), you can u
 
 (Note: you won't see this in the CodeSandbox demos since they use the [Parcel bundler](https://parceljs.org/) to enable module support, but you will see it in the [source code](https://github.com/mikewesthad/phaser-3-tilemap-blog-posts/tree/master/examples/post-2) for this series.)
 
-Inside of index.js, you can now [`import`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import) functions, objects, or primitive values from other files that have at least one [`export`](https://developer.mozilla.org/en-US/docs/web/javascript/reference/statements/export). `import` and `export` provide ways for us to split our single file code into separate files. With them, here's what our new project structure looks like:
+Inside of index.js, you can now [`import`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import) functions, objects, or primitive values from other files that have at least one [`export`](https://developer.mozilla.org/en-US/docs/web/javascript/reference/statements/export). `import` and `export` provide ways for us to split our single file code into separate files. With that in mind, here's what our new project structure looks like:
 
 ![](./images/directory-structure.png)
 
@@ -141,11 +141,11 @@ Inside of index.js, you can now [`import`](https://developer.mozilla.org/en-US/d
 |  ├── index.js
 |  |     Creates the Phaser game from our config
 |  |
-|  ├── player.js
-|  |     Handles player movement and animations
+|  ├── platformer-scene.js
+|  |     The new home of our scene (e.g. preload, create, update)
 |  |
-|  └── platformer-scene.js
-|        The new home of our scene (e.g. preload, create, update)
+|  └── player.js
+|        Handles player movement and animations
 |
 └── index.html
       Loads up index.js
@@ -159,7 +159,7 @@ Check out the code below, starting with index.js. From there, when you see an `i
 
 <!-- Embed link for medium: https://codesandbox.io/s/p5pqqjk6q0?hidenavigation=1&module=%2Fjs%2Findex.js&moduleview=1 -->
 
-_↳ Check out the [CodeSandbox](https://codesandbox.io/s/31xpvv85om?hidenavigation=1&module=%2Fjs%2Findex.js&moduleview=1), [live example](https://www.mikewesthad.com/phaser-3-tilemap-blog-posts/post-2/02-modules-demo) or the source code [here](https://github.com/mikewesthad/phaser-3-tilemap-blog-posts/blob/master/examples/post-2/02-modules-demo)._
+_↳ Check out the [CodeSandbox](https://codesandbox.io/s/p5pqqjk6q0?hidenavigation=1&module=%2Fjs%2Findex.js&moduleview=1), [live example](https://www.mikewesthad.com/phaser-3-tilemap-blog-posts/post-2/02-modules-demo) or the source code [here](https://github.com/mikewesthad/phaser-3-tilemap-blog-posts/blob/master/examples/post-2/02-modules-demo)._
 
 Breaking down every line of code here is a bit out of the scope of the post, but let's look at a trimmed down version of player.js before moving on:
 
@@ -193,7 +193,7 @@ export default class Player {
 
 This sets up an important pattern by letting us separate the bulk of the player logic from platformer-scene.js. The scene just has to worry about how the player interacts with the rest of the world. As long as we call `update` and `destroy` at the right times, we could even bring this player file over to a completely separate project and it would work fine.
 
-It's also worth noting that this class sets up a pattern that we'll use again in the future. player.js exports a class that doesn't extend `Phaser.GameObjects.Sprite`. Instead, it embraces a more flexible [component pattern](http://gameprogrammingpatterns.com/component.html) where `Player` has a sprite rather than `Player` is a sprite.
+It's also worth noting that this class sets up a pattern that we'll use again in the future. player.js exports a class that doesn't extend `Phaser.GameObjects.Sprite`. Instead, it embraces a more flexible [component pattern](http://gameprogrammingpatterns.com/component.html) where `Player` has a sprite property rather than `Player` itself being a sprite.
 
 There's a lot more that we could do to make this code more modular (e.g. taking advantage of Phaser's event system, see [samme/phaser-plugin-update](https://github.com/samme/phaser-plugin-update), or separating the movement logic from the animation), but this is modular enough without introducing too many new concepts.
 
@@ -208,10 +208,10 @@ There are two important tilemap-specific extensions to the code from the previou
 1.  Painting colliding tiles
 2.  Adding spikes with proper hitboxes and logic
 
-First up, painting tiles. This is similar to previous code, but with the added wrinkle is that we want
+First up, painting tiles. This is similar to previous code, but with the added wrinkle that we want
 the tiles that we add to be colliding, so that the player can land on them. `putTileAtWorldXY` will
 return the [`Tile`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.Tile) object that we
-just manipulated. `Tile` objects are pretty simple. They hold the index and position of the tile
+is being manipulated. `Tile` objects are pretty simple. They hold the index and position of the tile
 that they render, along with some physics information. We can use `tile.setCollision` to enable collisions:
 
 ```js
@@ -236,7 +236,7 @@ One of the arcade physics (AP) limits in Phaser is that the physics body of coll
 
 There are a few ways to solve this. We could switch to using Matter.js for physics, but that's overkill. Instead, let's convert the spikes from tiles into sprites, which we can give custom sized physics bodies. (...which also gives us a convenient excuse to look deeper at the tilemap API!)
 
-Tilemaps have methods for turning Tiled objects and tiles into sprites: [`createFromObjects`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.Tilemap.html#createFromObjects__anchor) & [`createFromTiles`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.Tilemap.html#createFromTiles__anchor) respectively. You can these to visually lay out where your game entities should be - e.g. place objects in the location of enemies in your level and then turn them into proper sprites when your game boots up. Here's a diagrammed [Phaser example](https://labs.phaser.io/edit.html?src=src\game%20objects\tilemap\static\create%20from%20objects.js&v=3.9.0) that uses this strategy to place animated coins from Phaser:
+Tilemaps have methods for turning Tiled objects and tiles into sprites: [`createFromObjects`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.Tilemap.html#createFromObjects__anchor) & [`createFromTiles`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.Tilemap.html#createFromTiles__anchor) respectively. You can these to visually lay out where your game entities should be - e.g. place Tiled objects where enemies should be in your level and then turn them into proper sprites when your game boots up. Here's a diagrammed [Phaser example](https://labs.phaser.io/edit.html?src=src\game%20objects\tilemap\static\create%20from%20objects.js&v=3.9.0) that uses this strategy to replace Tiled objects with animated coin sprites:
 
 ![](./images/object-to-sprite/object-to-sprite-annotated.gif)
 
@@ -265,7 +265,7 @@ this.groundLayer.forEachTile(tile => {
     else if (spike.angle === -90) spike.body.setSize(6, 32).setOffset(26, 0);
     else if (spike.angle === 90) spike.body.setSize(6, 32).setOffset(0, 0);
 
-    // And lastly, remove the spike tile from the laye
+    // And lastly, remove the spike tile from the layer
     this.groundLayer.removeTileAt(tile.x, tile.y);
   }
 });
@@ -285,7 +285,7 @@ Now for everything in context, where we reset the game when the player touches t
 
 _↳ Check out the [CodeSandbox](https://codesandbox.io/s/mo2j4nvkxy?hidenavigation=1&module=%2Fjs%2Findex.js&moduleview=1), [live example](https://www.mikewesthad.com/phaser-3-tilemap-blog-posts/post-2/03-drawing-platformer) or the source code [here](https://github.com/mikewesthad/phaser-3-tilemap-blog-posts/blob/master/examples/post-2/03-drawing-platformer)._
 
-## Coming up Next
+## Up Next
 
 Stay tuned. In the next two posts in the series, we'll create a procedural dungeon with dynamic tilemaps and integrate [Matter.js](http://brm.io/matter-js/) to create a wall-jumping platformer.
 
