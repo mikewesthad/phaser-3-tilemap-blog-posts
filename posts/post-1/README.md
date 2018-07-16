@@ -8,7 +8,7 @@ This is a series of blog posts about creating modular worlds with tilemaps in th
 
 ![](./images/final-demo/final-example-demo-optimized.gif)
 
-_↳ Final example that we'll create_
+_↳ Final example that we'll create - graphics from [Tuxemon](https://github.com/Tuxemon/Tuxemon)._
 
 The [next post](https://medium.com/@michaelwesthadley/modular-game-worlds-in-phaser-3-tilemaps-2-dynamic-platformer-3d68e73d494a) covers how to create a dynamic platformer and the posts after that will cover procedurally generated dungeons and wall-jumping maps with [Matter.js](http://brm.io/matter-js/).
 
