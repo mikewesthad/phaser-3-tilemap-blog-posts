@@ -1,4 +1,4 @@
-# Modular Game Worlds in Phaser 3 (Tilemaps #1)
+# Modular Game Worlds in Phaser 3 (Tilemaps #1) — Static Maps
 
 Author: [Mike Hadley](https://www.mikewesthad.com/)
 
