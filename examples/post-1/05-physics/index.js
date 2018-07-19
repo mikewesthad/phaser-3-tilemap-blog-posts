@@ -48,9 +48,9 @@ function create() {
   const tileset = map.addTilesetImage("tuxmon-sample-32px-extruded", "tiles");
 
   // Parameters: layer name (or index) from Tiled, tileset, x, y
-  const belowLayer = map.createDynamicLayer("Below Player", tileset, 0, 0);
-  const worldLayer = map.createDynamicLayer("World", tileset, 0, 0);
-  const aboveLayer = map.createDynamicLayer("Above Player", tileset, 0, 0);
+  const belowLayer = map.createStaticLayer("Below Player", tileset, 0, 0);
+  const worldLayer = map.createStaticLayer("World", tileset, 0, 0);
+  const aboveLayer = map.createStaticLayer("Above Player", tileset, 0, 0);
 
   worldLayer.setCollisionByProperty({ collides: true });
 
