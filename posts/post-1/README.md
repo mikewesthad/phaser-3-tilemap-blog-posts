@@ -206,6 +206,8 @@ _↳ Embedding a tileset AFTER creating it_
 
 _↳ Changing the tilemap format_
 
+(Note: one recent release of Tiled 1.1.6 changed the map export format in a way that breaks Phaser's import. It was changed back in the 7/17/18 release, so if you are having trouble with your map, make sure to grab the latest!)
+
 ## Loading a Tiled Map
 
 Using the `tilemapTiledJSON` loader method, we can load up and display a tilemap that we've exported from Tiled:
