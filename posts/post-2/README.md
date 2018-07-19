@@ -33,7 +33,7 @@ In this post, we'll dive into two new pieces of the API:
 - [`DynamicTilemapLayer`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.DynamicTilemapLayer.html)
 - [`Tile`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.Tile.html)
 
-A `Tilemap` isn't a display object. It holds data about the map and can contain one or more layers, which are the display objects that actually render `Tile` objects. They come in two flavors: `StaticTilemapLayer` & `DynamicTilemapLayer`. A `StaticTilemapLayer` is fast, but its tiles can't be modified. A `DynamicTilemapLayer` trades some speed for the flexibility and power of manipulating individual tiles.
+A `Tilemap` isn't a display object. It holds data about the map and can contain one or more layers, which are the display objects that actually render `Tile` objects. They come in two flavors: `StaticTilemapLayer` & `DynamicTilemapLayer`. A `StaticTilemapLayer` is fast, but the tiles in that layer can't be modified and can't render per-tile effects like flipping or tint. A `DynamicTilemapLayer` trades some speed for the flexibility and power of manipulating individual tiles.
 
 Static and dynamic layers share much of the same API. They both have methods for checking whether a tile exists (e.g. `hasTileAt`). They both have methods for getting access to tiles in the map (`getTileAt`,`findTile`, `forEachTile`, etc.). Dynamic layers have a set of additional methods for adding, removing, randomizing, etc. tiles within the layer (e.g. `putTileAt`, `removeTileAt`, `randomize`, etc.).
 
