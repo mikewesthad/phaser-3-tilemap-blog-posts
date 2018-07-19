@@ -112,17 +112,17 @@ function preload() {
 function create() {
   // Load a map from a 2D array of tile indices
   const level = [
-    [  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0 ],
-    [  0,   1,   2,   3,   0,   0,   0,   1,   2,   3,   0 ],
-    [  0,   5,   6,   7,   0,   0,   0,   5,   6,   7,   0 ],
-    [  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0 ],
-    [  0,   0,   0,  14,  13,  14,   0,   0,   0,   0,   0 ],
-    [  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0 ],
-    [  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0 ],
-    [  0,   0,  14,  14,  14,  14,  14,   0,   0,   0,  15 ],
-    [  0,   0,   0,   0,   0,   0,   0,   0,   0,  15,  15 ],
-    [ 35,  36,  37,   0,   0,   0,   0,   0,  15,  15,  15 ],
-    [ 39,  39,  39,  39,  39,  39,  39,  39,  39,  39,  39 ]
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 1, 2, 3, 0, 0, 0, 1, 2, 3, 0],
+    [0, 5, 6, 7, 0, 0, 0, 5, 6, 7, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 14, 13, 14, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 14, 14, 14, 14, 14, 0, 0, 0, 15],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 15],
+    [35, 36, 37, 0, 0, 0, 0, 0, 15, 15, 15],
+    [39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39]
   ];
 
   // When loading from an array, make sure to specify the tileWidth and tileHeight
@@ -148,7 +148,7 @@ _↳ Check out the [codepen](https://codepen.io/mikewesthad/pen/VdOLge), [live e
 
 Breaking down that code, we've got three main parts: a [`Tilemap`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.Tilemap.html), a [`Tileset`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.Tileset.html) and a [`StaticTilemapLayer`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.StaticTilemapLayer.html). You create a `Tilemap` through [`this.make.tilemap`](https://photonstorm.github.io/phaser3-docs/Phaser.GameObjects.GameObjectCreator.html#tilemap) (or [`this.add.tilemap`](https://photonstorm.github.io/phaser3-docs/Phaser.GameObjects.GameObjectFactory.html#tilemap)). This isn't a display object, rather, it holds data about the map and allows you to add tilesets & tilemap layers.
 
-A map can have one or more layers, which are the display objects that actually render tiles from a `Tileset`. They come in two flavors: `StaticTilemapLayer` & `DynamicTilemapLayer`. A `StaticTilemapLayer` is super fast, but the tiles in that layer can't be modified, and you can't apply per-tile effects like flipping or tint. A `DynamicTilemapLayer` trades some speed for the flexibility and power of manipulating individual tiles. For this post, we'll stick to static layers, but next time, we'll dive into dynamic layers.
+A map can have one or more layers, which are the display objects that actually render tiles from a `Tileset`. They come in two flavors: `StaticTilemapLayer` & `DynamicTilemapLayer`. A `StaticTilemapLayer` is super fast, but the tiles in that layer can't be modified and can't render per-tile effects like flipping or tint. A `DynamicTilemapLayer` trades some speed for the flexibility and power of manipulating individual tiles. For this post, we'll stick to static layers, but next time, we'll dive into dynamic layers.
 
 ## Loading from a File: CSV
 
