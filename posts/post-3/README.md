@@ -29,6 +29,61 @@ Alright, Let's get into it!
 
 ## Outline
 
+This one of the contributions to phaser labs that I had the most fun making, and it conveniently covers a lot of what we need :)
+
+1.  Simple Phaser template version
+2.  More complex version broken into better programming practices
+
+## Dungeon
+
+We're going to get a head start on generating a world by using a dungeon generator library, [mikewesthad/dungeon](https://github.com/mikewesthad/dungeon). It's my updated fork of [nickgravelyn/dungeon](https://github.com/nickgravelyn/dungeon) with a few new features that I wanted for the demo. It's a pretty simple, brute force dungeon generator. Using a few user supplied parameters, it progressively builds a dungeon room-by-room starting at the center of the map.
+
+You can load the library via a [CDN](https://www.jsdelivr.com/package/npm/@mikewesthad/dungeon), by downloading the script, or through npm ([install instructions](https://github.com/mikewesthad/dungeon#installation)). Once you've got it loaded, you'll have a `Dungeon` class that you can use like this:
+
+```js
+const dungeon = new Dungeon({
+  // The dungeon's grid size
+  width: 40,
+  height: 40,
+  rooms: {
+    // Random range for the width of a room
+    width: {
+      min: 5,
+      max: 10
+    },
+    // Random range for the height of a room
+    height: {
+      min: 8,
+      max: 20
+    },
+    // Cap the area of a room - e.g. this will prevent large rooms like 10 x 20
+    maxArea: 150,
+    // Max rooms to place
+    maxRooms: 10
+  }
+});
+```
+
+And we can visualize the random dungeon by generating some HTML via `dungeon.drawToHtml` which converts the dungeon to a `<pre><table> ... </table></pre>` HTML element. We just need to specify which characters we want to use for each type of "tile" in the dungeon:
+
+```js
+const html = dungeon.drawToHtml({
+  empty: " ",
+  wall: "📦",
+  floor: "☁️",
+  door: "🚪"
+});
+
+// Append the element to an existing element on the page
+document.getElementById("centered-container").appendChild(html);
+```
+
+And voilà, emoji-goodness:
+
+![](images/emoji-dungeon.gif)
+
+Check out the example:
+
 ## Up Next
 
 Stay tuned.
