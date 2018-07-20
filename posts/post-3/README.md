@@ -27,13 +27,6 @@ This post will make the most sense if you have some experience with JavaScript (
 
 Alright, Let's get into it!
 
-## Outline
-
-This one of the contributions to phaser labs that I had the most fun making, and it conveniently covers a lot of what we need :)
-
-1.  Simple Phaser template version
-2.  More complex version broken into better programming practices
-
 ## Dungeon
 
 We're going to get a head start on generating a world by using a dungeon generator library, [mikewesthad/dungeon](https://github.com/mikewesthad/dungeon). It's my updated fork of [nickgravelyn/dungeon](https://github.com/nickgravelyn/dungeon) with a few new features that I wanted for the demo. It's a pretty simple, brute force dungeon generator. Using a few user supplied parameters, it progressively builds a dungeon room-by-room starting at the center of the map.
