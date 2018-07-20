@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Dungeon HTML Demo</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Space+Mono:400,700" rel="stylesheet">
+  <style>
+    html,
+    body,
+    pre {
+      margin: 0;
+      padding: 0;
+    }
+
+    #centered-container {
+      min-width: 100vw;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .dungeon {
+      border-radius: 10px;
+      font-family: 'Space Mono', monospace;
+      padding: 20px;
+      margin: 20px;
+      border: 10px solid #f2f2f2;
+      font-size: 15px;
+      line-height: 0.7;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="centered-container"></div>
+
+  <script src=" //cdn.jsdelivr.net/npm/@mikewesthad/dungeon@1.2.1"></script>
+  <script src="./js/index.js" type="module"></script>
+</body>
+
+</html>
