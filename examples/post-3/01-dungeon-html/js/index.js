@@ -22,7 +22,7 @@ const dungeon = new Dungeon({
 const html = dungeon.drawToHtml({
   empty: " ",
   wall: "📦",
-  floor: "🧦",
+  floor: "☁️",
   door: "🚪",
   floorAttributes: { style: "opacity: 0.25" },
   containerAttributes: { class: "dungeon", style: "line-height: 1" }
