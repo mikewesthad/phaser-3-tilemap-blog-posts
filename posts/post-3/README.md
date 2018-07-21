@@ -29,9 +29,9 @@ Alright, Let's get into it!
 
 ## Dungeon
 
-We're going to get a head start on generating a world by using a dungeon generator library, [mikewesthad/dungeon](https://github.com/mikewesthad/dungeon). It's my updated fork of [nickgravelyn/dungeon](https://github.com/nickgravelyn/dungeon) with a few new features that I wanted for the demo. It's a pretty simple, brute force dungeon generator. Using a few user supplied parameters, it progressively builds a dungeon room-by-room starting at the center of the map.
+We're going to get a head start on generating a world by using a dungeon generator library, [mikewesthad/dungeon](https://github.com/mikewesthad/dungeon). It's my updated fork of [nickgravelyn/dungeon](https://github.com/nickgravelyn/dungeon) that has a few new features, along with being published on npm. It's a pretty simple, brute force dungeon generator. You give it some configuration info, and it randomly builds a dungeon room-by-room starting at the center of the map.
 
-You can load the library via a [CDN](https://www.jsdelivr.com/package/npm/@mikewesthad/dungeon), by downloading the script, or through npm ([install instructions](https://github.com/mikewesthad/dungeon#installation)). Once you've got it loaded, you'll have a `Dungeon` class that you can use like this:
+You can load the library via a [CDN](https://www.jsdelivr.com/package/npm/@mikewesthad/dungeon), by downloading the script, or through npm ([install instructions](https://github.com/mikewesthad/dungeon#installation)). Once you've got the library loaded, you'll have a `Dungeon` class that you can use like this:
 
 ```js
 const dungeon = new Dungeon({
@@ -39,12 +39,12 @@ const dungeon = new Dungeon({
   width: 40,
   height: 40,
   rooms: {
-    // Random range for the width of a room
+    // Random range for the width of a room (grid units)
     width: {
       min: 5,
       max: 10
     },
-    // Random range for the height of a room
+    // Random range for the height of a room (grid units)
     height: {
       min: 8,
       max: 20
