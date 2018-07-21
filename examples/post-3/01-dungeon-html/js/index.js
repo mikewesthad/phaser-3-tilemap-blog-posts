@@ -4,12 +4,12 @@ const dungeon = new Dungeon({
   width: 40,
   height: 40,
   rooms: {
-    // Random range for the width of a room
+    // Random range for the width of a room (grid units)
     width: {
       min: 5,
       max: 10
     },
-    // Random range for the height of a room
+    // Random range for the height of a room (grid units)
     height: {
       min: 8,
       max: 20
