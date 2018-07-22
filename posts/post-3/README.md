@@ -77,6 +77,92 @@ And voilà, emoji-goodness:
 
 Check out the example:
 
+**Insert CodeSandbox**
+
+## Phaser & Dungeon
+
+Now we can introduce Phaser and put a player inside of these random worlds. The [previous post](https://medium.com/@michaelwesthadley/modular-game-worlds-in-phaser-3-tilemaps-2-dynamic-platformer-3d68e73d494a) in this series introduced the idea of using modules to better structure our code. Since modules aren't common in the Phaser examples, I'll break down the structure again here to help ease the transition.
+
+Remember, if you're following along and not using CodeSandbox, you can get access to modules in your code by using `<script src="./js/index.js" type="module"></script>` in any modern browser. You could, of course, also reach for Webpack, Parcel or any of the other JavaScript build tools. Check out [phaser3-project-template](https://github.com/photonstorm/phaser3-project-template) for a webpack starting template.
+
+Our directory structure looks like this:
+
+**Insert image**
+
+index.js is the entry point for our code. This file kicks off things off by creating the Phaser game with arcade physics enabled and loading our custom scene:
+
+```js
+import DungeonScene from "./dungeon-scene.js";
+
+const config = {
+  type: Phaser.AUTO,
+  width: 800,
+  height: 600,
+  backgroundColor: "#000",
+  parent: "game-container",
+  pixelArt: true,
+  scene: DungeonScene,
+  physics: {
+    default: "arcade",
+    arcade: {
+      gravity: { y: 0 }
+    }
+  }
+};
+
+const game = new Phaser.Game(config);
+```
+
+dungeon-scene.js is a module that exports a single `class` called `DungeonScene`. It extends [`Phaser.Scene`](https://photonstorm.github.io/phaser3-docs/Phaser.Scene.html), which means it has access to a bunch of Phaser functionality via properties (e.g. `this.add` for accessing the game factory). The scene loads up some assets in `preload`, creates a dungeon and player in `create` and updates the player in `update`.
+
+Once we've created a `dungeon` like we did in the last example, we can set up a tilemap with a blank layer using [`createBlankDynamicLayer`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.Tilemap.html#createBlankDynamicLayer__anchor):
+
+```js
+// Create a blank map
+const map = this.make.tilemap({
+  tileWidth: 48,
+  tileHeight: 48,
+  width: dungeon.width,
+  height: dungeon.height
+});
+
+// Load up a tileset, in this case, the tileset has 1px margin & 2px padding (last two arguments)
+const tileset = map.addTilesetImage("tiles", null, 48, 48, 1, 2);
+
+// Create an empty layer and give it the name "Layer 1"
+const layer = map.createBlankDynamicLayer("Layer 1", tileset);
+```
+
+`Dungeon` comes with an easy way to get a 2D array of tiles via `dungeon.getMappedTiles`, and Phaser has an easy way to insert an array of tiles into a layer via [`putTilesAt`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.DynamicTilemapLayer.html#putTilesAt__anchor):
+
+```js
+// Turn the dungeon into a 2D array of tiles where each of the four types of tiles is mapped to a
+// tile index within our tileset. Note: using -1 for empty tiles means they won't render.
+const mappedTiles = dungeon.getMappedTiles({ empty: -1, floor: 6, door: 6, wall: 20 });
+
+// Drop a 2D array into the map at (0, 0)
+layer.putTilesAt(mappedTiles, 0, 0);
+```
+
+And if we put this all together with the player code from the first post in the series, we end up with:
+
+**Insert CodeSandbox**
+
+**Do I need to break down player.js again?**
+
+## Other Bits to Incorperate Elsewhere
+
+```js
+// Place a row of tiles
+layer.putTilesAt([1, 1, 1], 0, 0);
+
+// Place a column of tiles
+layer.putTilesAt([[1], [1], [1]], 0, 0);
+
+// Place a 2D grid of tiles
+layer.putTilesAt([[1, 1, 1], [1, 0, 1], [1, 0, 1]], 0, 0);
+```
+
 ## Up Next
 
 Stay tuned.
