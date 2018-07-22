@@ -150,7 +150,35 @@ And if we put this all together with the player code from the first post in the 
 
 **Do I need to break down player.js again?**
 
-## Other Bits to Incorperate Elsewhere
+## A Closer Look at the Dungeon Tileset
+
+Here's the tileset that we're using:
+
+![](./images/buch-tileset-48px.png)
+
+_↳ Unextruded image, [dungeon tileset](https://opengameart.org/content/top-down-dungeon-tileset) by Michele "Buch" Bucelli (tileset artist) & Abram Connelly (tileset sponsor)_
+
+And we want to use it to map tiles to our generated dungeons, which look like:
+
+![](./images/small-emoji-dungeon.png)
+
+We'll need to choose tiles to use for the floor, walls and doors. Because this tileset has perspective and directional lighting, we are also going to need to use different tiles for the corners and the north, west, south and east walls.
+
+Here are the specific tiles that we'll be using to create our rooms:
+
+![](./images/labeled-tileset.png)
+
+Before jumping into code, I'll usually play around with the tileset in [Tiled](https://www.mapeditor.org/) to get a feel for the tiles and how they fit together to create a room. Having a good plan in place is essential. Here's a short timelapse of me planning out how two rooms intersect:
+
+![](./images/tiled-room-demo/tiled-room-demo-optimized.gif)
+
+_↳ If you want to follow that process more closely, here's a slower [video version](https://vimeo.com/281170034/f62b5d0dfe)._
+
+One important thing to note is that I'm using two layers here. We'll want at least two layers here - one for the ground & walls and one for the chests/pots/etc. - so that we can use the tiles that have transparent backgrounds.
+
+![](./images/comparing-layers.png)
+
+## Other Bits to Incorporate Elsewhere
 
 ```js
 // Place a row of tiles
