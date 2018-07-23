@@ -69,7 +69,7 @@ export default class DungeonScene extends Phaser.Scene {
 
       // Dungeons have rooms that are connected with doors. Each door has an x & y relative to the
       // room's location. Each direction has a different door to tile mapping.
-      var doors = room.getDoorLocations(); // → Returns an array objects like this {x, y}
+      var doors = room.getDoorLocations(); // → Returns an array of {x, y} objects
       for (var i = 0; i < doors.length; i++) {
         if (doors[i].y === 0) {
           this.groundLayer.putTilesAt(TILES.DOOR.TOP, x + doors[i].x - 1, y + doors[i].y);

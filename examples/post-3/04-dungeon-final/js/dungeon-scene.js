@@ -81,8 +81,8 @@ export default class DungeonScene extends Phaser.Scene {
       this.groundLayer.weightedRandomize(right, top + 1, 1, height - 2, TILES.WALL.RIGHT);
 
       // Dungeons have rooms that are connected with doors. Each door has an x & y relative to the
-      // room's location
-      var doors = room.getDoorLocations();
+      // room's location. Each direction has a different door to tile mapping.
+      var doors = room.getDoorLocations(); // → Returns an array of {x, y} objects
       for (var i = 0; i < doors.length; i++) {
         if (doors[i].y === 0) {
           this.groundLayer.putTilesAt(TILES.DOOR.TOP, x + doors[i].x - 1, y + doors[i].y);

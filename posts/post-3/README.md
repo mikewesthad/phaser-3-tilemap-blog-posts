@@ -35,7 +35,7 @@ We'll start by getting comfortable with a dungeon generator library using vanill
 
 We're going to get a head start on generating worlds by using a dungeon generator library, [mikewesthad/dungeon](https://github.com/mikewesthad/dungeon). It's my updated fork of [nickgravelyn/dungeon](https://github.com/nickgravelyn/dungeon) that has a few new features, along with being published on npm. It's a pretty simple, brute force dungeon generator. You give it some configuration info, and it randomly builds a dungeon room-by-room starting at the center of the map.
 
-You can load the library via a [CDN](https://www.jsdelivr.com/package/npm/@mikewesthad/dungeon), by downloading the script, or through npm ([install instructions](https://github.com/mikewesthad/dungeon#installation)). Once you've got the library loaded, you'll have a `Dungeon` class that you can use to construct a dungeon instance like this:
+You can load the library via a CDN, by downloading the script, or through npm ([install instructions](https://github.com/mikewesthad/dungeon#installation)). Once you've got the library loaded, you'll have a `Dungeon` class that you can use to construct a dungeon instance like this:
 
 ```js
 const dungeon = new Dungeon({
@@ -127,7 +127,7 @@ const game = new Phaser.Game(config);
 
 <!-- https://gist.github.com/mikewesthad/193ed96b8dc9ffe3a954f0561ede0ddc -->
 
-"dungeon-scene.js" is a module that exports a single `class` called `DungeonScene`. It extends [`Phaser.Scene`](https://photonstorm.github.io/phaser3-docs/Phaser.Scene.html), which means it has access to a bunch of Phaser functionality via properties (e.g. `this.add` for accessing the game factory). The scene loads up some assets in `preload`, creates the dungeon and player in `create` and updates the player each frame inside of `update`.
+"dungeon-scene.js" is a module that exports a single `class` called `DungeonScene`. It extends [`Phaser.Scene`](https://photonstorm.github.io/phaser3-docs/Phaser.Scene.html), which means it has access to a bunch of Phaser functionality via properties (e.g. `this.add` for accessing the game object factory). The scene loads up some assets in `preload`, creates the dungeon and player in `create` and updates the player each frame inside of `update`.
 
 Once we've created a `dungeon` like we did in the last example, we can set up a tilemap with a blank layer using [`createBlankDynamicLayer`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.Tilemap.html#createBlankDynamicLayer__anchor):
 
@@ -172,13 +172,15 @@ layer.putTilesAt(mappedTiles, 0, 0);
 
 <!-- https://gist.github.com/mikewesthad/54b3482ac8e97894b27a987892542cc7 -->
 
-And if we put this all together with a player module based on the code from the first post in the series, we end up with:
+And if we put this all together with a player module based on the code from the [first post](https://medium.com/@michaelwesthadley/modular-game-worlds-in-phaser-3-tilemaps-1-958fc7e6bbd6) in the series, we end up with:
 
 [![Edit Phaser Tilemap Post 3: 02-dungeon-simple-mapping](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/52v0nz348p?hidenavigation=1&module=%2Fjs%2Findex.js&moduleview=1)
 
 <!-- Embed link for medium: https://codesandbox.io/s/52v0nz348p?hidenavigation=1&module=%2Fjs%2Findex.js&moduleview=1 -->
 
 _↳ Check out the [CodeSandbox](https://codesandbox.io/s/52v0nz348p?hidenavigation=1&module=%2Fjs%2Findex.js&moduleview=1), [live example](https://www.mikewesthad.com/phaser-3-tilemap-blog-posts/post-3/02-dungeon-simple-mapping) or the source code [here](https://github.com/mikewesthad/phaser-3-tilemap-blog-posts/blob/master/examples/post-3/02-dungeon-simple-mapping)._
+
+With the interactive examples in this post, you'll want to click on the "Edit on CodeSandbox" button and check out the code in full screen where you can see all the files easily.
 
 ## A Closer Look at the Dungeon Tileset
 
@@ -393,7 +395,7 @@ export default class DungeonScene extends Phaser.Scene {
 
       // Dungeons have rooms that are connected with doors. Each door has an x & y relative to the
       // room's location. Each direction has a different door to tile mapping.
-      var doors = room.getDoorLocations(); // → Returns an array objects like this {x, y}
+      var doors = room.getDoorLocations(); // → Returns an array of {x, y} objects
       for (var i = 0; i < doors.length; i++) {
         if (doors[i].y === 0) {
           this.groundLayer.putTilesAt(TILES.DOOR.TOP, x + doors[i].x - 1, y + doors[i].y);
@@ -437,7 +439,7 @@ _↳ Check out the [CodeSandbox](https://codesandbox.io/s/l54pq7lq7z?hidenavigat
 
 ## Stuff & Visibility
 
-This is starting to feel more complete, so let's kick it up by randomly place some stuff in the rooms and then adding a visibility algorithm to create a fog of war effect:
+This is starting to feel more complete, so let's kick it up by randomly placing some stuff in the rooms and then adding a visibility algorithm to create a fog of war effect:
 
 ![](./images/final-demo-optimized.gif)
 
@@ -503,7 +505,7 @@ Then once you activate collision on the new `stuffLayer`, you'll end up with:
 
 And what would a rougelike dungeon be like without some sort of lighting effect? We're going to go with something easy to show off the dynamic layer API, but you could implement something fun like a [ray casting approach](https://www.redblobgames.com/articles/visibility/) on your own.
 
-Unlike static map layers, dynamic layers can have per tile effects like tint and alpha. We're going to take advantage of that by create a third tilemap layer which will just have blank, black tiles everywhere. They will start out completely opaque, but when a player enters a room, we'll make the tiles "above" the room transparent so that the player can see. When they leave a room, we'll "fog" the old room by making the black overlay semi-opaque.
+Unlike static map layers, dynamic layers can have per tile effects like tint and alpha. We're going to take advantage of that by create a third tilemap layer which will just have blank, black tiles everywhere. They will start out completely opaque, but when a player enters a room, we'll make the tiles "above" the room transparent so that the player can see. When they leave a room, we'll "fog" the old room by making the black overlay of tiles semi-opaque.
 
 Inside of our scene's `create`, we'll start by creating a new tilemap layer filled with black tiles and handing it off to a yet-to-be-created new module:
 

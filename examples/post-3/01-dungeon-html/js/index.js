@@ -1,3 +1,7 @@
+/**
+ * Author: Michael Hadley, mikewesthad.com
+ */
+
 // "Dungeon" comes from https://github.com/mikewesthad/dungeon
 const dungeon = new Dungeon({
   // The dungeon's grid size
@@ -46,11 +50,3 @@ document.getElementById("centered-container").appendChild(html);
 //   containerAttributes: { class: "dungeon" }
 // });
 // document.getElementById("dungeon-container").appendChild(alternateHtml);
-
-// You can also manually map the tiles to a 2D array of numbers or strings
-const mappedTiles = dungeon.getMappedTiles({
-  empty: 0,
-  floor: 1,
-  door: 2,
-  wall: 3
-});
