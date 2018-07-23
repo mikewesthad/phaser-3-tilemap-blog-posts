@@ -1,3 +1,8 @@
+/**
+ * A class that wraps up our top down player logic. It creates, animates and moves a sprite in
+ * response to WASD keys. Call its update method from the scene's update and call its destroy
+ * method when you're done with the player.
+ */
 export default class Player {
   constructor(scene, x, y) {
     this.scene = scene;
@@ -18,12 +23,16 @@ export default class Player {
 
     this.sprite = scene.physics.add
       .sprite(x, y, "characters", 0)
-      .setSize(28, 38)
-      .setOffset(20, 24);
+      .setSize(22, 33)
+      .setOffset(23, 27);
 
     this.sprite.anims.play("player-walk-back");
 
     this.keys = scene.input.keyboard.createCursorKeys();
+  }
+
+  freeze() {
+    this.sprite.body.moves = false;
   }
 
   update() {
@@ -54,7 +63,7 @@ export default class Player {
     // Normalize and scale the velocity so that sprite can't move faster along a diagonal
     sprite.body.velocity.normalize().scale(speed);
 
-    // Update the animation last and give left/right/down animations precedence over up animations
+    // Update the animation last and give left/right animations precedence over up/down animations
     if (keys.left.isDown || keys.right.isDown || keys.down.isDown) {
       sprite.anims.play("player-walk", true);
     } else if (keys.up.isDown) {
@@ -62,7 +71,7 @@ export default class Player {
     } else {
       sprite.anims.stop();
 
-      // If we were moving & now we're not, then pick a single idle frame to use
+      // If we were moving, pick and idle frame to use
       if (prevVelocity.y < 0) sprite.setTexture("characters", 65);
       else sprite.setTexture("characters", 46);
     }

@@ -19,16 +19,15 @@ export default class DungeonScene extends Phaser.Scene {
   }
 
   create() {
-    // Generate a random world with rooms have an odd width & height. This ensures that the rooms
-    // will have a center tile where we can place an item or stairs.
+    // Generate a random world
     const dungeon = new Dungeon({
       width: 50,
       height: 50,
       rooms: {
-        width: { min: 7, max: 15, onlyOdd: true },
-        height: { min: 7, max: 15, onlyOdd: true }
-      },
-      maxRooms: 10
+        width: { min: 7, max: 15 },
+        height: { min: 7, max: 15 },
+        maxRooms: 50
+      }
     });
 
     // Create a blank tilemap with dimensions matching the dungeon
@@ -61,7 +60,7 @@ export default class DungeonScene extends Phaser.Scene {
 
     // Help text that has a "fixed" position on the screen
     this.add
-      .text(16, 16, "Arrow keys to scroll", {
+      .text(16, 16, "Arrow keys to move", {
         font: "18px monospace",
         fill: "#000000",
         padding: { x: 20, y: 10 },
