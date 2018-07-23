@@ -26,7 +26,7 @@ export default class DungeonScene extends Phaser.Scene {
       rooms: {
         width: { min: 7, max: 15 },
         height: { min: 7, max: 15 },
-        maxRooms: 50
+        maxRooms: 12
       }
     });
 

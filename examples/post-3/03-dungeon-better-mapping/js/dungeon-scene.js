@@ -21,9 +21,9 @@ export default class DungeonScene extends Phaser.Scene {
 
   create() {
     // Generate a random world with a few extra options:
-    //  - Rooms should only have odd number dimensions so that they have a center tile.
-    //  - Doors should be at least 2 tiles away from corners, so that we can place a corner tile on
-    //    either side of the door location
+    //  - Rooms should only have odd dimensions so that they have a center tile.
+    //  - Doors should be at least 2 tiles away from corners, to leave enough room for the tiles
+    //    that we're going to put on either side of the door opening.
     this.dungeon = new Dungeon({
       width: 50,
       height: 50,

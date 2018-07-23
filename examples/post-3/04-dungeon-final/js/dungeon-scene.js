@@ -99,7 +99,7 @@ export default class DungeonScene extends Phaser.Scene {
     // Separate out the rooms into:
     //  - The starting room (index = 0)
     //  - A random room to be designated as the end room (with stairs and nothing else)
-    //  - 90% of the remaining rooms to place random stuff into (leaving 10% empty)
+    //  - An array of 90% of the remaining rooms, for placing random stuff (leaving 10% empty)
     const rooms = this.dungeon.rooms.slice();
     const startRoom = rooms.shift();
     const endRoom = Phaser.Utils.Array.RemoveRandomElement(rooms);
