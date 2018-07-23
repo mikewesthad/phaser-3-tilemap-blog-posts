@@ -289,7 +289,9 @@ _↳ Check out the [CodeSandbox](https://codesandbox.io/s/mo2j4nvkxy?hidenavigat
 
 Stay tuned. In the next two posts in the series, we'll create a procedural dungeon with dynamic tilemaps and integrate [Matter.js](http://brm.io/matter-js/) to create a wall-jumping platformer.
 
-Let me know if there's something you'd like to see in future posts!
+![](../post-3/images/final-demo-optimized.gif)
+
+Thanks for reading, and if there's something you'd like to see in future posts, let me know!
 
 ## About Me
 
