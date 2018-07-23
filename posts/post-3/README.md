@@ -8,6 +8,8 @@ This is the third post in a series of blog posts about creating modular worlds w
 
 ![](./images/final-demo-optimized.gif)
 
+_↳ Tileset and Character by [Michele "Buch" Bucelli](https://opengameart.org/users/buch)_
+
 If you haven't checked out the previous posts in the series, here are the links:
 
 1.  [Static tilemaps & a Pokémon-style world](https://medium.com/@michaelwesthadley/modular-game-worlds-in-phaser-3-tilemaps-1-958fc7e6bbd6)
@@ -59,6 +61,8 @@ const dungeon = new Dungeon({
 });
 ```
 
+<!-- https://gist.github.com/mikewesthad/42a8f2f9d8d95cb6f35d83f84fd6059a -->
+
 And we can visualize the random dungeon by generating some HTML via `dungeon.drawToHtml` which converts the dungeon to a `<pre><table> ... </table></pre>` HTML element. We just need to specify which characters we want to use for each type of "tile" in the dungeon:
 
 ```js
@@ -72,6 +76,8 @@ const html = dungeon.drawToHtml({
 // Append the element to an existing element on the page
 document.getElementById("centered-container").appendChild(html);
 ```
+
+<!-- https://gist.github.com/mikewesthad/91b1ef1b35f477b0fe560c3f0fba22e8 -->
 
 And voilà, emoji-goodness:
 
@@ -119,6 +125,8 @@ const config = {
 const game = new Phaser.Game(config);
 ```
 
+<!-- https://gist.github.com/mikewesthad/193ed96b8dc9ffe3a954f0561ede0ddc -->
+
 "dungeon-scene.js" is a module that exports a single `class` called `DungeonScene`. It extends [`Phaser.Scene`](https://photonstorm.github.io/phaser3-docs/Phaser.Scene.html), which means it has access to a bunch of Phaser functionality via properties (e.g. `this.add` for accessing the game factory). The scene loads up some assets in `preload`, creates the dungeon and player in `create` and updates the player each frame inside of `update`.
 
 Once we've created a `dungeon` like we did in the last example, we can set up a tilemap with a blank layer using [`createBlankDynamicLayer`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.Tilemap.html#createBlankDynamicLayer__anchor):
@@ -149,6 +157,8 @@ const tileset = map.addTilesetImage("tiles", null, 48, 48, 1, 2);
 const layer = map.createBlankDynamicLayer("Layer 1", tileset);
 ```
 
+<!-- https://gist.github.com/mikewesthad/a66d44f433a38ea5a86fd72cd61f3a3a -->
+
 `Dungeon` comes with an easy way to get a 2D array of tiles via `dungeon.getMappedTiles`, and Phaser has an easy way to insert an array of tiles into a layer via [`putTilesAt`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.DynamicTilemapLayer.html#putTilesAt__anchor):
 
 ```js
@@ -159,6 +169,8 @@ const mappedTiles = dungeon.getMappedTiles({ empty: -1, floor: 6, door: 6, wall:
 // Drop a 2D array into the map at (0, 0)
 layer.putTilesAt(mappedTiles, 0, 0);
 ```
+
+<!-- https://gist.github.com/mikewesthad/54b3482ac8e97894b27a987892542cc7 -->
 
 And if we put this all together with a player module based on the code from the first post in the series, we end up with:
 
@@ -248,6 +260,8 @@ export default class DungeonScene extends Phaser.Scene {
 }
 ```
 
+<!-- https://gist.github.com/mikewesthad/827bccb91f9bed20297d47c19c196256 -->
+
 We're going to be using the dynamic layer's [`fill`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.DynamicTilemapLayer.html#fill__anchor), [`putTileAt`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.DynamicTilemapLayer.html#putTileAt__anchor), [`putTilesAt`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.DynamicTilemapLayer.html#putTilesAt__anchor) and [`weightedRandomize`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.DynamicTilemapLayer.html#weightedRandomize__anchor) methods to build out our map. Let's start with `fill` and `weightedRandomize` to make an initial pass at placing the floor and walls:
 
 ```js
@@ -286,6 +300,8 @@ export default class DungeonScene extends Phaser.Scene {
   }
 }
 ```
+
+<!-- https://gist.github.com/mikewesthad/01165ec3438ad177d9572ad07af28dd2 -->
 
 And we'll end up with a character trapped in a door-less world:
 
@@ -344,6 +360,8 @@ const TILE_MAPPING = {
 export default TILE_MAPPING;
 ```
 
+<!-- https://gist.github.com/mikewesthad/9da84f82cf89f61148e07732ee9949c3 -->
+
 Then back in our scene we can do something like the following:
 
 ```js
@@ -357,6 +375,8 @@ export default class DungeonScene extends Phaser.Scene {
   }
 }
 ```
+
+<!-- https://gist.github.com/mikewesthad/ae04e549f786ddd54ace76bddfbec4ac -->
 
 I'm starting to omit code so that we don't have massive repeated code snippets in the article. If you get lost, hop down to the bottom of this section and check out the code sandbox. Now, to finish off our mapping, let's add in some doors:
 
@@ -390,6 +410,8 @@ export default class DungeonScene extends Phaser.Scene {
 }
 ```
 
+<!-- https://gist.github.com/mikewesthad/c70ce241d5e793845277f2d31c0ecc9d -->
+
 Now we can add back in the player collision logic, similar to the last example:
 
 ```js
@@ -403,7 +425,9 @@ this.player = new Player(this, map.widthInPixels / 2, map.heightInPixels / 2);
 this.physics.add.collider(this.player.sprite, this.groundLayer);
 ```
 
-And you end up with:
+<!-- https://gist.github.com/mikewesthad/c5ddd9db3922a2c502a4adf25c5102a6 -->
+
+And we end up with:
 
 [![Edit Phaser Tilemap Post 3: 03-dungeon-better-mapping](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/l54pq7lq7z?hidenavigation=1&module=%2Fjs%2Findex.js&moduleview=1)
 
@@ -423,6 +447,8 @@ For adding stuff, we're going to want another layer:
 this.stuffLayer = map.createBlankDynamicLayer("Stuff", tileset);
 this.stuffLayer.fill(TILES.BLANK);
 ```
+
+<!-- https://gist.github.com/mikewesthad/c9cb978bf8b41e690707468ba6f3e1df -->
 
 And then we can loop over the rooms again to place some stuff. We're going to skip placing anything in the first room. We're also going to designate a randomly selected room as the "goal" room, which will have a staircase that descends down to a new dungeon.
 
@@ -469,6 +495,8 @@ otherRooms.forEach(room => {
 });
 ```
 
+<!-- https://gist.github.com/mikewesthad/e1e4fbfd49b5fc1f743b8a0f44fc540f -->
+
 Then once you activate collision on the new `stuffLayer`, you'll end up with:
 
 ![](./images/stuff-demo-optimized.gif)
@@ -483,6 +511,8 @@ Inside of our scene's `create`, we'll start by creating a new tilemap layer fill
 const shadowLayer = map.createBlankDynamicLayer("Shadow", tileset).fill(TILES.BLANK);
 this.tilemapVisibility = new TilemapVisibility(shadowLayer);
 ```
+
+<!-- https://gist.github.com/mikewesthad/7dc582ff806602ae9e409097e8980d83 -->
 
 Inside of "tilemap-visibility.js", we'll create a new class that keeps track of the currently active room and dims/brightens rooms as needed:
 
@@ -516,6 +546,8 @@ export default class TilemapVisibility {
 }
 ```
 
+<!-- https://gist.github.com/mikewesthad/60cd2592c77dbc0183979d25fdf9e320 -->
+
 And then lastly, inside of our scene's `update` we just need to update the active room:
 
 ```js
@@ -532,7 +564,9 @@ update(time, delta) {
 }
 ```
 
-Whew, and we finally end up with something satisfying like this:
+<!-- https://gist.github.com/mikewesthad/9c230024983308c51274b47ed6a57c1e -->
+
+Whew, and we finally end up with something like this:
 
 [![Edit Phaser Tilemap Post 3: 03-dungeon-better-mapping](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/3r0nvw2z2p?hidenavigation=1&module=%2Fjs%2Findex.js&moduleview=1)
 
@@ -557,6 +591,8 @@ this.stuffLayer.setTileIndexCallback(TILES.STAIRS, () => {
   });
 });
 ```
+
+<!-- https://gist.github.com/mikewesthad/9896e69057ed216ddc1734a2d2a5fcd7  -->
 
 I also added a `level` property to the scene so that we can tell the player what level they are on:
 
@@ -587,6 +623,8 @@ export default class DungeonScene extends Phaser.Scene {
   }
 }
 ```
+
+<!-- https://gist.github.com/mikewesthad/bcc73d47285e39921e1a2bae04f9dd70 -->
 
 ## Up Next
 
