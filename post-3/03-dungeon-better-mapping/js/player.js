@@ -1,10 +1,12 @@
+/**
+ * A class that wraps up our top down player logic. It creates, animates and moves a sprite in
+ * response to WASD keys. Call its update method from the scene's update and call its destroy
+ * method when you're done with the player.
+ */
 export default class Player {
   constructor(scene, x, y) {
     this.scene = scene;
 
-    // 0 - 22
-    // 23 - 45
-    // 46 - 68
     const anims = scene.anims;
     anims.create({
       key: "player-walk",
@@ -21,12 +23,16 @@ export default class Player {
 
     this.sprite = scene.physics.add
       .sprite(x, y, "characters", 0)
-      .setSize(28, 38)
-      .setOffset(20, 24);
+      .setSize(22, 33)
+      .setOffset(23, 27);
 
     this.sprite.anims.play("player-walk-back");
 
     this.keys = scene.input.keyboard.createCursorKeys();
+  }
+
+  freeze() {
+    this.sprite.body.moves = false;
   }
 
   update() {
