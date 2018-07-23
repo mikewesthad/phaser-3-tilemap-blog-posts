@@ -10,7 +10,7 @@ This is a series of blog posts about creating modular worlds with tilemaps in th
 
 _↳ Final example that we'll create_
 
-In the next posts in the series, we'll create a procedural dungeon world and integrate [Matter.js](http://brm.io/matter-js/) to create a wall-jumping platformer.
+The next [post](https://medium.com/@michaelwesthadley/modular-game-worlds-in-phaser-3-tilemaps-3-procedural-dungeon-3bc19b841cd) covers creating a procedural dungeon world, and the one after that will cover integrating [Matter.js](http://brm.io/matter-js/) to create a wall-jumping platformer.
 
 Before we dive in, all the source code and assets that go along with this post can be found in [this repository](https://github.com/mikewesthad/phaser-3-tilemap-blog-posts/tree/master/examples/post-2).
 
@@ -287,7 +287,7 @@ _↳ Check out the [CodeSandbox](https://codesandbox.io/s/mo2j4nvkxy?hidenavigat
 
 ## Up Next
 
-Stay tuned. In the next two posts in the series, we'll create a procedural dungeon with dynamic tilemaps and integrate [Matter.js](http://brm.io/matter-js/) to create a wall-jumping platformer.
+Check out the next [post](https://medium.com/@michaelwesthadley/modular-game-worlds-in-phaser-3-tilemaps-3-procedural-dungeon-3bc19b841cd) where we'll create a procedural dungeon with dynamic tilemaps:
 
 ![](../post-3/images/final-demo-optimized.gif)
 
