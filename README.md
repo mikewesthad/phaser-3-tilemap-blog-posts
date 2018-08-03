@@ -22,3 +22,7 @@ npm run serve
 ```
 
 This will open up a browser with the examples served up.
+
+## License & Attribution
+
+See [licenses.md](./licenses.md) for the licenses & attributions for the various components of this repository - the game assets, the code examples and the blog posts themselves.
