@@ -48,14 +48,15 @@ const floor = Bodies.rectangle(400, 575, 800, 50, { isStatic: true, friction: 0 
 const leftWall = Bodies.rectangle(-25, 400, 50, 800, { isStatic: true, friction: 0 });
 const rightWall = Bodies.rectangle(825, 400, 50, 800, { isStatic: true, friction: 0 });
 
-// Create some static obstacles in the world for our bodies to bounce off of
-const obstacle1 = Bodies.circle(150, 200, 85, { isStatic: true, friction: 0 });
+// Create some bouncy, static obstacles in the world for our bodies to ricochet off of
+const obstacle1 = Bodies.circle(150, 200, 85, { isStatic: true, friction: 0, restitution: 1 });
 const obstacle2 = Bodies.polygon(400, 400, 3, 75, {
   isStatic: true,
   angle: 90 * DEG_TO_RAD,
-  friction: 0
+  friction: 0,
+  restitution: 1
 });
-const obstacle3 = Bodies.circle(650, 200, 85, { isStatic: true, friction: 0 });
+const obstacle3 = Bodies.circle(650, 200, 85, { isStatic: true, friction: 0, restitution: 1 });
 
 // Bodies won't do anything unless they are added to the world
 World.add(engine.world, [

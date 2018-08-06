@@ -1,6 +1,14 @@
+// If a body is a compound body (like some of our tile bodies), then Matter collision events may
+// be triggered by any of the parts of the compound body. The root body is the one which has access
+// to the tile, gameObject and label.
+const getRootBody = body => {
+  while (body.parent !== body) body = body.parent;
+  return body;
+};
+
 export default class MainScene {
   preload() {
-    this.load.tilemapTiledJSON("map", "../assets/tilemaps/simple-map.json");
+    this.load.tilemapTiledJSON("map", "../assets/tilemaps/simple-map-with-collisions.json");
     this.load.image("kenney-tileset-64px", "../assets/tilesets/kenney-tileset-64px.png");
 
     // An atlas is a way to pack multiple images together into one texture. For more info see:
@@ -23,34 +31,38 @@ export default class MainScene {
 
     // Get the layers registered with Matter. Any colliding tiles will be given a Matter body. We
     // haven't mapped our collision shapes in Tiled so each colliding tile will get a default
-    // rectangle body (similar to AP).
+    // rectangle body (similar to AP). The body will be accessible via tile.physics.matterBody.
     this.matter.world.convertTilemapLayer(groundLayer);
     this.matter.world.convertTilemapLayer(lavaLayer);
 
-    // Drop a couple matter-enabled emoji images into the world. (Note, the frame names come from
-    // twemoji - they are the unicode values of the emoji.)
-    const image1 = this.matter.add.image(275, 300, "emoji", "1f92c");
-    image1.setCircle(image1.width / 2, { restitution: 1, friction: 0.25 });
-    image1.setScale(0.5);
-    const image2 = this.matter.add.image(275, 300, "emoji", "1f60d");
-    image2.setCircle(image2.width / 2, { restitution: 1, friction: 0.25 });
-    image2.setScale(0.5);
-    // We can also pass in our Matter body options into to this.matter.add.image
-    const image3 = this.matter.add
-      .image(325, 300, "emoji", "1f4a9", { restitution: 1, friction: 0, shape: "circle" })
-      .setScale(0.5);
+    lavaLayer.forEachTile(tile => {
+      // tile.physics is where physics engines can install tile bodies (currently only used by
+      // the Matter engine). tile.physics.matterBody is a Phaser.Physics.Matter.TileBody instance...
+      // which has a "body" property which is the raw Matter body, so we can use the Matter API and
+      // change the label property.
+      if (tile.physics.matterBody) {
+        const tileBody = tile.physics.matterBody; // Phaser wrapper around a tile's body
+        const matterBody = tileBody.body; // The actual Matter.js body
+        matterBody.label = "lava";
+      }
+    });
 
     // Drop some more emojis when the mouse is pressed. To randomize the frame, we'll grab all the
     // frame names from the atlas.
     const frameNames = Object.keys(this.cache.json.get("emoji").frames);
     this.input.on("pointerdown", () => {
       const worldPoint = this.input.activePointer.positionToCamera(this.cameras.main);
-      for (let i = 0; i < 4; i++) {
+      for (let i = 0; i < 1; i++) {
         const x = worldPoint.x + Phaser.Math.RND.integerInRange(-10, 10);
         const y = worldPoint.y + Phaser.Math.RND.integerInRange(-10, 10);
         const frame = Phaser.Utils.Array.GetRandom(frameNames);
         this.matter.add
-          .image(x, y, "emoji", frame, { restitution: 1, friction: 0, shape: "circle" })
+          .image(x, y, "emoji", frame, {
+            restitution: 1,
+            friction: 0,
+            shape: "circle",
+            label: "emoji"
+          })
           .setScale(0.5);
       }
     });
@@ -66,6 +78,48 @@ export default class MainScene {
     this.input.keyboard.on("keydown_D", event => {
       this.matter.world.drawDebug = !this.matter.world.drawDebug;
       this.matter.world.debugGraphic.clear();
+    });
+
+    // The native matter events are camelcase, but they are lowercased as they are passed through
+    // Phaser. To listen to Matter engine events, listen to the Phaser.Matter.World
+
+    // Loop over all the collision pairs that start colliding on each step of the Matter engine.
+    this.matter.world.on("collisionstart", event => {
+      const pairs = event.pairs;
+
+      pairs.map(pair => {
+        const { bodyA, bodyB } = pair;
+
+        // The tile bodies in this example are a mixture of compound bodies and simple rectangle
+        // bodies. The "label" property was set on the parent body, so we will first make sure that
+        // we have the top level body instead of a part of a larger compound body.
+        const rootA = getRootBody(bodyA);
+        const rootB = getRootBody(bodyB);
+
+        if (
+          (rootA.label === "lava" && rootB.label === "emoji") ||
+          (rootB.label === "lava" && rootA.label === "emoji")
+        ) {
+          const emojiBody = rootA.label === "emoji" ? rootA : rootB;
+
+          // Get access to the image we created
+          const emoji = emojiBody.gameObject;
+
+          // A body may collide with multiple other bodies in a step, so we'll use a flag to
+          // only tween & destroy the ball once.
+          if (emoji.isBeingDestroyed) return;
+          emoji.isBeingDestroyed = true;
+
+          // Remove the emoji from the physics simulation so that it doesn't interact with anything
+          this.matter.world.remove(emoji);
+
+          this.tweens.add({
+            targets: emoji,
+            alpha: { value: 0, duration: 150, ease: "Power1" },
+            onComplete: () => emoji.destroy()
+          });
+        }
+      });
     });
 
     this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);

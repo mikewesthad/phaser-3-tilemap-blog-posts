@@ -1,6 +1,6 @@
 export default class MainScene {
   preload() {
-    this.load.tilemapTiledJSON("map", "../assets/tilemaps/simple-map.json");
+    this.load.tilemapTiledJSON("map", "../assets/tilemaps/simple-map-with-collisions.json");
     this.load.image("kenney-tileset-64px", "../assets/tilesets/kenney-tileset-64px.png");
 
     // An atlas is a way to pack multiple images together into one texture. For more info see:
