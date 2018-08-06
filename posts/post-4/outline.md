@@ -31,6 +31,7 @@ This may need to be split up into two smaller posts - one on the initial matter 
 - Collision mapping with Tiled
   - Tileset collision editor to map colliding bodies
   - Simple shapes and compound shapes
+  - Making the emoji's faces change on collision? -> Nope! There's a bug in phaser.
 - Platformer 1
   - Creating a player that uses matter physics to move
     - Fixed rotation
