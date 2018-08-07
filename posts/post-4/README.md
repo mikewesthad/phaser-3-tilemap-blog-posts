@@ -175,6 +175,137 @@ _↳ Check out the [CodeSandbox](https://codesandbox.io/s/w07j0jn57w?hidenavigat
 
 Now that we've got the Matter fundamentals, we can turn our attention to working with Matter & Phaser together. This [tutorial series](https://code.tutsplus.com/series/getting-started-with-matterjs--cms-1186)by Monty Shokeen if you want to dive deeper into Matter by itself.
 
+## Matter and Phaser
+
+We'll create something similar to the last example, except we'll use a tilemap to define the world and we'll drop some emojis (because why not):
+
+![](./images/example-2-demo-optimized.gif)
+
+Using the same structure as the last tutorial, we'll create an `index.js` file that creates our game and loads a custom scene:
+
+```js
+import MainScene from "./main-scene.js";
+
+const config = {
+  type: Phaser.AUTO,
+  width: 800,
+  height: 600,
+  backgroundColor: "#000c1f",
+  parent: "game-container",
+  pixelArt: true,
+
+  // Load our yet-to-be-created custom scene
+  scene: MainScene,
+
+  // Load up Matter and optionally configure it
+  physics: {
+    default: "matter",
+    matter: {
+      gravity: { y: 1 } // This is the default value, so we could omit this
+    }
+  }
+};
+
+const game = new Phaser.Game(config);
+```
+
+Let's start by creating `MainScene` which loads up the tilemap and enables physics:
+
+```js
+export default class MainScene extends Phaser.Scene {
+  preload() {
+    this.load.tilemapTiledJSON("map", "../assets/tilemaps/simple-map.json");
+    this.load.image(
+      "kenney-tileset-64px-extruded",
+      "../assets/tilesets/kenney-tileset-64px-extruded.png"
+    );
+
+    // An atlas is a way to pack multiple images together into one texture. For more info see:
+    //  https://labs.phaser.io/view.html?src=src/animation/texture%20atlas%20animation.js
+    this.load.atlas("emoji", "../assets/atlases/emoji.png", "../assets/atlases/emoji.json");
+  }
+
+  create() {
+    // Create the 2-layer map
+    const map = this.make.tilemap({ key: "map" });
+    const tileset = map.addTilesetImage("kenney-tileset-64px-extruded");
+    const groundLayer = map.createDynamicLayer("Ground", tileset, 0, 0);
+    const lavaLayer = map.createDynamicLayer("Lava", tileset, 0, 0);
+
+    // Set colliding tiles before converting the layer to Matter bodies - same as we've done before
+    // with AP. See post #1 for more on setCollisionByProperty.
+    groundLayer.setCollisionByProperty({ collides: true });
+    lavaLayer.setCollisionByProperty({ collides: true });
+
+    // Get the layers registered with Matter. Any colliding tiles will be given a Matter body. We
+    // haven't mapped out custom collision shapes in Tiled so each colliding tile will get a default
+    // rectangle body (similar to AP).
+    this.matter.world.convertTilemapLayer(groundLayer);
+    this.matter.world.convertTilemapLayer(lavaLayer);
+
+    // Visualize all the matter bodies in the world. Note: this will be slow so go ahead and comment
+    // it out after you've seen what the bodies look like.
+    this.matter.world.createDebugGraphic();
+}
+```
+
+If we look closely, we can see that all the new bodies are rectangles. We'll get into giving the tiles custom bodies that match their graphics in the next section.
+
+![](./images/example-2-bodies.png)
+
+Now, we can drop a couple emojis with circle bodies using [`this.matter.add.image`](https://photonstorm.github.io/phaser3-docs/Phaser.Physics.Matter.Factory.html#image__anchor) inside our scene. Like with AP, we can create physics enabled images and [sprites](https://photonstorm.github.io/phaser3-docs/Phaser.Physics.Matter.Factory.html#sprite__anchor) using the `this.matter.add` [factory methods](https://photonstorm.github.io/phaser3-docs/Phaser.Physics.Matter.Factory.html). The factory also has methods for creating native Matter bodies and constraints (without any graphics), like `this.matter.add.rectangle`.
+
+```js
+// Drop a couple matter-enabled emoji images into the world. (Note, the frame names come from
+// twemoji - they are the unicode values of the emoji.)
+
+// Create a physics-enabled image
+const image1 = this.matter.add.image(275, 100, "emoji", "1f92c");
+// Change it's body to a circle and configure it's body parameters
+image1.setCircle(image1.width / 2, { restitution: 1, friction: 0.25 });
+image1.setScale(0.5);
+
+const image2 = this.matter.add.image(300, 75, "emoji", "1f60d");
+image2.setCircle(image2.width / 2, { restitution: 1, friction: 0.25 });
+image2.setScale(0.5);
+
+// We can also pass in our Matter body options directly into to this.matter.add.image, along with
+// a Phaser "shape" property for controlling the type & size of the body
+const image3 = this.matter.add
+  .image(325, 100, "emoji", "1f4a9", { restitution: 1, friction: 0, shape: "circle" })
+  .setScale(0.5);
+```
+
+These image variables are now instances of [`Phaser.Physics.Matter.Image`](https://photonstorm.github.io/phaser3-docs/Phaser.Physics.Matter.Image.html). They have the properties and methods of a normal Phaser image, but with added methods and properties for manipulating the underlying Matter body. There's a `body` property which gives you access to the native Matter body, and methods like [`setCircle`](https://photonstorm.github.io/phaser3-docs/Phaser.Physics.Matter.Image.html#setCircle__anchor), [`setRectangle`](https://photonstorm.github.io/phaser3-docs/Phaser.Physics.Matter.Image.html#setRectangle__anchor), [`setBody`](https://photonstorm.github.io/phaser3-docs/Phaser.Physics.Matter.Image.html#setBody__anchor), [`setExistingBody`](https://photonstorm.github.io/phaser3-docs/Phaser.Physics.Matter.Image.html#setExistingBody__anchor) etc. for replacing the image's current body. The same idea applies to [`Phaser.Phyiscs.Matter.Sprite`](https://photonstorm.github.io/phaser3-docs/Phaser.Physics.Matter.Sprite.html).
+
+Like the Matter example from the previous section, we can add in some emojis every time the left mouse button is pressed by adding the following to our `create` method:
+
+```js
+// To randomize which emoji we'll use, we'll grab all the atlas's frame names
+const frameNames = Object.keys(this.cache.json.get("emoji").frames);
+
+this.input.on("pointerdown", () => {
+  const worldPoint = this.input.activePointer.positionToCamera(this.cameras.main);
+  for (let i = 0; i < 4; i++) {
+    const x = worldPoint.x + Phaser.Math.RND.integerInRange(-10, 10);
+    const y = worldPoint.y + Phaser.Math.RND.integerInRange(-10, 10);
+    const frame = Phaser.Utils.Array.GetRandom(frameNames);
+    this.matter.add
+      .image(x, y, "emoji", frame, { restitution: 1, friction: 0, shape: "circle" })
+      .setScale(0.5);
+  }
+});
+
+// Our canvas is now "clickable" so let's update the cursor to a custom pointer
+this.input.setDefaultCursor("url(../assets/cursors/pointer.cur), pointer");
+```
+
+[![Edit Phaser Tilemap Post 3: 02-matter-and-phaser](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/mq6rr2jn5p?hidenavigation=1&module=%2Fjs%2Findex.js&moduleview=1)
+
+<!-- Embed link for medium: https://codesandbox.io/s/mq6rr2jn5p?hidenavigation=1&module=%2Fjs%2Findex.js&moduleview=1 -->
+
+_↳ Check out the [CodeSandbox](https://codesandbox.io/s/mq6rr2jn5p?hidenavigation=1&module=%2Fjs%2Findex.js&moduleview=1), [live example](https://www.mikewesthad.com/phaser-3-tilemap-blog-posts/post-4/02-matter-and-phaser) or the source code [here](https://github.com/mikewesthad/phaser-3-tilemap-blog-posts/blob/master/examples/post-4/02-matter-and-phaser)._
+
 
 ## Up Next
 
