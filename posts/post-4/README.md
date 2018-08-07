@@ -31,7 +31,7 @@ Alright, Let's get into it!
 
 Phaser's implementation is a thin wrapper around the underlying Matter library, so if we want to use Matter in Phaser, we should start with learning Matter by itself. We'll create a simple setup where you can drop random shapes into a world:
 
-![](./images/example-1-demo.gif)
+![](./images/example-1-demo-optimized.gif)
 
 Matter is structured around modules that contain factory functions that create objects and functions that can manipulate those objects. For example, the `Body` module is about creating & manipulating [rigidbodies](https://www.quora.com/What-is-a-rigid-body), so it has the `Body.create(...)` factory which will create a fresh body object for us, and `Body.applyForce(...)` which will apply a force to the given body object. So the first step we'll want to take is to alias a few of the modules:
 
