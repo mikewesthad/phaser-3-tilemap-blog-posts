@@ -7,12 +7,12 @@
 const { Engine, Render, World, Bodies, Body } = Matter;
 
 // A few math/random helpers
-const DEG_TO_RAD = Math.PI / 180;
+const DEGREES_TO_RADIANS = Math.PI / 180;
 const randomInRange = (min, max) => Math.random() * (max - min) + min;
 const randomIntInRange = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
 
 // Create a matter physics simulation engine and a debugging canvas renderer. We won't need to do
-// this in Phaser.
+// this ourselves when working with Phaser later.
 const engine = Engine.create();
 const render = Render.create({
   element: document.getElementById("game-container"),
@@ -33,7 +33,7 @@ const rectangle = Bodies.rectangle(400, -450, 120, 80, { friction: 1, restitutio
 const circle = Bodies.circle(400, -300, 50, { friction: 0, restitution: 1 });
 const triangle = Bodies.polygon(400, -150, 3, 50, { friction: 0, restitution: 0.5 });
 
-// Create a compound body that is composed of two rectangle bodies joined together
+// Create a cross-shaped compound body that is composed of two rectangle bodies joined together
 const verticalPart = Bodies.rectangle(400, 0, 100, 50);
 const horizontalPart = Bodies.rectangle(400, 0, 50, 100);
 const cross = Body.create({
@@ -52,7 +52,7 @@ const rightWall = Bodies.rectangle(825, 400, 50, 800, { isStatic: true, friction
 const obstacle1 = Bodies.circle(150, 200, 85, { isStatic: true, friction: 0, restitution: 1 });
 const obstacle2 = Bodies.polygon(400, 400, 3, 75, {
   isStatic: true,
-  angle: 90 * DEG_TO_RAD,
+  angle: 90 * DEGREES_TO_RADIANS,
   friction: 0,
   restitution: 1
 });
