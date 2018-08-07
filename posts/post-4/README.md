@@ -306,6 +306,12 @@ this.input.setDefaultCursor("url(../assets/cursors/pointer.cur), pointer");
 
 _↳ Check out the [CodeSandbox](https://codesandbox.io/s/mq6rr2jn5p?hidenavigation=1&module=%2Fjs%2Findex.js&moduleview=1), [live example](https://www.mikewesthad.com/phaser-3-tilemap-blog-posts/post-4/02-matter-and-phaser) or the source code [here](https://github.com/mikewesthad/phaser-3-tilemap-blog-posts/blob/master/examples/post-4/02-matter-and-phaser)._
 
+## Mapping Collisions Shapes
+
+We've got our tiles integrated with Matter, but we've got a problem. Our bodies are all rectangles, but our tiles aren't all rectangles:
+
+![](./images/example-3-issue.gif)
+
 
 ## Up Next
 
