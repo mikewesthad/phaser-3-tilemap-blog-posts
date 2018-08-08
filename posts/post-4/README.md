@@ -391,7 +391,9 @@ If we needed more control over the bodies given to tiles (or if we weren't using
 
 ## Up Next
 
-**INSERT CLOSING**
+Stay tuned. Next up, we'll use this foundational knowledge of Matter to build a platformer.
+
+<!-- Insert next GIF when it's ready -->
 
 Thanks for reading, and if there's something you'd like to see in future posts, let me know!
 
