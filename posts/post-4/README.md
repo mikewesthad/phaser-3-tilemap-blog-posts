@@ -312,6 +312,69 @@ We've got our tiles integrated with Matter, but we've got a problem. Our bodies 
 
 ![](./images/example-3-issue.gif)
 
+We're not really taking advantage of Matter's different body shapes... yet. In Tiled, we can map our collision shapes using the [collision editor](http://docs.mapeditor.org/en/stable/manual/editing-tilesets/). Phaser will automatically parse out circles, rectangles, polygons and compound shapes when we use `this.matter.world.convertTilemapLayer(...)`.
+
+To map out the shapes in Tiled, we need to:
+
+1.  Go to the tileset properties window and open the collision editor.
+2.  Click on a tile and map out its body. Repeat for all the tiles that need custom bodies.
+3.  Save the tileset & re-export the tilemap.
+
+Tiled's UI can be a little confusing, so here's how to open the collision editor:
+
+![](./images/mapping-step-1.gif)
+
+Once we've got a tile selected, we'll have this window to map out the colliding shapes over the tile:
+
+![](./images/mapping-collision-editor.png)
+
+From left to right in the toolbar, the tools are: select object, edit polygon points, create rectangle, create ellipse, create polygon and create polyline. We'll use all of them except for the polyline. Let's take a look at mapping out a few different tiles. The goal is to use the fewest number of shapes / vertices while still getting decently mapped hitboxes.
+
+First up, many tiles will work great with just a single rectangle, like this skinny platform:
+
+![](./images/mapping-rectangle.gif)
+
+(As you are working, you may find it useful to enable or disable the snapping settings: View -> Snapping in the top toolbar. In these GIFs, I have snap to pixels enabled.)
+
+Sometimes, all you need is a single circle:
+
+![](./images/mapping-circle-cropped.gif)
+
+One gotcha here - Matter doesn't support ellipses, so any "ellipse" that you create in Tiled is going to be converted into a circle body inside of Phaser.
+
+Compound bodies made of multiple bodies - like our cross from earlier - can be handy, like for this switch:
+
+![](./images/mapping-compound-cropped.gif)
+
+We can also map out polygons, like using a triangle for this sloped tile. (Press enter to complete the shape after drawing the last vertex.)
+
+![](./images/mapping-compound-cropped.gif)
+
+Not all polygons are created equal. Convex polygons are usually much easier to deal with than concave polygons:
+
+![](./images/convex-vs-concave.png)
+
+_↳ Play with this [tool](https://www.mathopenref.com/polygonconvex.html) to see what we mean by "interior angle"._
+
+Convex polygons will work as expected. Any concave polygon bodies will be decomposed by Matter into convex polygons (using [poly-decomp.js](https://github.com/schteppe/poly-decomp.js)). If the decomposition fails, the body will set to a [convex hull](https://medium.com/@harshitsikchi/convex-hulls-explained-baab662c4e94) See [Matter docs](http://brm.io/matter-js/docs/classes/Bodies.html#method_fromVertices) for more info. I'd recommend sticking to convex polygons, but we can map out a concave polygon for demo purposes:
+
+![](./images/mapping-complex-polygon-cropped.gif)
+
+Save the tileset, re-export the map and we'll have:
+
+![](./images/mapping-small-emoji.gif)
+
+_↳ Using a smaller scale on the emoji to better show the collision mapping. Note, the debug rendering for the compound bodies - the sign and lava - also renders the convex hull by default._
+
+In the codesandbox, I mapped out the rest of the tiles we're using and exported the new map. No real need to change anything in the code to load up these new bodies:
+
+[![Edit Phaser Tilemap Post 3: 03-mapping-tiles](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rw3w7ln9qn?hidenavigation=1&module=%2Fjs%2Findex.js&moduleview=1)
+
+<!-- Embed link for medium: https://codesandbox.io/s/rw3w7ln9qn?hidenavigation=1&module=%2Fjs%2Findex.js&moduleview=1 -->
+
+_↳ Check out the [CodeSandbox](https://codesandbox.io/s/rw3w7ln9qn?hidenavigation=1&module=%2Fjs%2Findex.js&moduleview=1), [live example](https://www.mikewesthad.com/phaser-3-tilemap-blog-posts/post-4/03-mapping-tiles) or the source code [here](https://github.com/mikewesthad/phaser-3-tilemap-blog-posts/blob/master/examples/post-4/03-mapping-tiles)._
+
+If we needed more control over the bodies given to tiles (or if we weren't using Tiled), we can loop over the tiles using `layer.forEachTile` and use [`this.matter.add.tileBody`](https://photonstorm.github.io/phaser3-docs/Phaser.Physics.Matter.Factory.html#tileBody__anchor) to add custom tile bodies to each tile.
 
 ## Up Next
 

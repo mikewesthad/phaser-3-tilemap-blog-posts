@@ -1,7 +1,10 @@
-export default class MainScene {
+export default class MainScene extends Phaser.Scene {
   preload() {
-    this.load.tilemapTiledJSON("map", "../assets/tilemaps/simple-map-with-collisions.json");
-    this.load.image("kenney-tileset-64px", "../assets/tilesets/kenney-tileset-64px.png");
+    this.load.tilemapTiledJSON("map", "../assets/tilemaps/simple-map-collision-mapped.json");
+    this.load.image(
+      "kenney-tileset-64px-extruded",
+      "../assets/tilesets/kenney-tileset-64px-extruded.png"
+    );
 
     // An atlas is a way to pack multiple images together into one texture. For more info see:
     //  https://labs.phaser.io/view.html?src=src/animation/texture%20atlas%20animation.js
@@ -12,14 +15,13 @@ export default class MainScene {
 
   create() {
     const map = this.make.tilemap({ key: "map" });
-    const tileset = map.addTilesetImage("kenney-tileset-64px");
+    const tileset = map.addTilesetImage("kenney-tileset-64px-extruded");
     const groundLayer = map.createDynamicLayer("Ground", tileset, 0, 0);
     const lavaLayer = map.createDynamicLayer("Lava", tileset, 0, 0);
 
-    // Set colliding tiles, same as with arcade physics (AP). We'll just make everything collide for
-    // now.
-    groundLayer.setCollisionByExclusion([-1, 0]);
-    lavaLayer.setCollisionByExclusion([-1, 0]);
+    // Set colliding tiles before converting the layer to Matter bodies
+    groundLayer.setCollisionByProperty({ collides: true });
+    lavaLayer.setCollisionByProperty({ collides: true });
 
     // Get the layers registered with Matter. Any colliding tiles will be given a Matter body. We
     // haven't mapped our collision shapes in Tiled so each colliding tile will get a default
@@ -31,14 +33,14 @@ export default class MainScene {
     // twemoji - they are the unicode values of the emoji.)
     const image1 = this.matter.add.image(275, 300, "emoji", "1f92c");
     image1.setCircle(image1.width / 2, { restitution: 1, friction: 0.25 });
-    image1.setScale(0.5);
+    image1.setScale(0.25);
     const image2 = this.matter.add.image(275, 300, "emoji", "1f60d");
     image2.setCircle(image2.width / 2, { restitution: 1, friction: 0.25 });
-    image2.setScale(0.5);
+    image2.setScale(0.25);
     // We can also pass in our Matter body options into to this.matter.add.image
     const image3 = this.matter.add
       .image(325, 300, "emoji", "1f4a9", { restitution: 1, friction: 0, shape: "circle" })
-      .setScale(0.5);
+      .setScale(0.25);
 
     // Drop some more emojis when the mouse is pressed. To randomize the frame, we'll grab all the
     // frame names from the atlas.
@@ -51,7 +53,7 @@ export default class MainScene {
         const frame = Phaser.Utils.Array.GetRandom(frameNames);
         this.matter.add
           .image(x, y, "emoji", frame, { restitution: 1, friction: 0, shape: "circle" })
-          .setScale(0.5);
+          .setScale(0.25);
       }
     });
 
