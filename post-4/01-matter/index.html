@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Matter Template</title>
+
+  <style>
+    html,
+    body,
+    #game-container {
+      margin: 0;
+      padding: 0;
+    }
+
+    #game-container {
+      min-width: 100vw;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #game-container>canvas {
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="game-container"></div>
+
+  <script src="//cdnjs.cloudflare.com/ajax/libs/matter-js/0.12.0/matter.js"></script>
+  <script src="./js/index.js" type="module"></script>
+</body>
+
+</html>

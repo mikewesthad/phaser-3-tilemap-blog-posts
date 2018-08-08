@@ -3,6 +3,8 @@
  * Asset Credits:
  *  - Tileset, Michele "Buch" Bucelli (tileset artist) & Abram Connelly (tileset sponsor):
  *     https://opengameart.org/content/top-down-dungeon-tileset
+ *  - Character, Michele "Buch" Bucelli:
+ *      https://opengameart.org/content/a-platformer-in-the-forest
  */
 
 import DungeonScene from "./dungeon-scene.js";
