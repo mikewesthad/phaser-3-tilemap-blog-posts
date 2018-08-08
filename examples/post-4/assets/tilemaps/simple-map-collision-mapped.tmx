@@ -1537,7 +1537,9 @@
     <property name="collides" type="bool" value="true"/>
    </properties>
    <objectgroup draworder="index">
-    <object id="1" x="48" y="0" width="16" height="64"/>
+    <object id="2" x="0" y="4">
+     <polygon points="0,0 16,5 32,0 48,-4 64,0 64,60 0,60"/>
+    </object>
    </objectgroup>
   </tile>
   <tile id="290">

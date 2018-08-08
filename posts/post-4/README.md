@@ -1,16 +1,16 @@
-# Modular Game Worlds in Phaser 3 (Tilemaps #4) - Matter.js
+# Modular Game Worlds in Phaser 3 (Tilemaps #4) - Meet Matter.js
 
 Author: [Mike Hadley](https://www.mikewesthad.com/)
 
-Reading this on GitHub? Check out the [medium post]() **INSERT LINK**.
+Reading this on GitHub? Check out the [medium post](https://medium.com/@michaelwesthadley/modular-game-worlds-in-phaser-3-tilemaps-4-meet-matter-js-abf4dfa65ca1).
 
-This is the fourth post in a series of blog posts about creating modular worlds with tilemaps in the [Phaser 3](http://phaser.io/) game engine. In this edition, we'll
+This is the fourth post in a series of blog posts about creating modular worlds with tilemaps in the [Phaser 3](http://phaser.io/) game engine. In this edition, we'll get acquainted with Matter.js, so that we can set up a world with "realistic" physics.
 
-**INSERT IMAGE**
+![](./images/final-demo-optimize.gif)
 
-_↳ Caption_
+_↳ Dropping [Twemoji](https://github.com/twitter/twemoji)_
 
-If you haven't checked out the previous posts in the series, here are the links:
+This will set us up for the next post where we'll ditch the emoji and add a Matter.js platforming player to this world. If you haven't checked out the previous posts in the series, here are the links:
 
 1.  [Static tilemaps & a Pokémon-style world](https://medium.com/@michaelwesthadley/modular-game-worlds-in-phaser-3-tilemaps-1-958fc7e6bbd6)
 2.  [Dynamic tilemaps & puzzle-y platformer](https://medium.com/@michaelwesthadley/modular-game-worlds-in-phaser-3-tilemaps-2-dynamic-platformer-3d68e73d494a)
@@ -26,7 +26,20 @@ Alright, Let's get into it!
 
 ## Overview
 
-**INSERT CONTENT**
+As I was writing up this post, I realized that there were just too many new concepts to pack into one post, so I'm splitting this into two posts. This one will introduce the Matter physics engine by itself, and then we'll bring in Phaser, tilemaps and mapping tile bodies in Tiled. In the second post, we'll dive into Matter's collision logic and build a platformer.
+
+A quick sidebar: this whole tutorial series is tilemap-centric, so of course, we are going to use Tiled & tilemaps here as we build up to a platformer. That said, the game/art/tool/etc. that you may want to create might not need a tilemap, e.g. this [pinball game](https://codepen.io/lonekorean/pen/KXLrVX) made with Matter. Don't feel constrained to tilemaps just because we are using them here! You'll learn the basics of Matter along the way here, so you'll still get something out of following along even if you don't use tilemaps.
+
+## Introduction to Matter
+
+[Matter](http://brm.io/matter-js/) is another JavaScript 2D physics engine. Whereas arcade physics (AP) in Phaser aims to be fast and simple (mainly just axis-aligned bounding boxes and circles), Matter is a more realistic physics simulation engine - complex body shapes, mass, density, constraints, etc.
+
+AP is perfect if you have a game where you can get by with boxes & circle, but if you want to do something like create physics puzzles in your world (Angry Birds, Crayon Physics, etc.), Matter is the way to go. For example, here's the slingshot demo from the Matter site (click and drag the blue shape on the left):
+
+https://codepen.io/liabru/pen/yGbFt
+
+You'll definitely want to play around with the [other demos](http://brm.io/matter-js/demo/) on the Matter site to get a feel for what Matter can do. You'll also want to keep the [Matter docs](http://brm.io/matter-js/docs/) handy.
+
 ## First Steps with Matter
 
 Phaser's implementation is a thin wrapper around the underlying Matter library, so if we want to use Matter in Phaser, we should start with learning Matter by itself. We'll create a simple setup where you can drop random shapes into a world:

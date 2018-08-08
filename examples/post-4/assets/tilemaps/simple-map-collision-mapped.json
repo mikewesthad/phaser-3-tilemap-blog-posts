@@ -3624,15 +3624,44 @@
                      "name":"",
                      "objects":[
                             {
-                             "height":64,
-                             "id":1,
+                             "height":0,
+                             "id":2,
                              "name":"",
+                             "polygon":[
+                                    {
+                                     "x":0,
+                                     "y":0
+                                    }, 
+                                    {
+                                     "x":16,
+                                     "y":5
+                                    }, 
+                                    {
+                                     "x":32,
+                                     "y":0
+                                    }, 
+                                    {
+                                     "x":48,
+                                     "y":-4
+                                    }, 
+                                    {
+                                     "x":64,
+                                     "y":0
+                                    }, 
+                                    {
+                                     "x":64,
+                                     "y":60
+                                    }, 
+                                    {
+                                     "x":0,
+                                     "y":60
+                                    }],
                              "rotation":0,
                              "type":"",
                              "visible":true,
-                             "width":16,
-                             "x":48,
-                             "y":0
+                             "width":0,
+                             "x":0,
+                             "y":4
                             }],
                      "opacity":1,
                      "type":"objectgroup",
