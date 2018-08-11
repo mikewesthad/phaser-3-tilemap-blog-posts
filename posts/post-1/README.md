@@ -274,9 +274,9 @@ If you are working with tile indices, then there's [`setCollision`](https://phot
 
 Steps (or see GIF below):
 
-1.  Open up the Tileset Editor by clicking on the "Edit Tileset" button (at the bottom right of screen).
+1.  Open up the Tileset Editor by clicking on the "Edit Tileset" button (at the bottom right of the screen).
 2.  Click and drag (or CTRL + A) to select all the tiles.
-3.  Under the properties window (left side of screen), click the plus icon and add a boolean property named "collides."
+3.  Under the properties window (left side of the screen), click the plus icon and add a boolean property named "collides."
 4.  Select only the tiles that you want to collide and set "collides" to true by checking the box
 5.  Re-export your map.
 
