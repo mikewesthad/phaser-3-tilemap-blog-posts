@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "serve": "browser-sync start --watch --server examples --directory",
+    "dev": "npm run serve",
     "deploy": "gh-pages --branch gh-pages --dist examples"
   },
   "prettier": {
