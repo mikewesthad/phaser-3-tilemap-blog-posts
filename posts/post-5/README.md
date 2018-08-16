@@ -126,7 +126,139 @@ Events.on(engine, "collisionStart", event => {
 
 In the first conditional, we check if one of the bodies is the floor, then we adjust the color of the other body to match the floor color. In the second conditional, we check if the circle hit the floor, and if so, kill it. With those basics, we can do a lot in a game world - like checking if the player hit a button, or if any object fell into lava.
 
-This approach isn't terribly friendly or modular though. You have to worry about the order of bodyA and bodyB - was the floor A or B? You also have to have a big centralized function that knows about all the colliding pairs. If you want to go further with Matter without Phaser, then check out this Matter plugin to that makes collision handling easier by listening to collisions on specific bodies: [dxu/matter-collision-events](https://github.com/dxu/matter-collision-events#readme). When we get to Phaser, we'll similarly solve this with a plugin.
+**sandbox**
+
+This approach isn't terribly friendly or modular though. We have to worry about the order of bodyA and bodyB - was the floor A or B? We also have to have a big centralized function that knows about all the colliding pairs. Matter takes the approach of keeping the engine itself as simple as possible and leaving it up to the user to add in their specific way of handling collisions. If you want to go further with Matter without Phaser, then check out this Matter plugin to that makes collision handling easier by giving us a way to listening to collisions on specific bodies: [dxu/matter-collision-events](https://github.com/dxu/matter-collision-events#readme). When we get to Phaser, we'll similarly solve this with a plugin.
+
+## Simple Collisions in Phaser
+
+Now that we understand how collisions work in Matter, let's use them in Phaser. Before getting into creating a platformer, let's quickly revisit our emoji dropping example from last time:
+
+**GIF**
+
+When an emoji collides with something, we'll make it play a short angry face animation. The setup is the same as last time. We set up a tilemap and enable Matter bodies on the tiles. When the player clicks on the screen, we drop a Matter-enabled emoji. Last time we used a [`Phaser.Physics.Matter.Image`](https://photonstorm.github.io/phaser3-docs/Phaser.Physics.Matter.Image.html) for the emoji, but this time we'll use a [`Phaser.Physics.Matter.Sprite`](https://photonstorm.github.io/phaser3-docs/Phaser.Physics.Matter.Sprite.html) so that we can use an animation. This goes into our Scene's `create` method:
+
+```js
+// Drop some 1x grimacing emoji sprite when the mouse is pressed
+this.input.on("pointerdown", () => {
+  const worldPoint = this.input.activePointer.positionToCamera(this.cameras.main);
+  const x = worldPoint.x + Phaser.Math.RND.integerInRange(-10, 10);
+  const y = worldPoint.y + Phaser.Math.RND.integerInRange(-10, 10);
+
+  // We're creating sprites this time, so that we can animate them
+  this.matter.add
+    .sprite(x, y, "emoji", "1f62c", { restitution: 1, friction: 0.25, shape: "circle" })
+    .setScale(0.5);
+});
+
+// Create an angry emoji => grimace emoji animation
+this.anims.create({
+  key: "angry",
+  frames: [{ key: "emoji", frame: "1f92c" }, { key: "emoji", frame: "1f62c" }],
+  frameRate: 8,
+  repeat: 0
+});
+```
+
+Now we just need to handle the collisions (also in `create`):
+
+```js
+this.matter.world.on("collisionstart", event => {
+  event.pairs.forEach(pair => {
+    const { bodyA, bodyB } = pair;
+  });
+});
+
+this.matter.world.on("collisionend", event => {
+  event.pairs.forEach(pair => {
+    const { bodyA, bodyB } = pair;
+  });
+});
+```
+
+The structure is pretty much the same as with native Matter, except that Phaser lowercases the event name to match its own conventions. `bodyA` and `bodyB` are Matter bodies, but with an added property. If the bodies are owned by a Phaser game object (like a Sprite, Image, Tile, etc.), they'll have a `gameObject` property. We can then use that property to identify what collided:
+
+```js
+this.matter.world.on("collisionstart", event => {
+  event.pairs.forEach(pair => {
+    const { bodyA, bodyB } = pair;
+
+    const gameObjectA = bodyA.gameObject;
+    const gameObjectB = bodyB.gameObject;
+
+    const aIsEmoji = gameObjectA instanceof Phaser.Physics.Matter.Sprite;
+    const bIsEmoji = gameObjectB instanceof Phaser.Physics.Matter.Sprite;
+
+    if (aIsEmoji) {
+      gameObjectA.setAlpha(0.5);
+      gameObjectA.play("angry", false); // false = don't restart animation if it's already playing
+    }
+    if (bIsEmoji) {
+      gameObjectB.setAlpha(0.5);
+      gameObjectB.play("angry", false);
+    }
+  });
+});
+```
+
+We've got two types of colliding objects in our scene - sprites and tiles. We're using the [`instanceof`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/instanceof) to figure out which bodies are the emoji sprites. We play an angry animation and make the sprite translucent. We can also use the "collisionend" event to make the sprite opaque again:
+
+```js
+this.matter.world.on("collisionend", event => {
+  event.pairs.forEach(pair => {
+    const { bodyA, bodyB } = pair;
+    const gameObjectA = bodyA.gameObject;
+    const gameObjectB = bodyB.gameObject;
+
+    const aIsEmoji = gameObjectA instanceof Phaser.Physics.Matter.Sprite;
+    const bIsEmoji = gameObjectB instanceof Phaser.Physics.Matter.Sprite;
+
+    if (aIsEmoji) gameObjectA.setAlpha(1);
+    if (bIsEmoji) gameObjectB.setAlpha(1);
+  });
+});
+```
+
+**sandbox**
+
+Now we've seen native Matter events and Phaser's wrapper around those Matter events. Both are a bit messy to use without a better structure, but they are important to cover before we start using a plugin to help us manage the collisions.
+
+The approach in this section still isn't very modular. One function handles all our collisions. If we added more types of objects to the world, we'd need more conditionals in this function. We also haven't looked at how compound bodies would work here - spoiler, they add another layer of complexity.
+
+## Collision Plugin
+
+I created a Phaser plugin to make our lives a bit easier when it comes to Matter collisions in Phaser: [phaser-matter-collision-plugin](https://github.com/mikewesthad/phaser-matter-collision-plugin). With it, we can detect collisions between specific game objects, e.g.
+
+```js
+const player = this.matter.add.sprite(0, 0, "player");
+const trapDoor = this.matter.add.sprite(200, 0, "door");
+
+this.matterCollision.addOnCollideStart({
+  objectA: player,
+  objectB: trapDoor,
+  callback: () => console.log("Player touched door!")
+});
+```
+
+Or between groups of game objects, e.g.
+
+```js
+const player = this.matter.add.sprite(0, 0, "player");
+const enemy1 = this.matter.add.sprite(100, 0, "enemy");
+const enemy2 = this.matter.add.sprite(200, 0, "enemy");
+const enemy3 = this.matter.add.sprite(300, 0, "enemy");
+
+this.matterCollision.addOnCollideStart({
+  objectA: player,
+  objectB: [enemy1, enemy2, enemy3],
+  callback: eventData => {
+    console.log("Player hit an enemy");
+    // eventData.gameObjectB will be the specific enemy that was hit
+  }
+});
+```
+
+Check out [the docs](https://www.mikewesthad.com/phaser-matter-collision-plugin/docs/manual/README.html) if you want to learn more.
 
 ## Up Next
 
