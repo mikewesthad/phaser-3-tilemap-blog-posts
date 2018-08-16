@@ -52,13 +52,13 @@ const { Engine, Render, World, Bodies, Body, Events } = Matter;
 
 ```js
 Events.on(engine, "collisionStart", event => {
-  event.pairs.map(pair => {
+  event.pairs.forEach(pair => {
     const { bodyA, bodyB } = pair;
   });
 });
 
 Events.on(engine, "collisionEnd", event => {
-  event.pairs.map(pair => {
+  event.pairs.forEach(pair => {
     const { bodyA, bodyB } = pair;
   });
 });
@@ -68,7 +68,7 @@ On each tick of the engine's loop, Matter keeps track of all pairs of objects th
 
 ```js
 Events.on(engine, "collisionStart", event => {
-  event.pairs.map(pair => {
+  event.pairs.forEach(pair => {
     const { bodyA, bodyB } = pair;
 
     // Make translucent until collisionEnd
@@ -78,7 +78,7 @@ Events.on(engine, "collisionStart", event => {
 });
 
 Events.on(engine, "collisionEnd", event => {
-  event.pairs.map(pair => {
+  event.pairs.forEach(pair => {
     const { bodyA, bodyB } = pair;
 
     // Return to opaque
@@ -96,7 +96,7 @@ Now we can extend our "collisionStart" to have some conditional logic based on w
 
 ```js
 Events.on(engine, "collisionStart", event => {
-  event.pairs.map(pair => {
+  event.pairs.forEach(pair => {
     const { bodyA, bodyB } = pair;
 
     // Make translucent until collisionEnd

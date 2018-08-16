@@ -73,7 +73,7 @@ World.add(engine.world, [
 ]);
 
 Events.on(engine, "collisionStart", event => {
-  event.pairs.map(pair => {
+  event.pairs.forEach(pair => {
     const { bodyA, bodyB } = pair;
 
     bodyA.render.opacity = 0.75;
@@ -100,7 +100,7 @@ Events.on(engine, "collisionStart", event => {
 });
 
 Events.on(engine, "collisionEnd", event => {
-  event.pairs.map(pair => {
+  event.pairs.forEach(pair => {
     const { bodyA, bodyB } = pair;
 
     bodyA.render.opacity = 1;
