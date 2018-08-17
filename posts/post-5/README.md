@@ -259,6 +259,21 @@ this.matterCollision.addOnCollideStart({
 ```
 
 Check out [the docs](https://www.mikewesthad.com/phaser-matter-collision-plugin/docs/manual/README.html) if you want to learn more.
+## Ghost Collisions
+
+At some point in exploring Matter, you might run into the common problem of ghost collisions. If you notice a player seemingly tripping over nothing as it walks along a platform of tiles, you are likely running into ghost collisions. Here's what they look like:
+
+![](./images/ghost-collision-demo.gif)
+
+You can check out the corresponding live [demo](http://labs.phaser.io/view.html?src=src/game%20objects/tilemap/collision/matter%20ghost%20collisions.js) that I created on Phaser Labs. As the mushrooms move over the top platform, you can see that they catch on the vertical edge of the tiles. That's due to how physics engines resolve collisions. The engine sees the tiles as separate bodies when the mushroom collides against them. It doesn't know that they form a straight line and that the mushrooms shouldn't hit any of the vertical edges. Check out [this article](http://www.iforce2d.net/b2dtut/ghost-vertices) for more information and to see how Box2D solves for this.
+
+There are a couple ways to mitigate this:
+
+- Add chamfer to bodies, i.e. round the edges, or use circular bodies to reduce the impact of the ghost collisions.
+- Map out your level's hitboxes as as a few convex hulls instead of giving each tile a separate body. You can still use Tiled for this. Create an object layer, and fill it with shapes, convert those shapes to Matter bodies in Phaser. The demo code does that.
+- You might be able to use Matter's ability to handle polygons to join all your tiles into one body, depending on the complexity of your map.
+
+Or, just live with the little glitches for a bit. [@hexus](https://github.com/hexus) is working on a Phaser plugin for solving for ghost collisions against tilemaps, so keep an eye on his GitHub feed. It should be dropping pretty soon.
 
 ## Up Next
 
