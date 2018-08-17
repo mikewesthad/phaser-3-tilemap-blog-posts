@@ -31,6 +31,8 @@ Alright, Let's get into it!
 
 In the [last post](https://medium.com/@michaelwesthadley/modular-game-worlds-in-phaser-3-tilemaps-4-meet-matter-js-abf4dfa65ca1), we got acquainted with Matter.js...
 
+If you are the type of the person who just wants to get straight to handling collisions nicely in Phaser, you can jump ahead two sections. But if you like to understand how something really works - which I think will pay off in the long run - then let's take a short detour back into Matter to see how native collisions work there.
+
 ## Collisions in Matter
 
 Last time, we saw how to add physical shapes to a world and have them collide with one another. If we want to use that physics in a game, we need to be able to respond when certain objects collide with one another, e.g. like a player character stepping on a trap door. Since Phaser's implementation of Matter is a thin wrapper around the underlying library, it's worth revisiting our vanilla Matter example from last time to learn about collision detection in Matter.
