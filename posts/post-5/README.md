@@ -1,4 +1,4 @@
-# Modular Game Worlds in Phaser 3 (Tilemaps #5) - Matter.js & Collisions
+# Modular Game Worlds in Phaser 3 (Tilemaps #5) - Matter Physics Platfomer
 
 Author: [Mike Hadley](https://www.mikewesthad.com/)
 
@@ -358,6 +358,520 @@ Here's the final code, with a little extra added in to make the emojis draggable
 
 https://codesandbox.io/s/v829vxpp8l
 
+## Platformer: Creating the Player
+
+Now that we've got the fundamentals of collisions under our belts, we can tackle something more complicated - a platformer. We'll build it in pieces, starting with the Player class. In this first section we'll end up with:
+
+![](./images/platformer-player.gif)
+
+Here's the last [starter CodeSandbox project](https://codesandbox.io/s/pmkmj7r8lm) which you can use to code along for the rest of the post. It already has a map loaded up with collisions and has empty files for the different modules we'll be creating.
+
+We're going to start by creating our platforming "player.js" file. One of the challenges that comes with realistic physics engines like Matter is that they can be hard to control in predictable way in a game context. In contrast to our platformer from [post two](https://itnext.io/modular-game-worlds-in-phaser-3-tilemaps-2-dynamic-platformer-3d68e73d494a) which had a single rectangle body, this character will have a compound body with four parts:
+
+![](./images/player-bodies.png)
+
+Our player is composed of a main body and three sensors. The main body will be like the rectangle bodies we've created before, except that it will have rounded corners (chamfer). This helps smooth out collisions (this will make more sense later). As for the other three parts, a sensor is a body that doesn't react physically with other bodies in the world, but still triggers collisions. These will allow us to implement some special logic - e.g. the sensor below the player will let us tell if the player is currently on the ground.
+
+Jumping into the code, we're going to need to rely on the native Matter API, accessible under `Phaser.Physics.Matter.Matter` (yeah, double Matter), to build the body:
+
+```js
+export default class Player {
+  constructor(scene, x, y) {
+    this.scene = scene;
+
+    // Create the physics-based sprite that we will move around and animate
+    this.sprite = scene.matter.add.sprite(0, 0, "player", 0);
+
+    const { Body, Bodies } = Phaser.Physics.Matter.Matter; // Native Matter modules
+    const { width: w, height: h } = this.sprite;
+    const mainBody = Bodies.rectangle(0, 0, w * 0.6, h, { chamfer: { radius: 10 } });
+    this.sensors = {
+      bottom: Bodies.rectangle(0, h * 0.5, w * 0.25, 2, { isSensor: true }),
+      left: Bodies.rectangle(-w * 0.35, 0, 2, h * 0.5, { isSensor: true }),
+      right: Bodies.rectangle(w * 0.35, 0, 2, h * 0.5, { isSensor: true })
+    };
+    const compoundBody = Body.create({
+      parts: [mainBody, this.sensors.bottom, this.sensors.left, this.sensors.right],
+      frictionStatic: 0,
+      frictionAir: 0.02,
+      friction: 0.1
+    });
+    this.sprite
+      .setExistingBody(compoundBody)
+      .setScale(2)
+      .setFixedRotation() // Sets inertia to infinity so the player can't rotate
+      .setPosition(x, y);
+  }
+}
+```
+
+And if we create the player in main-scene.js, loading its position from a Tiled object within our map:
+
+```js
+import Player from "./player.js";
+
+export default class MainScene extends Phaser.Scene {
+  create() {
+    // ... code omitted that sets up the tilemaps
+
+    // The spawn point is set using a point object inside of Tiled (within the "Spawn" object layer)
+    const { x, y } = map.findObject("Spawn", obj => obj.name === "Spawn Point");
+    this.player = new Player(this, x, y);
+
+    // Smoothly follow the player
+    this.cameras.main.startFollow(this.player.sprite, false, 0.5, 0.5);
+  }
+}
+```
+
+We'll end up with:
+
+![](./images/platformer-1.gif)
+
+Let's go back to the player class and add in some controls:
+
+```js
+import MultiKey from "./multi-key.js";
+
+export default class Player {
+  constructor(scene, x, y) {
+    // ... previous code omitted
+
+    // Track the keys
+    const { LEFT, RIGHT, UP, A, D, W } = Phaser.Input.Keyboard.KeyCodes;
+    this.leftInput = new MultiKey(scene, [LEFT, A]);
+    this.rightInput = new MultiKey(scene, [RIGHT, D]);
+    this.jumpInput = new MultiKey(scene, [UP, W]);
+
+    this.scene.events.on("update", this.update, this);
+  }
+
+  update() {
+    const sprite = this.sprite;
+    const velocity = sprite.body.velocity;
+    const isRightKeyDown = this.rightInput.isDown();
+    const isLeftKeyDown = this.leftInput.isDown();
+    const isJumpKeyDown = this.jumpInput.isDown();
+
+    const moveForce = 0.01;
+
+    if (isLeftKeyDown) {
+      sprite.setFlipX(true);
+      sprite.applyForce({ x: -moveForce, y: 0 });
+    } else if (isRightKeyDown) {
+      sprite.setFlipX(false);
+      sprite.applyForce({ x: moveForce, y: 0 });
+    }
+
+    // Limit horizontal speed, without this the player's velocity would just keep increasing to
+    // absurd speeds. We don't want to touch the vertical velocity though, so that we don't
+    // interfere with gravity.
+    if (velocity.x > 7) sprite.setVelocityX(7);
+    else if (velocity.x < -7) sprite.setVelocityX(-7);
+
+    if (isJumpKeyDown) {
+      sprite.setVelocityY(-11);
+    }
+  }
+}
+```
+
+We've done a few things here. First, to make input handling a bit better, we're using a small class called `MultiKey` that I've provided for us. The source code is in the sandbox, but for our purposes, all we need to know is that we pass it as many Phaser keys as we want, and then the `isDown()` method will tell us if any of the keys are down. This makes it easy to have W/A/S/D keys or the arrow keys control the player.
+
+Second, we hook the player's `update` method into the scene's life cycle: `this.scene.events.on("update", this.update, this)`. In previous posts, we manually called the player's update method, but now anytime the scene updates, the player will update on its own.
+
+Lastly, inside of update, we apply a force to the player to move them horizontally in response to key input. Since we are applying a force any time the key is down, the velocity will keep increasing the longer we hold the key - all the way up to break neck speeds where the sprite flies off screen. We need to manually impose a (horizontal) speed limit. We also spike the y velocity in order to make the player jump.
+
+We have a player moving around the world, but we have two problems. The first is that the player can jump while in mid-air, a.k.a. superman:
+
+![](./images/platformer-2)
+
+The second is that, because the player has a physical body with friction, the player can stick to a wall by jumping into it, a.k.a. spiderman:
+
+![](./images/platformer-3)
+
+This is where those sensors come in! We can use the ground sensor to know when the player is on the ground or in the air, so that we can solve the jumping problem. We can use the left/right sensors to know when the player is up against a wall, so that we can remove the spidey ability to stick to walls. We're going to have to modify a few things:
+
+```js
+import MultiKey from "./multi-key.js";
+
+export default class Player {
+  constructor(scene, x, y) {
+    // ... previous code omitted
+
+    // Track which sensors are touching something
+    this.isTouching = { left: false, right: false, ground: false };
+
+    // Jumping is going to have a cooldown
+    this.canJump = true;
+    this.jumpCooldownTimer = null;
+
+    // Before matter's update, reset the player's count of what surfaces it is touching.
+    scene.matter.world.on("beforeupdate", this.resetTouching, this);
+
+    // If a sensor just started colliding with something, or it continues to collide with something,
+    // call onSensorCollide
+    scene.matterCollision.addOnCollideStart({
+      objectA: [this.sensors.bottom, this.sensors.left, this.sensors.right],
+      callback: this.onSensorCollide,
+      context: this
+    });
+    scene.matterCollision.addOnCollideActive({
+      objectA: [this.sensors.bottom, this.sensors.left, this.sensors.right],
+      callback: this.onSensorCollide,
+      context: this
+    });
+  }
+
+  onSensorCollide({ bodyA, bodyB, pair }) {
+    if (bodyB.isSensor) return; // We only care about collisions with physical objects
+    if (bodyA === this.sensors.left) {
+      this.isTouching.left = true;
+      if (pair.separation > 0.5) this.sprite.x += pair.separation - 0.5;
+    } else if (bodyA === this.sensors.right) {
+      this.isTouching.right = true;
+      if (pair.separation > 0.5) this.sprite.x -= pair.separation - 0.5;
+    } else if (bodyA === this.sensors.bottom) {
+      this.isTouching.ground = true;
+    }
+  }
+
+  resetTouching() {
+    this.isTouching.left = false;
+    this.isTouching.right = false;
+    this.isTouching.ground = false;
+  }
+}
+```
+
+We've added two properties - `canJump` & `jumpCooldownTimer` - that we'll use in update. We've also added `isTouching`, which is how we will track what the sensors are touching. We hook into Matter's "beforeupdate" event, which runs before any collision events, to reset the `isTouching` fields back to `false`. Using the matter collision plugin, anytime a sensor hits another body in the scene, we mark the appropriate field of `isTouching` to `true`.
+
+We're also using `pair.separation` from the Matter event. This tells us how far the bodies would have to move to no longer be colliding. We're pushing the player slightly away from any walls on the left or right side (but leaving 0.5px of overlap so that the sensor continues colliding). The player's `mainBody` that physically interacts with the world can no longer be pressed up against a wall, so the friction-sticking-to-walls problem is solved.
+
+Back in update, we can change a few things:
+
+```js
+const sprite = this.sprite;
+const velocity = sprite.body.velocity;
+const isRightKeyDown = this.rightInput.isDown();
+const isLeftKeyDown = this.leftInput.isDown();
+const isJumpKeyDown = this.jumpInput.isDown();
+const isOnGround = this.isTouching.ground;
+const isInAir = !isOnGround;
+
+// Adjust the movement so that the player is slower in the air
+const moveForce = isOnGround ? 0.01 : 0.005;
+
+if (isLeftKeyDown) {
+  sprite.setFlipX(true);
+
+  // Don't let the player push things left if they in the air
+  if (!(isInAir && this.isTouching.left)) {
+    sprite.applyForce({ x: -moveForce, y: 0 });
+  }
+} else if (isRightKeyDown) {
+  sprite.setFlipX(false);
+
+  // Don't let the player push things right if they in the air
+  if (!(isInAir && this.isTouching.right)) {
+    sprite.applyForce({ x: moveForce, y: 0 });
+  }
+}
+
+// Limit horizontal speed, without this the player's velocity would just keep increasing to
+// absurd speeds. We don't want to touch the vertical velocity though, so that we don't
+// interfere with gravity.
+if (velocity.x > 7) sprite.setVelocityX(7);
+else if (velocity.x < -7) sprite.setVelocityX(-7);
+
+if (isJumpKeyDown && this.canJump && isOnGround) {
+  sprite.setVelocityY(-11);
+
+  // Add a slight delay between jumps since the bottom sensor will still collide for a few
+  // frames after a jump is initiated
+  this.canJump = false;
+  this.jumpCooldownTimer = this.scene.time.addEvent({
+    delay: 250,
+    callback: () => (this.canJump = true)
+  });
+}
+```
+
+We tweaked the move speed so that you move more slowly in the air and so that you can't push things around while in the air (important later). We also modified the jump so that you can only jump when the ground sensor is colliding with something. We've also used a Phaser timer to create a cooldown so that you have to wait 250ms between jumps.
+
+Putting that all together:
+
+https://codesandbox.io/s/5vlzl8j9vp
+
+I've added player animations in that sandbox, check out the `create` and `update` methods to see how they work.
+
+## Tidy up On Shutdown & Destroy
+
+We're going to want to add some more interactivity to our world. The first thing we'll add is the ability to kill the player and restart the scene when they land on lava or a spike. To do this, we need to be responsible and have the Player instance clean up after itself.
+
+In the last tutorial, we had the scene handle cleaning up and destroying the player. Since we are hooking the player directly into events, we'll want the player to listen for `shutdown` and `destroy` Scene events. `shutdown` is triggered when a scene via [`this.scene.restart`](https://photonstorm.github.io/phaser3-docs/Phaser.Scenes.ScenePlugin.html#restart__anchor) or [`this.scene.stop`](https://photonstorm.github.io/phaser3-docs/Phaser.Scenes.ScenePlugin.html#stop__anchor) within a Scene. When stopped, the scene instance isn't destroyed, so if the scene is started again, it will go through `init` and `create` (but not the constructor). `destroy` kills the Scene instance, and if we start that Scene again, a new instance will be created. In either case, we're going to unsubscribe the listener from any events and destroy the sprite it owns. Inside of player.js:
+
+```js
+create() {
+  // ... our existing create code would be here
+
+  this.destroyed = false;
+  this.scene.events.on("update", this.update, this);
+  this.scene.events.once("shutdown", this.destroy, this);
+  this.scene.events.once("destroy", this.destroy, this);
+}
+
+update() {
+  if (this.destroyed) return;
+
+  // ... our existing update code would be here
+}
+
+destroy() {
+  this.destroyed = true;
+
+  // Event listeners
+  this.scene.events.off("update", this.update, this);
+  this.scene.events.off("shutdown", this.destroy, this);
+  this.scene.events.off("destroy", this.destroy, this);
+  if (this.scene.matter.world) {
+    this.scene.matter.world.off("beforeupdate", this.resetTouching, this);
+  }
+
+  // Matter collision plugin
+  const sensors = [this.sensors.bottom, this.sensors.left, this.sensors.right];
+  this.scene.matterCollision.removeOnCollideStart({ objectA: sensors });
+  this.scene.matterCollision.removeOnCollideActive({ objectA: sensors });
+
+  // Don't want any timers triggering post-mortem
+  if (this.jumpCooldownTimer) this.jumpCooldownTimer.destroy();
+
+  this.sprite.destroy();
+}
+```
+
+We listen for shutdown and destroy, and in response, trigger the player's `destroy` method. This unsubscribes anything that could trigger code within Player - scene events, matter collision plugin callbacks, the timer. We also destroy the sprite that the player owns. Even though this method is being called by scene events automatically, it's written in a way that we could decide to destroy the player at any point in time, irrespective of the scene events.
+
+We've also added a `destroyed` flag to the code. This is necessary because of the way [EventEmitter3](https://github.com/primus/eventemitter3) works. When an event is triggered, any event listeners for the event are cached at the start of the event. So it's possible (and can happen often when working with physics) that a player will be destroyed during an update event, it may still receive one more update event. We could get around this with a plugin like [samme/phaser-update-plugin](https://github.com/samme/phaser-plugin-update), or a similar plugin that a friend and I created: [sporadic-labs/phaser-lifecycle-plugin](https://github.com/sporadic-labs/phaser-lifecycle-plugin). Both are proxies around scene events, so if you unsubscribe a listener through them, you can trust that the listener will not be invoked again from an event.
+
+## Player vs Lethal Tiles
+
+Whew, now we can continue building out the world by adding some simple physics-y puzzles. First up, let's kill the player when it lands on a spike or lava.
+
+![](./images/platformer-lava.gif)
+
+Inside of our MainScene:
+
+```js
+export default class MainScene extends Phaser.Scene {
+  create() {
+    // ... this goes after we created the player
+
+    this.unsubscribePlayerCollide = this.matterCollision.addOnCollideStart({
+      objectA: this.player.sprite,
+      callback: this.onPlayerCollide,
+      context: this
+    });
+  }
+
+  onPlayerCollide({ gameObjectB }) {
+    if (!gameObjectB || !(gameObjectB instanceof Phaser.Tilemaps.Tile)) return;
+
+    const tile = gameObjectB;
+
+    // Check the tile property set in Tiled (you could also just check the index if you aren't using
+    // Tiled in your game)
+    if (tile.properties.isLethal) {
+      // Unsubscribe from collision events so that this logic is run only once
+      this.unsubscribePlayerCollide();
+
+      this.player.freeze();
+      const cam = this.cameras.main;
+      cam.fade(250, 0, 0, 0);
+      cam.once("camerafadeoutcomplete", () => this.scene.restart());
+    }
+  }
+}
+```
+
+We're setting up the player's sprite to collide with anything in the world. When it does, we check if the thing it collided with (`gameObjectB`) is a tile. If it is, and it's a lethal tile (a tile property set up in Tiled - see ["Moving with Physics" section](https://medium.com/@michaelwesthadley/modular-game-worlds-in-phaser-3-tilemaps-1-958fc7e6bbd6#b92b) of post 1), we fade out and restart the scene.
+
+The `freeze` method on the player simply makes the player's body static, so that it doesn't move for the duration of the fade. `unsubscribePlayerCollide` is really important here. This function - which is returned from `addOnCollideStart` - will remove the collision listener that we added, so that the player can only die once.
+
+Here's the final platformer sandbox for this post (includes the lethal tiles plus the next sections):
+
+https://codesandbox.io/s/j44k3844j3
+
+## Crates & Spikes Puzzle
+
+The part of the map with the spikes isn't jumpable without some help. Let's create a really simple physics puzzle that shows off Matter. We'll place some crates in front of the player for them to knock down so they can cross the spikes. Because we're using Tiled to build the level, we'll use an object layer for this. It's already set up in the starter project, but here's how it was made:
+
+![](./images/placing-crates.gif)
+
+_↳ Using the "Tile Object" object tool which allows you to place tile graphics in the map_
+
+```js
+create() {
+  // ... our existing code would be here
+
+  // Load up some crates from the "Crates" object layer created in Tiled
+  map.getObjectLayer("Crates").objects.forEach(crateObject => {
+    const { x, y, width, height } = crateObject;
+
+    // Tiled origin for its coordinate system is (0, 1), but we want coordinates relative to an
+    // origin of (0.5, 0.5)
+    this.matter.add
+      .image(x + width / 2, y - height / 2, "block")
+      .setBody({ shape: "rectangle", density: 0.001 });
+  });
+}
+```
+
+![](./images/knocking-crates.gif)
+
+## Constraints and Seesaw Platforms
+
+We've got a large chasm filled with lava after the spike, so let's add some rotating platforms to that area to create another simple physics puzzle. The platforms will use constraints to keep them pinned in space, but they will rotate freely:
+
+![](./images/rotating-platform.gif)
+
+Again, we'll use Tiled to pick the locations of these platforms:
+
+![](./images/placing-platforms.gif)
+
+Then we can use a yet-to-be created module to place platforms:
+
+```js
+import createRotatingPlatform from "./create-rotating-platform.js";
+
+export default class MainScene extends Phaser.Scene {
+  create() {
+    // ... our existing code would be here
+
+    // Create platforms at the point locations in the "Platform Locations" layer created in Tiled
+    map.getObjectLayer("Platform Locations").objects.forEach(point => {
+      createRotatingPlatform(this, point.x, point.y);
+    });
+  }
+}
+```
+
+**Embed codepen?**
+
+Check out the [constraints demo](http://brm.io/matter-js/demo/#constraints) and [source code](https://github.com/liabru/matter-js/blob/master/examples/constraints.js) from Matter.js. We can think of constraints as a way to express that a body should be linked invisibly to another body or point in space. The body will then stay a fixed distance (that you specify) from that other body or point. Using the `stiffness` parameter, we can control whether there's any give to that invisible connection (e.g. a spring) or not.
+
+In a new file "create-rotating-platform.js" we can export a function that creates platforms. (We don't really need a class here - we're just configuring a [TileSprite](https://photonstorm.github.io/phaser3-docs/Phaser.GameObjects.TileSprite.html).)
+
+```js
+export default function createRotatingPlatform(scene, x, y, numTiles = 5) {
+  // A TileSprite is a Sprite whose texture repeats to fill the given width and height. We can use
+  // this with an image from our tileset to create a platform composed of tiles:
+  const platform = scene.add.tileSprite(x, y, 64 * numTiles, 18, "wooden-plank");
+
+  scene.matter.add.gameObject(platform, {
+    restitution: 0, // No bounciness
+    frictionAir: 0, // Spin forever without slowing down from air resistance
+    friction: 0.2, // A little extra friction so the player sticks better
+    // Density sets the mass and inertia based on area - 0.001 is the default. We're going lower
+    // here so that the platform tips/rotates easily
+    density: 0.0005
+  });
+
+  // Alias the native Matter.js API
+  const { Constraint } = Phaser.Physics.Matter.Matter;
+
+  // Create a point constraint that pins the center of the platform to a fixed point in space, so
+  // it can't move
+  const constraint = Constraint.create({
+    pointA: { x: platform.x, y: platform.y },
+    bodyB: platform.body,
+    length: 0
+  });
+
+  // We need to add the constraint to the Matter world to activate it
+  scene.matter.world.add(constraint);
+
+  // Give the platform a random initial tilt, as a hint to the player that these platforms rotate
+  const sign = Math.random() < 0.5 ? -1 : 1;
+  const angle = sign * Phaser.Math.Between(15, 25);
+  platform.setAngle(angle);
+}
+```
+
+We're taking advantage of [TileSprite](https://photonstorm.github.io/phaser3-docs/Phaser.GameObjects.TileSprite.html) so that we can use our tile assets (64 x 64 pixels) to create a platform in the world. I've just extracted an individual tile from the tileset for us and trimmed it to 64 x 18 pixels.
+
+Constraints can be a lot of fun. Anything we can do in vanilla Matter, we can do with Matter & Phaser. Check out Matter's [constraint documentation](http://brm.io/matter-js/docs/classes/Constraint.html) for more information.
+
+Here's the final platformer sandbox for this post (includes the lethal tiles plus the next two sections):
+
+https://codesandbox.io/s/j44k3844j3
+
+## Celebration Trigger
+
+Great - we can get from the left side of the screen to the right side. Let's do something fun to celebrate when the player does that. We'll create an invisible sensor and drop celebratory emojis on the player when they hit the sensor:
+
+![](./images/trigger-emoji.gif)
+
+Again, we turn to Tiled to map out the sensor using an object layer:
+
+![](./images/placing-sensors.gif)
+
+Then we can load that up and listen for collisions back in our scene:
+
+```js
+export default class MainScene extends Phaser.Scene {
+  create() {
+    // ... our existing code would be here
+
+    // Create a sensor at rectangle object created in Tiled (under the "Sensors" layer)
+    const rect = map.findObject("Sensors", obj => obj.name === "Celebration");
+    const celebrateSensor = this.matter.add.rectangle(
+      rect.x + rect.width / 2,
+      rect.y + rect.height / 2,
+      rect.width,
+      rect.height,
+      {
+        isSensor: true, // It shouldn't physically interact with other bodies
+        isStatic: true // It shouldn't move
+      }
+    );
+    this.unsubscribeCelebrate = this.matterCollision.addOnCollideStart({
+      objectA: this.player.sprite,
+      objectB: celebrateSensor,
+      callback: this.onPlayerWin,
+      context: this
+    });
+  }
+
+  onPlayerWin() {
+    // Celebrate only once
+    this.unsubscribeCelebrate();
+
+    // Drop some heart-eye emojis, of course
+    for (let i = 0; i < 35; i++) {
+      const x = this.player.sprite.x + Phaser.Math.RND.integerInRange(-50, 50);
+      const y = this.player.sprite.y - 150 + Phaser.Math.RND.integerInRange(-10, 10);
+      this.matter.add
+        .image(x, y, "emoji", "1f60d", {
+          restitution: 1,
+          friction: 0,
+          density: 0.0001,
+          shape: "circle"
+        })
+        .setScale(0.5);
+    }
+  }
+}
+```
+
+This same idea of invisible sensors can be used to trigger buttons, falling platforms, loading the next level, etc.
+
+And with that, we've got a nice little physics-y level that you could experiment with and extend.
+
+The final platformer sandbox again:
+
+https://codesandbox.io/s/j44k3844j3
+
 ## Ghost Collisions
 
 At some point in exploring Matter, you might run into the common problem of ghost collisions. If you notice a player seemingly tripping over nothing as it walks along a platform of tiles, you are likely running into ghost collisions. Here's what they look like:
@@ -370,18 +884,16 @@ There are a couple ways to mitigate this:
 
 - Add chamfer to bodies, i.e. round the edges, or use circular bodies to reduce the impact of the ghost collisions.
 - Map out your level's hitboxes as as a few convex hulls instead of giving each tile a separate body. You can still use Tiled for this. Create an object layer, and fill it with shapes, convert those shapes to Matter bodies in Phaser. The demo code does that.
-- You might be able to use Matter's ability to handle polygons to join all your tiles into one body, depending on the complexity of your map.
+- You might be able to use Matter's ability to handle compound bodies to join all your tiles into one body, depending on the complexity of your map.
 
 Or, just live with the little glitches for a bit. [@hexus](https://github.com/hexus) is working on a Phaser plugin for solving for ghost collisions against tilemaps, so keep an eye on his GitHub feed. It should be dropping pretty soon.
 
-## Up Next
+## Series Finale
 
-Thanks for reading, and if there's something you'd like to see in future posts, let me know!
+Thanks for reading. Hope you've enjoyed reading this series on modular game worlds.
+
+While this series is over, I'll still be posting about Phaser 3, so if there's something you'd like to see in future posts, let me know!
 
 ## About Me
 
 I’m a creative developer & educator. I wrote the Tilemap API for Phaser 3 and created a ton of guided examples, but I wanted to collect all of that information into a more guided and digestible format so that people can more easily jump into Phaser 3. You can see more of my work and get in touch [here](https://www.mikewesthad.com/).
-
-```
-
-```
