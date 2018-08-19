@@ -31,62 +31,12 @@ export default class MainScene extends Phaser.Scene {
 
     this.matter.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
 
-    // Drop some 1x grimacing emoji sprite when the mouse is pressed
-    this.input.on("pointerdown", () => {
-      const worldPoint = this.input.activePointer.positionToCamera(this.cameras.main);
-      const x = worldPoint.x + Phaser.Math.RND.integerInRange(-10, 10);
-      const y = worldPoint.y + Phaser.Math.RND.integerInRange(-10, 10);
-
-      // We're creating sprites this time, so that we can animate them
-      this.matter.add
-        .sprite(x, y, "emoji", "1f62c", { restitution: 1, friction: 0.25, shape: "circle" })
-        .setScale(0.5);
-    });
-
-    // Create an angry emoji => grimace emoji animation
-    this.anims.create({
-      key: "angry",
-      frames: [{ key: "emoji", frame: "1f92c" }, { key: "emoji", frame: "1f62c" }],
-      frameRate: 8,
-      repeat: 0
-    });
-
-    this.matter.world.on("collisionstart", event => {
-      event.pairs.forEach(pair => {
-        const { bodyA, bodyB } = pair;
-        const gameObjectA = bodyA.gameObject;
-        const gameObjectB = bodyB.gameObject;
-
-        const aIsEmoji = gameObjectA instanceof Phaser.Physics.Matter.Sprite;
-        const bIsEmoji = gameObjectB instanceof Phaser.Physics.Matter.Sprite;
-
-        if (aIsEmoji) {
-          gameObjectA.setAlpha(0.5);
-          gameObjectA.play("angry", false);
-        }
-        if (bIsEmoji) {
-          gameObjectB.setAlpha(0.5);
-          gameObjectB.play("angry", false);
-        }
-      });
-    });
-
-    this.matter.world.on("collisionend", event => {
-      event.pairs.forEach(pair => {
-        const { bodyA, bodyB } = pair;
-        const gameObjectA = bodyA.gameObject;
-        const gameObjectB = bodyB.gameObject;
-
-        const aIsEmoji = gameObjectA instanceof Phaser.Physics.Matter.Sprite;
-        const bIsEmoji = gameObjectB instanceof Phaser.Physics.Matter.Sprite;
-
-        if (aIsEmoji) gameObjectA.setAlpha(1);
-        if (bIsEmoji) gameObjectB.setAlpha(1);
-      });
-    });
-
     // Our canvas is "clickable" so let's update the cursor to a custom pointer
     this.input.setDefaultCursor("url(../assets/cursors/pointer.cur), pointer");
+
+    // --- Code along here ---
+    //
+    //
 
     this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
 
@@ -100,15 +50,6 @@ export default class MainScene extends Phaser.Scene {
       speed: 0.5
     };
     this.controls = new Phaser.Cameras.Controls.FixedKeyControl(controlConfig);
-
-    const text = "Left-click to emoji.\nArrows to move camera.";
-    const help = this.add.text(16, 16, text, {
-      fontSize: "18px",
-      padding: { x: 10, y: 5 },
-      backgroundColor: "#ffffff",
-      fill: "#000000"
-    });
-    help.setScrollFactor(0).setDepth(1000);
   }
 
   update(time, delta) {

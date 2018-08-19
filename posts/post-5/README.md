@@ -137,9 +137,13 @@ This approach isn't terribly friendly or modular though. We have to worry about 
 
 Now that we understand how collisions work in Matter, let's use them in Phaser. Before getting into creating a platformer, let's quickly revisit our emoji dropping example from last time:
 
-**GIF**
+![](./images/collisions-angry-emoji.gif)
 
-When an emoji collides with something, we'll make it play a short angry face animation. The setup is the same as last time. We set up a tilemap and enable Matter bodies on the tiles. When the player clicks on the screen, we drop a Matter-enabled emoji. Last time we used a [`Phaser.Physics.Matter.Image`](https://photonstorm.github.io/phaser3-docs/Phaser.Physics.Matter.Image.html) for the emoji, but this time we'll use a [`Phaser.Physics.Matter.Sprite`](https://photonstorm.github.io/phaser3-docs/Phaser.Physics.Matter.Sprite.html) so that we can use an animation. This goes into our Scene's `create` method:
+_↳ Dropping emoji like last time, except now they get angry when they collide._
+
+When an emoji collides with something, we'll make it play a short angry face animation. Here is another [starter template](https://codesandbox.io/s/l5ko8wo917) for this section where you can code along. It has a tilemap set up with Matter bodies on the tiles. Note: Phaser versions 3.11 and lower had a bug with Matter's "collisionEnd", but it's patched now in 3.12 and up. The starter project uses 3.12.
+
+When the player clicks on the screen, we drop a Matter-enabled emoji. Last time we used a [`Phaser.Physics.Matter.Image`](https://photonstorm.github.io/phaser3-docs/Phaser.Physics.Matter.Image.html) for the emoji, but this time we'll use a [`Phaser.Physics.Matter.Sprite`](https://photonstorm.github.io/phaser3-docs/Phaser.Physics.Matter.Sprite.html) so that we can use an animation. This goes into our Scene's `create` method:
 
 ```js
 // Drop some 1x grimacing emoji sprite when the mouse is pressed
@@ -222,9 +226,9 @@ this.matter.world.on("collisionend", event => {
 });
 ```
 
-**sandbox**
+https://codesandbox.io/s/810yw745v9
 
-Now we've seen native Matter events and Phaser's wrapper around those Matter events. Both are a bit messy to use without a better structure, but they are important to cover before we start using a plugin to help us manage the collisions.
+Now we've seen native Matter events and Phaser's wrapper around those Matter events. Both are a bit messy to use without a better structure, but they are important to cover before we start using a plugin to help us manage the collisions. It's especially important if you decide you don't want to rely on my plugin 😉.
 
 The approach in this section still isn't very modular. One function handles all our collisions. If we added more types of objects to the world, we'd need more conditionals in this function. We also haven't looked at how compound bodies would work here - spoiler, they add another layer of complexity.
 
