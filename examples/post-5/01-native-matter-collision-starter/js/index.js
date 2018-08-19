@@ -4,7 +4,7 @@
 
 // Matter is structured around modules that contain object creation factories and methods that can
 // manipulate those objects - e.g. Body.create and Body.applyForce
-const { Engine, Render, World, Bodies, Body, Events } = Matter;
+const { Engine, Render, World, Bodies, Body } = Matter;
 
 // A few math/random helpers
 const DEGREES_TO_RADIANS = Math.PI / 180;
@@ -87,41 +87,10 @@ document.querySelector("canvas").addEventListener("mousedown", () => {
   }
 });
 
-Events.on(engine, "collisionStart", event => {
-  event.pairs.forEach(pair => {
-    const { bodyA, bodyB } = pair;
-
-    bodyA.render.opacity = 0.75;
-    bodyB.render.opacity = 0.75;
-
-    // Detecting collisions between the floor and anything else
-    if (bodyA === floor || bodyB === floor) {
-      console.log("Something hit the floor!");
-
-      // The conditional ternary operator is a shorthand for an if-else conditional. Here, we use it
-      // to access whichever body is not the floor.
-      const otherBody = bodyB === floor ? bodyA : bodyB;
-      otherBody.render.fillStyle = "#2E2B44";
-    }
-
-    // Detecting collisions between the floor and the circle
-    if ((bodyA === floor && bodyB === circle) || (bodyA === circle && bodyB === floor)) {
-      console.log("Circle hit floor");
-
-      const circleBody = bodyA === circle ? bodyA : bodyB;
-      World.remove(engine.world, circleBody);
-    }
-  });
-});
-
-Events.on(engine, "collisionEnd", event => {
-  event.pairs.forEach(pair => {
-    const { bodyA, bodyB } = pair;
-
-    bodyA.render.opacity = 1;
-    bodyB.render.opacity = 1;
-  });
-});
+// --- Code along starting here ---
+//
+//
+//
 
 // Kick off the simulation and the render loops
 Engine.run(engine);

@@ -4,11 +4,11 @@ Author: [Mike Hadley](https://www.mikewesthad.com/)
 
 Reading this on GitHub? Check out the [medium post](coming soon).
 
-This is the fifth post in a series of blog posts about creating modular worlds with tilemaps in the [Phaser 3](http://phaser.io/) game engine. In this edition, ...
+This is the fifth post (and finale!) in a series of blog posts about creating modular worlds with tilemaps in the [Phaser 3](http://phaser.io/) game engine. In this edition, we'll step up our Matter.js knowledge and create a little puzzle-y platformer:
 
-**Insert final demo GIF**
+![](./images/final-demo-smaller-optimized.gif)
 
-_↳ insert caption_
+_↳ Pushing crates around to avoid spikes and hopping over seesaw platforms_
 
 If you haven't checked out the previous posts in the series, here are the links:
 
@@ -27,17 +27,19 @@ Alright, Let's get into it!
 
 ## Overview
 
-...
-
-In the [last post](https://medium.com/@michaelwesthadley/modular-game-worlds-in-phaser-3-tilemaps-4-meet-matter-js-abf4dfa65ca1), we got acquainted with Matter.js...
-
-If you are the type of the person who just wants to get straight to handling collisions nicely in Phaser, you can jump ahead two sections. But if you like to understand how something really works - which I think will pay off in the long run - then let's take a short detour back into Matter to see how native collisions work there.
+In the [last post](https://medium.com/@michaelwesthadley/modular-game-worlds-in-phaser-3-tilemaps-4-meet-matter-js-abf4dfa65ca1), we got acquainted with the Matter.js physics engine and played with dropping bouncy emoji around a scene. Now we're going to build on that Matter knowledge and step through building a 2D platformer. We'll learn how collisions work in Matter, get familiar with a plugin that will allow us to nicely watch for collisions in Phaser and then get into the core of the platformer.
 
 ## Collisions in Matter
 
-Last time, we saw how to add physical shapes to a world and have them collide with one another. If we want to use that physics in a game, we need to be able to respond when certain objects collide with one another, e.g. like a player character stepping on a trap door. Since Phaser's implementation of Matter is a thin wrapper around the underlying library, it's worth revisiting our vanilla Matter example from last time to learn about collision detection in Matter.
+The crux of what we are going to do revolves around handling Matter collisions. If we want to use physics in a game, we need to be able to respond when certain objects collide with one another, e.g. like a player character stepping on a trap door. Since Phaser's implementation of Matter is a thin wrapper around the underlying library, it's worth revisiting our vanilla Matter example from last time to learn about collision detection in Matter. If you are impatient, you _could_ jump ahead two sections to get straight to the platformer. But if you like to understand how something really works - which I think will pay off in the long run - then stick with me here.
 
-The setup is almost exactly the same:
+Here's what we're aiming for in this section:
+
+![](./images/matter-collisions-optimized.gif)
+
+_↳ The shapes are flickering when they collide with each other and they are turning purple when they hit the floor._
+
+Here's a [CodeSandbox starter project](https://codesandbox.io/s/kw73yy6375) that matches what we did last time. I'd recommend opening that up and coding along there (there's a comment towards the bottom of the file that shows you where to start coding along). The setup is almost exactly the same:
 
 1. We create a renderer and engine.
 2. We create some different shaped bodies that will bounce around the world.
@@ -47,7 +49,10 @@ The setup is almost exactly the same:
 The difference is that we added a new module alias at the top of the file, `Events`:
 
 ```js
-const { Engine, Render, World, Bodies, Body, Events } = Matter;
+import { Engine, Render, World, Bodies, Body, Events } from "matter-js";
+
+// Or when using Matter globally as a script:
+// const { Engine, Render, World, Bodies, Body, Events } = Matter;
 ```
 
 `Events` allows us to subscribe to event emitters in Matter. The two events we will play with in this demo are [`collisionStart`](http://brm.io/matter-js/docs/classes/Engine.html#event_collisionStart) and [`collisionEnd`](http://brm.io/matter-js/docs/classes/Engine.html#event_collisionEnd). (See the docs for other [engine events](http://brm.io/matter-js/docs/classes/Engine.html#events).)
@@ -66,7 +71,7 @@ Events.on(engine, "collisionEnd", event => {
 });
 ```
 
-On each tick of the engine's loop, Matter keeps track of all pairs of objects that just started colliding (`collisionStart`), have continued colliding for multiple ticks (`collisionActive`) or just finished colliding (`collisionEnd`). The events have the same structure. Each provides a single argument - an object - with a `pairs` property that is an array of all pairs of Matter bodies that were colliding. Each `pair` has `bodyA` and `bodyB` properties that give us access to who collided. Inside of our event listener, we can loop over all the pairs, look for collisions we care about and do something. Let's start by making anything that collides slightly transparent (using the body's [render property](http://brm.io/matter-js/docs/classes/Body.html#property_render)):
+On each tick of the engine's loop, Matter keeps track of all pairs of objects that just started colliding (`collisionStart`), have continued colliding for multiple ticks (`collisionActive`) or just finished colliding (`collisionEnd`). The events have the same structure. Each provides a single argument - an object - with a `pairs` property that is an array of all pairs of Matter bodies that were colliding. Each `pair` has `bodyA` and `bodyB` properties that give us access to which two bodies collided. Inside of our event listener, we can loop over all the pairs, look for collisions we care about and do something. Let's start by making anything that collides slightly transparent (using the body's [render property](http://brm.io/matter-js/docs/classes/Body.html#property_render)):
 
 ```js
 Events.on(engine, "collisionStart", event => {
@@ -89,10 +94,6 @@ Events.on(engine, "collisionEnd", event => {
   });
 });
 ```
-
-**GIF**
-
-_↳ The bodies flash just while they are colliding_
 
 Now we can extend our "collisionStart" to have some conditional logic based on which bodies are colliding.
 
@@ -128,9 +129,9 @@ Events.on(engine, "collisionStart", event => {
 
 In the first conditional, we check if one of the bodies is the floor, then we adjust the color of the other body to match the floor color. In the second conditional, we check if the circle hit the floor, and if so, kill it. With those basics, we can do a lot in a game world - like checking if the player hit a button, or if any object fell into lava.
 
-**sandbox**
+https://codesandbox.io/s/yqv0qqjoj9
 
-This approach isn't terribly friendly or modular though. We have to worry about the order of bodyA and bodyB - was the floor A or B? We also have to have a big centralized function that knows about all the colliding pairs. Matter takes the approach of keeping the engine itself as simple as possible and leaving it up to the user to add in their specific way of handling collisions. If you want to go further with Matter without Phaser, then check out this Matter plugin to that makes collision handling easier by giving us a way to listening to collisions on specific bodies: [dxu/matter-collision-events](https://github.com/dxu/matter-collision-events#readme). When we get to Phaser, we'll similarly solve this with a plugin.
+This approach isn't terribly friendly or modular though. We have to worry about the order of `bodyA` and `bodyB` - was the floor A or B? We also have to have a big centralized function that knows about all the colliding pairs. Matter takes the approach of keeping the engine itself as lean as possible and leaving it up to the user to add in their specific way of handling collisions. If you want to go further with Matter without Phaser, then check out this Matter plugin to that makes collision handling easier by giving us a way to listening to collisions on specific bodies: [dxu/matter-collision-events](https://github.com/dxu/matter-collision-events#readme). When we get to Phaser, we'll similarly solve this with a plugin.
 
 ## Simple Collisions in Phaser
 
