@@ -35,7 +35,7 @@ export default class MainScene extends Phaser.Scene {
 
     // Create a physics-enabled image
     const image1 = this.matter.add.image(275, 100, "emoji", "1f92c");
-    // Change it's body to a circle and configure it's body parameters
+    // Change it's body to a circle and configure its body parameters
     image1.setCircle(image1.width / 2, { restitution: 1, friction: 0.25 });
     image1.setScale(0.5);
 
