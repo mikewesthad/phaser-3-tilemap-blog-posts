@@ -234,7 +234,13 @@ The approach in this section still isn't very modular. One function handles all 
 
 ## Collision Plugin
 
-I created a Phaser plugin to make our lives a bit easier when it comes to Matter collisions in Phaser: [phaser-matter-collision-plugin](https://github.com/mikewesthad/phaser-matter-collision-plugin). With it, we can detect collisions between specific game objects, e.g.
+I created a Phaser plugin to make our lives a bit easier when it comes to Matter collisions in Phaser: [phaser-matter-collision-plugin](https://github.com/mikewesthad/phaser-matter-collision-plugin). We'll use it to build this (last stop before we step up the complexity with a platformer):
+
+![](./images/emoji-love-hate.gif)
+
+_↳ Love-hate collisions_
+
+With the plugin, we can detect collisions between specific game objects, for example:
 
 ```js
 const player = this.matter.add.sprite(0, 0, "player");
@@ -247,7 +253,7 @@ this.matterCollision.addOnCollideStart({
 });
 ```
 
-Or between groups of game objects, e.g.
+Or between groups of game objects:
 
 ```js
 const player = this.matter.add.sprite(0, 0, "player");
@@ -265,7 +271,93 @@ this.matterCollision.addOnCollideStart({
 });
 ```
 
-Check out [the docs](https://www.mikewesthad.com/phaser-matter-collision-plugin/docs/manual/README.html) if you want to learn more.
+Or between a game object and any other body:
+
+```js
+const player = this.matter.add.sprite(0, 0, "player");
+
+this.matterCollision.addOnCollideStart({
+  objectA: player,
+  callback: eventData => {
+    const { bodyB, gameObjectB } = eventData;
+    console.log("Player touched something.");
+    // bodyB will be the matter body that the player touched
+    // gameObjectB will be the game object that owns bodyB, or undefined if there's no game object
+  }
+});
+```
+
+There are some other useful features - check out [the docs](https://www.mikewesthad.com/phaser-matter-collision-plugin/docs/manual/README.html) if you want to learn more. We'll be using it, and unpacking how it works, as we go.
+
+Phaser's plugin system allows us to hook into the game engine in a structured way and add additional features. The collision plugin is a scene plugin (vs a global plugin, see [docs](https://photonstorm.github.io/phaser3-docs/Phaser.Plugins.PluginManager.html)), so an instance will be accessible on each scene after we've installed it via `this.matterCollision`.
+
+Here's a [CodeSandbox starter project](https://codesandbox.io/s/316pq9j541) for coding along. It has the dependencies - Phaser and PhaserMatterCollisionPlugin - already installed as dependencies. (There are additional instructions [here](https://www.mikewesthad.com/phaser-matter-collision-plugin/docs/manual/README.html#installation) on how to load the plugin from a CDN or install it locally.)
+
+Inside of index.js, we can load up the game with the plugin installed:
+
+```js
+import MainScene from "./main-scene.js";
+
+const config = {
+  type: Phaser.AUTO,
+  width: 800,
+  height: 600,
+  backgroundColor: "#000c1f",
+  parent: "game-container",
+  scene: MainScene,
+  physics: { default: "matter" },
+  plugins: {
+    scene: [
+      {
+        plugin: PhaserMatterCollisionPlugin, // The plugin class
+        key: "matterCollision", // Where to store in Scene.Systems, e.g. scene.sys.matterCollision
+        mapping: "matterCollision" // Where to store in the Scene, e.g. scene.matterCollision
+      }
+    ]
+  }
+};
+
+const game = new Phaser.Game(config);
+```
+
+Then inside of main-scene.js, inside of `create`:
+
+```js
+// Create two simple animations - one angry => grimace emoji and one heart eyes => grimace
+this.anims.create({
+  key: "angry",
+  frames: [{ key: "emoji", frame: "1f92c" }, { key: "emoji", frame: "1f62c" }],
+  frameRate: 3,
+  repeat: 0
+});
+this.anims.create({
+  key: "love",
+  frames: [{ key: "emoji", frame: "1f60d" }, { key: "emoji", frame: "1f62c" }],
+  frameRate: 3,
+  repeat: 0
+});
+
+const bodyOptions = { restitution: 1, friction: 0, shape: "circle" };
+const emoji1 = this.matter.add.sprite(150, 100, "emoji", "1f62c", bodyOptions);
+const emoji2 = this.matter.add.sprite(250, 275, "emoji", "1f62c", bodyOptions);
+
+// Use the plugin to only listen for collisions between emoji 1 & 2
+this.matterCollision.addOnCollideStart({
+  objectA: emoji1,
+  objectB: emoji2,
+  callback: ({ gameObjectA, gameObjectB }) => {
+    gameObjectA.play("angry", false); // gameObjectA will always match the given "objectA"
+    gameObjectB.play("love", false); // gameObjectB will always match the given "objectB"
+  }
+});
+```
+
+Now we don't have to worry about which order the colliding pair is in, or finding the attached game object (or dealing with compound bodies). We can organize pieces of our collision logic within classes/modules as we see fit - like having the player listen for collisions that it cares about within player.js.
+
+Here's the final code, with a little extra added in to make the emojis draggable:
+
+https://codesandbox.io/s/v829vxpp8l
+
 ## Ghost Collisions
 
 At some point in exploring Matter, you might run into the common problem of ghost collisions. If you notice a player seemingly tripping over nothing as it walks along a platform of tiles, you are likely running into ghost collisions. Here's what they look like:
