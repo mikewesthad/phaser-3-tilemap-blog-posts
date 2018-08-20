@@ -57,6 +57,13 @@ The games assets fall under the original creator's license, so be sure to check 
 - Cursor by [freepik](https://www.flaticon.com/free-icon/pointer_178432), CC-BY 3.0
 - Tilesets by Kenney, [Platformer Redux](https://www.kenney.nl/assets/platformer-art-pixel-redux) and [Abstract Platformer](https://www.kenney.nl/assets/abstract-platformer), CC 1.0 Universal
 
+### Post 5
+
+- [Twemoji](https://github.com/twitter/twemoji), CC-BY 4.0
+- Cursor by [freepik](https://www.flaticon.com/free-icon/pointer_178432), CC-BY 3.0
+- Tilesets by Kenney, [Platformer Redux](https://www.kenney.nl/assets/platformer-art-pixel-redux) and [Abstract Platformer](https://www.kenney.nl/assets/abstract-platformer), CC 1.0 Universal
+- [0x72 Industrial Tileset](https://0x72.itch.io/16x16-industrial-tileset) by Robert, CC0
+
 ## Blog Posts
 
 No licenses is granted for the blog posts themselves and the associated assets (posts folder). If you like them, please share links to them rather than republishing them 👍🏽.

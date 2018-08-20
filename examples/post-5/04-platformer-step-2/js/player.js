@@ -70,7 +70,7 @@ export default class Player {
     this.canJump = true;
     this.jumpCooldownTimer = null;
 
-    // Before matter's update, reset the player's count of what surfaces it is touching.
+    // Before matter's update, reset our record of which surfaces the player is touching.
     scene.matter.world.on("beforeupdate", this.resetTouching, this);
 
     scene.matterCollision.addOnCollideStart({

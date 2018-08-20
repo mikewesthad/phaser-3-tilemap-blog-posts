@@ -6,6 +6,7 @@ An in-progress series on Tilemaps in Phaser 3.
 - Post #2 Dynamic Platformer: [link](https://medium.com/@michaelwesthadley/modular-game-worlds-in-phaser-3-tilemaps-2-dynamic-platformer-3d68e73d494a)
 - Post #3 Procedural Dungeon: [link](https://medium.com/@michaelwesthadley/modular-game-worlds-in-phaser-3-tilemaps-3-procedural-dungeon-3bc19b841cd)
 - Post #4 Meet Matter: [link](https://medium.com/@michaelwesthadley/modular-game-worlds-in-phaser-3-tilemaps-4-meet-matter-js-abf4dfa65ca1)
+- Post #5 Matter Physics Platformer: [link](https://medium.com/@michaelwesthadley/modular-game-worlds-in-phaser-3-tilemaps-5-matter-physics-platformer-d14d1f614557)
 
 ## Running Examples Locally
 
