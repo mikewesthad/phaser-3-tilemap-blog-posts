@@ -39,7 +39,7 @@ Here's what we're aiming for in this section:
 
 _↳ The shapes light up when they collide with each other, and they turn purple when they hit the floor._
 
-Here's a [CodeSandbox starter project](https://codesandbox.io/s/kw73yy6375) that matches what we did last time. I'd recommend opening that up and coding along. There's a comment towards the bottom of the file that shows you where to start coding. The setup is the same as last time:
+Here's a [CodeSandbox starter project](https://codesandbox.io/s/kw73yy6375?module=%2Fjs%2Findex.js) that matches what we did last time. I'd recommend opening that up and coding along. There's a comment towards the bottom of the file that shows you where to start coding. The setup is the same as last time:
 
 1. We create a renderer and engine.
 2. We create some different shaped bodies that will bounce around the world.
@@ -153,7 +153,7 @@ Now that we understand how collisions work in Matter, let's use them in Phaser. 
 
 _↳ Dropping emoji like last time, except now they get angry when they collide._
 
-When an emoji collides with something, we'll make it play a short angry face animation. Here is another [starter template](https://codesandbox.io/s/l5ko8wo917) for this section where you can code along. It has a tilemap set up with Matter bodies on the tiles. Note: Phaser versions 3.11 and lower had a bug with Matter's `collisionEnd`, but it's patched now in 3.12 and up. The starter project uses 3.12.
+When an emoji collides with something, we'll make it play a short angry face animation. Here is another [starter template](https://codesandbox.io/s/l5ko8wo917?module=%2Fjs%2Fmain-scene.js) for this section where you can code along. It has a tilemap set up with Matter bodies on the tiles. Note: Phaser versions 3.11 and lower had a bug with Matter's `collisionEnd`, but it's patched now in 3.12 and up. The starter project uses 3.12.
 
 When the player clicks on the screen, we will drop a Matter-enabled emoji. Last time we used a [`Phaser.Physics.Matter.Image`](https://photonstorm.github.io/phaser3-docs/Phaser.Physics.Matter.Image.html) for the emoji, but this time we'll use a [`Phaser.Physics.Matter.Sprite`](https://photonstorm.github.io/phaser3-docs/Phaser.Physics.Matter.Sprite.html) so that we can use an animation. This goes into our Scene's `create` method:
 
@@ -246,11 +246,11 @@ this.matter.world.on("collisionend", event => {
 
 <!-- https://gist.github.com/mikewesthad/b625785d422e4a843c6c4cc4a82c4833 -->
 
-[![Edit Phaser Tilemap Post 5: 02-simple-phaser-collisions](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/810yw745v9?hidenavigation=1&module=%2Fjs%2Findex.js&moduleview=1)
+[![Edit Phaser Tilemap Post 5: 02-simple-phaser-collisions](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/810yw745v9?hidenavigation=1&module=%2Fjs%2Fmain-scene.js&moduleview=1)
 
-<!-- Embed link for medium: https://codesandbox.io/s/810yw745v9?hidenavigation=1&module=%2Fjs%2Findex.js&moduleview=1 -->
+<!-- Embed link for medium: https://codesandbox.io/s/810yw745v9?hidenavigation=1&module=%2Fjs%2Fmain-scene.js&moduleview=1 -->
 
-_↳ Check out the [CodeSandbox](https://codesandbox.io/s/810yw745v9?hidenavigation=1&module=%2Fjs%2Findex.js), [live example](https://www.mikewesthad.com/phaser-3-tilemap-blog-posts/post-5/02-simple-phaser-collisions) or the source code [here](https://github.com/mikewesthad/phaser-3-tilemap-blog-posts/blob/master/examples/post-5/02-simple-phaser-collisions)._
+_↳ Check out the [CodeSandbox](https://codesandbox.io/s/810yw745v9?hidenavigation=1&module=%2Fjs%2Fmain-scene.js), [live example](https://www.mikewesthad.com/phaser-3-tilemap-blog-posts/post-5/02-simple-phaser-collisions) or the source code [here](https://github.com/mikewesthad/phaser-3-tilemap-blog-posts/blob/master/examples/post-5/02-simple-phaser-collisions)._
 
 Now we've seen native Matter events and Phaser's wrapper around those Matter events. Both are a bit messy to use without a better structure, but they are important to cover before we start using a plugin to help us manage the collisions. It's especially important if you decide you don't want to rely on my plugin 😉.
 
@@ -319,7 +319,7 @@ There are some other useful features - check out [the docs](https://www.mikewest
 
 Phaser's plugin system allows us to hook into the game engine in a structured way and add additional features. The collision plugin is a scene plugin (vs a global plugin, see [docs](https://photonstorm.github.io/phaser3-docs/Phaser.Plugins.PluginManager.html)), so an instance will be accessible on each scene after we've installed it via `this.matterCollision`.
 
-Here's a [CodeSandbox starter project](https://codesandbox.io/s/316pq9j541) for coding along. It has the dependencies - Phaser and PhaserMatterCollisionPlugin - already installed as dependencies. (There are additional instructions [here](https://www.mikewesthad.com/phaser-matter-collision-plugin/docs/manual/README.html#installation) on how to load the plugin from a CDN or install it locally.)
+Here's a [CodeSandbox starter project](https://codesandbox.io/s/316pq9j541?module=%2Fjs%2Findex.js) for coding along. It has the dependencies - Phaser and PhaserMatterCollisionPlugin - already installed as dependencies. (There are additional instructions [here](https://www.mikewesthad.com/phaser-matter-collision-plugin/docs/manual/README.html#installation) on how to load the plugin from a CDN or install it locally.)
 
 Inside of index.js, we can load up the game with the plugin installed:
 
@@ -368,7 +368,7 @@ this.anims.create({
 });
 
 const bodyOptions = { restitution: 1, friction: 0, shape: "circle" };
-const emoji1 = this.matter.add.sprite(150, 100, "emoji", "1f62c", bodyOptions);
+const emoji1 = this.matter.add.sprite(250, 100, "emoji", "1f62c", bodyOptions);
 const emoji2 = this.matter.add.sprite(250, 275, "emoji", "1f62c", bodyOptions);
 
 // Use the plugin to only listen for collisions between emoji 1 & 2
@@ -400,7 +400,7 @@ Now that we've got the fundamentals of collisions under our belts, we can tackle
 
 ![](./images/platformer-player.gif)
 
-Here's the last [starter CodeSandbox project](https://codesandbox.io/s/pmkmj7r8lm) which you can use to code along for the rest of the post. It already has a map loaded up with collisions and has empty files for the different modules we'll be creating.
+Here's the last [starter CodeSandbox project](https://codesandbox.io/s/pmkmj7r8lm?module=%2Fjs%2Fplayer.js) which you can use to code along for the rest of the post. It already has a map loaded up with collisions and has empty files for the different modules we'll be creating.
 
 We're going to start by creating our platforming "player.js" file. One of the challenges that comes with realistic physics engines like Matter is that they can be hard to control in predictable way in a game context. In contrast to our platformer from [post two](https://itnext.io/modular-game-worlds-in-phaser-3-tilemaps-2-dynamic-platformer-3d68e73d494a) which had a single rectangle body, this character will have a compound body with four parts:
 
