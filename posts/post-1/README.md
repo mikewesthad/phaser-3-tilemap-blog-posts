@@ -206,7 +206,7 @@ _↳ Embedding a tileset AFTER creating it_
 
 _↳ Changing the tilemap format_
 
-(Note: one recent release of Tiled 1.1.6 changed the map export format in a way that breaks Phaser's import. It was changed back in the 7/17/18 release, so if you are having trouble with your map, make sure to grab the latest!)
+Important note! A recent release of Tiled (version 1.2) changed the map export format in a way that breaks Phaser's map importing. If you are running into problems loading your maps (especially if collision info isn't loading), make sure you are using at least Phaser 3.14.0.
 
 ## Loading a Tiled Map
 
