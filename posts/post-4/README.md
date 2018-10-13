@@ -20,7 +20,7 @@ If you haven't checked out the previous posts in the series, here are the links:
 
 Before we dive in, all the source code and assets that go along with this post can be found in [this repository](https://github.com/mikewesthad/phaser-3-tilemap-blog-posts/tree/master/examples/post-4).
 
-A quick note for following along with Tiled: A recent release of Tiled (version 1.2) changed the map export format in a way that breaks Phaser's map importing. If you are running into problems loading your maps (especially if collision info isn't loading), make sure you are using at least Phaser 3.14.0.
+A quick note for following along with Tiled: A recent release of Tiled (version 1.2) changed the map export format in a way that breaks Phaser's map importing. Phaser 3.14.0 - the version that supports Tiled 1.2 - is also broken when it comes to getting collision info... I'm using Tiled 1.1 & Phaser 3.11 here. So TLDR, use Tiled 1.1 + Phaser 3.11, or use a version of Phaser >= 3.14.0 (whenever it drops, likely on 10/15/18).
 
 ## Intended Audience
 
