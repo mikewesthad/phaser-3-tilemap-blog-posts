@@ -632,7 +632,7 @@ export default class DungeonScene extends Phaser.Scene {
 
 Check out the next [post](https://medium.com/@michaelwesthadley/modular-game-worlds-in-phaser-3-tilemaps-4-meet-matter-js-abf4dfa65ca1) where we'll investigate using a more advanced physics engine - [Matter.js](http://brm.io/matter-js/) - with tilemaps:
 
-![](../post-4/final-demo-optimized.gif)
+![](../post-4/images/final-demo-optimize.gif)
 
 Thanks for reading, and if there's something you'd like to see in future posts, let me know!
 
