@@ -12,7 +12,7 @@ _↳ Final example that we'll create - graphics from [Tuxemon](https://github.co
 
 The [next post](https://medium.com/@michaelwesthadley/modular-game-worlds-in-phaser-3-tilemaps-2-dynamic-platformer-3d68e73d494a) covers how to create a dynamic platformer and the posts after that will cover procedurally generated dungeons and wall-jumping maps with [Matter.js](http://brm.io/matter-js/).
 
-Before we dive in, all the code that goes along with this post is in [this repository](https://github.com/mikewesthad/phaser-3-tilemap-blog-posts/tree/master/examples/post-1).
+Before we dive in, all the code that goes along with this post is in [this repository](https://github.com/mikewesthad/phaser-3-tilemap-blog-posts/tree/master/examples/post-1). These tutorials use the latest version of Phaser (v3.16.2) and Tiled (v1.2.2) as of 02/26/19.
 
 ## Why
 

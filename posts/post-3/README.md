@@ -17,7 +17,7 @@ If you haven't checked out the previous posts in the series, here are the links:
 
 In the next post in the series, we'll investigate using [Matter.js](http://brm.io/matter-js/) with tilemaps.
 
-Before we dive in, all the source code and assets that go along with this post can be found in [this repository](https://github.com/mikewesthad/phaser-3-tilemap-blog-posts/tree/master/examples/post-3).
+Before we dive in, all the source code and assets that go along with this post can be found in [this repository](https://github.com/mikewesthad/phaser-3-tilemap-blog-posts/tree/master/examples/post-3). These tutorials use the latest version of Phaser (v3.16.2) and Tiled (v1.2.2) as of 02/26/19. Some pairings of older versions of Phaser and Tiled don't get along well, so I recommend using these two version.
 
 ## Intended Audience
 

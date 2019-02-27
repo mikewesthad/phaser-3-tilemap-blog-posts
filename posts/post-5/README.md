@@ -17,9 +17,7 @@ If you haven't checked out the previous posts in the series, here are the links:
 3.  [Dynamic tilemaps & Procedural Dungeons](https://medium.com/@michaelwesthadley/modular-game-worlds-in-phaser-3-tilemaps-3-procedural-dungeon-3bc19b841cd)
 4.  [Meet Matter.js](https://medium.com/@michaelwesthadley/modular-game-worlds-in-phaser-3-tilemaps-4-meet-matter-js-abf4dfa65ca1)
 
-Before we dive in, all the source code and assets that go along with this post can be found in [this repository](https://github.com/mikewesthad/phaser-3-tilemap-blog-posts/tree/master/examples/post-5).
-
-A quick note for following along with Tiled: A recent release of Tiled (version 1.2) changed the map export format in a way that breaks Phaser's map importing. Phaser 3.14.0 - the version that supports Tiled 1.2 - is also broken when it comes to getting collision info… I'm using Tiled 1.1 & Phaser 3.12 here. So TLDR, use Tiled 1.1 + Phaser 3.12, or use a version of Phaser >= 3.14.0 (whenever it drops, likely on 10/15/18).
+Before we dive in, all the source code and assets that go along with this post can be found in [this repository](https://github.com/mikewesthad/phaser-3-tilemap-blog-posts/tree/master/examples/post-5). These tutorials use the latest version of Phaser (v3.16.2) and Tiled (v1.2.2) as of 02/26/19. Some pairings of older versions of Phaser and Tiled don't get along well, so I recommend using these two version.
 
 ## Intended Audience
 

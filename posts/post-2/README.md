@@ -12,9 +12,7 @@ _↳ Final example that we'll create_
 
 The next [post](https://medium.com/@michaelwesthadley/modular-game-worlds-in-phaser-3-tilemaps-3-procedural-dungeon-3bc19b841cd) covers creating a procedural dungeon world, and the one after that will cover integrating [Matter.js](http://brm.io/matter-js/) to create a wall-jumping platformer.
 
-Before we dive in, all the source code and assets that go along with this post can be found in [this repository](https://github.com/mikewesthad/phaser-3-tilemap-blog-posts/tree/master/examples/post-2).
-
-A quick note for following along with Tiled: A recent release of Tiled (version 1.2) changed the map export format in a way that breaks Phaser's map importing. If you are running into problems loading your maps (especially if collision info isn't loading), make sure you are using at least Phaser 3.14.0.
+Before we dive in, all the source code and assets that go along with this post can be found in [this repository](https://github.com/mikewesthad/phaser-3-tilemap-blog-posts/tree/master/examples/post-2). These tutorials use the latest version of Phaser (v3.16.2) and Tiled (v1.2.2) as of 02/26/19. Some pairings of older versions of Phaser and Tiled don't get along well, so I recommend using these two version.
 
 ## Intended Audience
 
