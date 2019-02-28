@@ -362,7 +362,7 @@ Note: I'm using a texture atlas here. See this [tutorial](https://www.codeandweb
 The last step is to collide the player and the tilemap layer against one another. We could use [`collide`](https://photonstorm.github.io/phaser3-docs/Phaser.Physics.Arcade.World.html#collide__anchor) or [`addCollider`](https://photonstorm.github.io/phaser3-docs/Phaser.Physics.Arcade.World.html#addCollider__anchor). We'll go with the latter:
 
 ```js
-function setup() {
+function create() {
   // ...
 
   // This will watch the player and worldLayer every frame to check for collisions
