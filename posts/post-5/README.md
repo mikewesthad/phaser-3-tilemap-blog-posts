@@ -962,7 +962,7 @@ There are a couple ways to mitigate this:
 
 - Add chamfer to bodies, i.e. round the edges, like we did in this post or use circular bodies to reduce the impact of the ghost collisions.
 - Map out your level's hitboxes in as few shapes as possible, instead of giving each tile a separate body. You can still use Tiled for this. Create an object layer, and fill it with shapes, convert those shapes to Matter bodies in Phaser. The demo code linked above does just that.
-- Or, keep an eye on hexus/phaser-slopes. @hexus is almost done with a Phaser plugin for solving ghost collisions against tilemaps. It lets you keep your tiles as separate bodies, like we've done here, which is helpful if you need to do things like check if a particular colliding tile is something lethal like lava 💪🏽
+- Or, use @hexus's [phaser-slopes](https://github.com/hexus/phaser-slopes) plugin. It solves ghost collisions against tilemaps, letting you keep your tiles as separate bodies.
 
 ## Series Finale
 
