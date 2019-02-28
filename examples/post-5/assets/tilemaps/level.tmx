@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.1.6" orientation="orthogonal" renderorder="right-down" width="47" height="13" tilewidth="64" tileheight="64" infinite="0" nextobjectid="48">
+<map version="1.2" tiledversion="1.2.2" orientation="orthogonal" renderorder="right-down" width="47" height="13" tilewidth="64" tileheight="64" infinite="0" nextlayerid="10" nextobjectid="48">
  <tileset firstgid="1" name="kenney-tileset-64px-extruded" tilewidth="64" tileheight="64" spacing="2" margin="1" tilecount="374" columns="22">
   <image source="../tilesets/kenney-tileset-64px-extruded.png" width="1452" height="1122"/>
   <tile id="0">
@@ -1972,7 +1972,7 @@
    </properties>
   </tile>
  </tileset>
- <layer name="Background" width="47" height="13">
+ <layer id="1" name="Background" width="47" height="13">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -1989,7 +1989,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <layer name="Ground" width="47" height="13">
+ <layer id="2" name="Ground" width="47" height="13">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -2006,7 +2006,7 @@
 133,133,133,133,133,133,133,133,133,0,0,133,133,133,133,133,133,133,133,133,133,0,0,0,0,0,0,0,0,0,0,0,0,0,0,133,133,133,133,133,133,133,133,133,133,133,133
 </data>
  </layer>
- <layer name="Lava" width="47" height="13">
+ <layer id="3" name="Lava" width="47" height="13">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -2023,7 +2023,7 @@
 312,312,312,312,312,312,312,312,312,312,312,312,312,312,312,312,312,312,312,312,312,312,312,312,312,312,312,312,312,312,312,312,312,312,312,312,312,312,312,312,312,312,312,312,312,312,312
 </data>
  </layer>
- <layer name="Foreground" width="47" height="13">
+ <layer id="4" name="Foreground" width="47" height="13">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -2040,7 +2040,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup name="Platform Locations">
+ <objectgroup id="5" name="Platform Locations">
   <object id="22" x="1600" y="384">
    <point/>
   </object>
@@ -2048,12 +2048,12 @@
    <point/>
   </object>
  </objectgroup>
- <objectgroup name="Spawn">
+ <objectgroup id="6" name="Spawn">
   <object id="14" name="Spawn Point" x="100" y="250">
    <point/>
   </object>
  </objectgroup>
- <objectgroup name="Swing Locations" visible="0">
+ <objectgroup id="7" name="Swing Locations" visible="0">
   <object id="29" x="960" y="0">
    <polyline points="0,0 -192,320"/>
   </object>
@@ -2061,12 +2061,12 @@
    <polyline points="0,0 192,320"/>
   </object>
  </objectgroup>
- <objectgroup name="Crates">
+ <objectgroup id="8" name="Crates">
   <object id="34" gid="274" x="804" y="510" width="64" height="64"/>
   <object id="35" gid="274" x="782" y="442" width="64" height="64"/>
   <object id="40" gid="274" x="1182" y="364" width="64" height="64"/>
  </objectgroup>
- <objectgroup name="Sensors">
+ <objectgroup id="9" name="Sensors">
   <object id="47" name="Celebration" x="2416" y="202" width="94" height="308"/>
  </objectgroup>
 </map>
