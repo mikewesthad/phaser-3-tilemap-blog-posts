@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.1.5" orientation="orthogonal" renderorder="right-down" width="40" height="20" tilewidth="32" tileheight="32" infinite="0" backgroundcolor="#1d212d" nextobjectid="6">
+<map version="1.2" tiledversion="1.2.2" orientation="orthogonal" renderorder="right-down" width="40" height="20" tilewidth="32" tileheight="32" infinite="0" backgroundcolor="#1d212d" nextlayerid="5" nextobjectid="6">
  <tileset firstgid="1" name="0x72-industrial-tileset-32px-extruded" tilewidth="32" tileheight="32" spacing="2" margin="1" tilecount="1024" columns="32">
   <image source="../tilesets/0x72-industrial-tileset-32px-extruded.png" width="1088" height="1088"/>
   <tile id="0">
@@ -1543,25 +1543,25 @@
   </tile>
   <tile id="256">
    <properties>
-    <property name="collides" type="bool" value="false"/>
+    <property name="collides" type="bool" value="true"/>
     <property name="isSpike" type="bool" value="false"/>
    </properties>
   </tile>
   <tile id="257">
    <properties>
-    <property name="collides" type="bool" value="false"/>
+    <property name="collides" type="bool" value="true"/>
     <property name="isSpike" type="bool" value="false"/>
    </properties>
   </tile>
   <tile id="258">
    <properties>
-    <property name="collides" type="bool" value="false"/>
+    <property name="collides" type="bool" value="true"/>
     <property name="isSpike" type="bool" value="false"/>
    </properties>
   </tile>
   <tile id="259">
    <properties>
-    <property name="collides" type="bool" value="false"/>
+    <property name="collides" type="bool" value="true"/>
     <property name="isSpike" type="bool" value="false"/>
    </properties>
   </tile>
@@ -1735,25 +1735,25 @@
   </tile>
   <tile id="288">
    <properties>
-    <property name="collides" type="bool" value="false"/>
+    <property name="collides" type="bool" value="true"/>
     <property name="isSpike" type="bool" value="false"/>
    </properties>
   </tile>
   <tile id="289">
    <properties>
-    <property name="collides" type="bool" value="false"/>
+    <property name="collides" type="bool" value="true"/>
     <property name="isSpike" type="bool" value="false"/>
    </properties>
   </tile>
   <tile id="290">
    <properties>
-    <property name="collides" type="bool" value="false"/>
+    <property name="collides" type="bool" value="true"/>
     <property name="isSpike" type="bool" value="false"/>
    </properties>
   </tile>
   <tile id="291">
    <properties>
-    <property name="collides" type="bool" value="false"/>
+    <property name="collides" type="bool" value="true"/>
     <property name="isSpike" type="bool" value="false"/>
    </properties>
   </tile>
@@ -1927,25 +1927,25 @@
   </tile>
   <tile id="320">
    <properties>
-    <property name="collides" type="bool" value="false"/>
+    <property name="collides" type="bool" value="true"/>
     <property name="isSpike" type="bool" value="false"/>
    </properties>
   </tile>
   <tile id="321">
    <properties>
-    <property name="collides" type="bool" value="false"/>
+    <property name="collides" type="bool" value="true"/>
     <property name="isSpike" type="bool" value="false"/>
    </properties>
   </tile>
   <tile id="322">
    <properties>
-    <property name="collides" type="bool" value="false"/>
+    <property name="collides" type="bool" value="true"/>
     <property name="isSpike" type="bool" value="false"/>
    </properties>
   </tile>
   <tile id="323">
    <properties>
-    <property name="collides" type="bool" value="false"/>
+    <property name="collides" type="bool" value="true"/>
     <property name="isSpike" type="bool" value="false"/>
    </properties>
   </tile>
@@ -6150,7 +6150,7 @@
    </properties>
   </tile>
  </tileset>
- <layer name="Background" width="40" height="20">
+ <layer id="1" name="Background" width="40" height="20">
   <data encoding="csv">
 0,0,0,0,23,0,0,23,0,0,97,23,0,0,0,0,0,23,0,0,0,97,0,0,0,0,0,23,0,0,0,0,0,23,0,0,0,0,23,0,
 0,0,0,0,23,0,0,23,0,0,97,23,0,0,0,0,0,23,0,0,0,97,0,0,0,0,0,23,0,0,0,0,0,23,0,0,0,0,23,0,
@@ -6174,7 +6174,7 @@
 54,55,0,0,23,0,0,0,129,0,0,23,97,0,0,129,0,0,0,97,0,0,0,0,129,0,0,0,97,0,0,0,0,129,0,0,0,97,0,0
 </data>
  </layer>
- <layer name="Ground" width="40" height="20">
+ <layer id="2" name="Ground" width="40" height="20">
   <data encoding="csv">
 237,237,21,22,0,0,0,0,0,0,0,0,0,0,1610612813,1610612994,0,0,0,0,0,0,0,0,0,0,0,0,1610612813,1610612994,0,0,0,0,0,0,20,21,237,238,
 21,21,21,21,22,0,0,0,0,0,0,0,0,0,1610612813,1610612994,0,0,0,0,0,0,0,0,0,0,0,0,1610612813,1610612994,0,0,0,0,0,20,21,21,21,21,
@@ -6198,7 +6198,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,536870989,54,3758096461,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,54
 </data>
  </layer>
- <layer name="Foreground" width="40" height="20">
+ <layer id="3" name="Foreground" width="40" height="20">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,97,0,0,0,0,0,0,0,9,0,0,0,0,0,97,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,97,0,0,0,0,0,0,0,9,0,0,0,0,0,97,0,0,0,0,0,0,0,0,0,0,
@@ -6222,7 +6222,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup name="Objects">
+ <objectgroup id="4" name="Objects">
   <object id="1" name="Spawn Point" x="160" y="192">
    <point/>
   </object>

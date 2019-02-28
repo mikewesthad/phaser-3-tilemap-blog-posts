@@ -25,6 +25,7 @@ function preload() {
 
 function create() {
   // Load a map from a 2D array of tile indices
+  // prettier-ignore
   const level = [
     [  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 ],
     [  0,  1,  2,  3,  0,  0,  0,  1,  2,  3,  0 ],

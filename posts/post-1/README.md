@@ -12,11 +12,11 @@ _↳ Final example that we'll create - graphics from [Tuxemon](https://github.co
 
 The [next post](https://medium.com/@michaelwesthadley/modular-game-worlds-in-phaser-3-tilemaps-2-dynamic-platformer-3d68e73d494a) covers how to create a dynamic platformer and the posts after that will cover procedurally generated dungeons and wall-jumping maps with [Matter.js](http://brm.io/matter-js/).
 
-Before we dive in, all the code that goes along with this post is in [this repository](https://github.com/mikewesthad/phaser-3-tilemap-blog-posts/tree/master/examples/post-1).
+Before we dive in, all the code that goes along with this post is in [this repository](https://github.com/mikewesthad/phaser-3-tilemap-blog-posts/tree/master/examples/post-1). These tutorials use the latest version of Phaser (v3.16.2) and Tiled (v1.2.2) as of 02/26/19.
 
 ## Why
 
-I'm a creative developer and educator at [Convergence Design Lab](https://convergencedesignlab.org/), but I was brought on to the Phaser team in the sprint leading up to the initial public v3 release to develop the Tilemap API. I created ~40 guided examples and wrote weekly newsletter updates, but I wanted to collect all of that information into a more guided and digestible format so that people can more easily jump into Phaser 3.
+I'm a creative developer and professor at Columbia College, but I was brought on to the Phaser team in the sprint leading up to the initial public v3 release to develop the Tilemap API. I created ~40 guided examples and wrote weekly newsletter updates, but I wanted to collect all of that information into a more guided and digestible format so that people can more easily jump into Phaser 3.
 
 ## Intended Audience
 
@@ -362,7 +362,7 @@ Note: I'm using a texture atlas here. See this [tutorial](https://www.codeandweb
 The last step is to collide the player and the tilemap layer against one another. We could use [`collide`](https://photonstorm.github.io/phaser3-docs/Phaser.Physics.Arcade.World.html#collide__anchor) or [`addCollider`](https://photonstorm.github.io/phaser3-docs/Phaser.Physics.Arcade.World.html#addCollider__anchor). We'll go with the latter:
 
 ```js
-function setup() {
+function create() {
   // ...
 
   // This will watch the player and worldLayer every frame to check for collisions

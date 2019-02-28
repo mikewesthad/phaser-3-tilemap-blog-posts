@@ -6,6 +6,7 @@
   "scripts": {
     "serve": "browser-sync start --watch --server examples --directory",
     "dev": "npm run serve",
+    "prettier": "prettier examples/**/*.{js,css,html} --write",
     "deploy": "gh-pages --branch gh-pages --dist examples"
   },
   "prettier": {
@@ -15,9 +16,10 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "browser-sync": "^2.24.7"
+    "browser-sync": "^2.26.3",
+    "prettier": "^1.16.4"
   },
   "dependencies": {
-    "gh-pages": "^1.2.0"
+    "gh-pages": "^2.0.1"
   }
 }

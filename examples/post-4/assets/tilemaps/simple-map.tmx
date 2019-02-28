@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.1.6" orientation="orthogonal" renderorder="right-down" width="29" height="12" tilewidth="64" tileheight="64" infinite="0" nextobjectid="1">
+<map version="1.2" tiledversion="1.2.2" orientation="orthogonal" renderorder="right-down" width="29" height="12" tilewidth="64" tileheight="64" infinite="0" nextlayerid="4" nextobjectid="1">
  <tileset firstgid="1" name="kenney-tileset-64px-extruded" tilewidth="64" tileheight="64" spacing="2" margin="1" tilecount="374" columns="22">
   <image source="../tilesets/kenney-tileset-64px-extruded.png" width="1452" height="1122"/>
   <tile id="0">
@@ -1873,7 +1873,7 @@
    </properties>
   </tile>
  </tileset>
- <layer name="Ground2" width="29" height="12" visible="0">
+ <layer id="1" name="Ground2" width="29" height="12" visible="0">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -1889,7 +1889,7 @@
 133,133,133,133,133,133,133,133,133,133,133,133,0,0,137,0,133,0,133,0,0,162,135,163,0,0,134,135,0
 </data>
  </layer>
- <layer name="Ground" width="29" height="12">
+ <layer id="2" name="Ground" width="29" height="12">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -1905,7 +1905,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <layer name="Lava" width="29" height="12">
+ <layer id="3" name="Lava" width="29" height="12">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
