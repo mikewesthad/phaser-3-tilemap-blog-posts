@@ -219,6 +219,8 @@ function preload() {
 }
 
 function create() {
+  const map = this.make.tilemap({ key: "map" });
+
   // Parameters are the name you gave the tileset in Tiled and then the key of the tileset image in
   // Phaser's cache (i.e. the name you used in preload)
   const tileset = map.addTilesetImage("tuxmon-sample-32px-extruded", "tiles");
