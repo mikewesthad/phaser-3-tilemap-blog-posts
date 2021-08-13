@@ -13,8 +13,8 @@ const config = {
   scene: {
     preload: preload,
     create: create,
-    update: update
-  }
+    update: update,
+  },
 };
 
 const game = new Phaser.Game(config);
@@ -36,7 +36,7 @@ function create() {
   this.add
     .text(width / 2, height / 2, "hello\nphaser 3\ntemplate", {
       font: "175px monospace",
-      color: "white"
+      color: "white",
     })
     .setOrigin(0.5, 0.5)
     .setShadow(5, 5, "#5588EE", 0, true, true);

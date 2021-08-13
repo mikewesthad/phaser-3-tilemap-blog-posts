@@ -13,8 +13,8 @@ const config = {
   scene: {
     preload: preload,
     create: create,
-    update: update
-  }
+    update: update,
+  },
 };
 
 const game = new Phaser.Game(config);
@@ -29,7 +29,7 @@ function create() {
   // When loading a CSV map, make sure to specify the tileWidth and tileHeight!
   const map = this.make.tilemap({ key: "map", tileWidth: 16, tileHeight: 16 });
   const tileset = map.addTilesetImage("tiles");
-  const layer = map.createStaticLayer(0, tileset, 0, 0); // layer index, tileset, x, y
+  const layer = map.createLayer(0, tileset, 0, 0); // layer index, tileset, x, y
 
   // Phaser supports multiple cameras, but you can access the default camera like this:
   const camera = this.cameras.main;
@@ -42,7 +42,7 @@ function create() {
     right: cursors.right,
     up: cursors.up,
     down: cursors.down,
-    speed: 0.5
+    speed: 0.5,
   });
 
   // Constrain the camera so that it isn't allowed to move outside the width/height of tilemap
@@ -54,7 +54,7 @@ function create() {
       font: "18px monospace",
       fill: "#ffffff",
       padding: { x: 20, y: 10 },
-      backgroundColor: "#000000"
+      backgroundColor: "#000000",
     })
     .setScrollFactor(0);
 }

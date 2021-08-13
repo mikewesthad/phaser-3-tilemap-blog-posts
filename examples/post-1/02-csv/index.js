@@ -12,8 +12,8 @@ const config = {
   pixelArt: true,
   scene: {
     preload: preload,
-    create: create
-  }
+    create: create,
+  },
 };
 
 const game = new Phaser.Game(config);
@@ -27,5 +27,5 @@ function create() {
   // When loading a CSV map, make sure to specify the tileWidth and tileHeight!
   const map = this.make.tilemap({ key: "map", tileWidth: 16, tileHeight: 16 });
   const tileset = map.addTilesetImage("tiles");
-  const layer = map.createStaticLayer(0, tileset, 0, 0); // layer index, tileset, x, y
+  const layer = map.createLayer(0, tileset, 0, 0); // layer index, tileset, x, y
 }
