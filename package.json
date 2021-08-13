@@ -16,9 +16,9 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "browser-sync": "^2.26.14",
-    "gh-pages": "^3.2.0",
-    "prettier": "^2.3.1"
+    "browser-sync": "^2.27.5",
+    "gh-pages": "^3.2.3",
+    "prettier": "^2.3.2"
   },
   "dependencies": {}
 }
