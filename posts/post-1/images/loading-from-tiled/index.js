@@ -15,8 +15,8 @@ const config = {
   scene: {
     preload: preload,
     create: create,
-    update: update
-  }
+    update: update,
+  },
 };
 
 const game = new Phaser.Game(config);
@@ -32,9 +32,9 @@ function create() {
 
   const tileset = map.addTilesetImage("tuxmon-sample-32px-extruded", "tiles");
 
-  const belowLayer = map.createStaticLayer("Below Player", tileset, 0, 0);
-  const worldLayer = map.createStaticLayer("World", tileset, 0, 0);
-  const aboveLayer = map.createStaticLayer("Above Player", tileset, 0, 0);
+  const belowLayer = map.createLayer("Below Player", tileset, 0, 0);
+  const worldLayer = map.createLayer("World", tileset, 0, 0);
+  const aboveLayer = map.createLayer("Above Player", tileset, 0, 0);
 }
 
 function update(time, delta) {}

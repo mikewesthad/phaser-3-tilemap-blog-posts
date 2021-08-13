@@ -12,7 +12,7 @@ _↳ Final example that we'll create - graphics from [Tuxemon](https://github.co
 
 The [next post](https://medium.com/@michaelwesthadley/modular-game-worlds-in-phaser-3-tilemaps-2-dynamic-platformer-3d68e73d494a) covers how to create a dynamic platformer and the posts after that will cover procedurally generated dungeons and wall-jumping maps with [Matter.js](http://brm.io/matter-js/).
 
-Before we dive in, all the code that goes along with this post is in [this repository](https://github.com/mikewesthad/phaser-3-tilemap-blog-posts/tree/master/examples/post-1). These tutorials use the latest version of Phaser (v3.16.2) and Tiled (v1.2.2) as of 02/26/19.
+Before we dive in, all the code that goes along with this post is in [this repository](https://github.com/mikewesthad/phaser-3-tilemap-blog-posts/tree/master/examples/post-1). These tutorials use the latest version of Phaser (v3.55.2) as of 08/13/21.
 
 ## Why
 
@@ -128,7 +128,7 @@ function create() {
   // When loading from an array, make sure to specify the tileWidth and tileHeight
   const map = this.make.tilemap({ data: level, tileWidth: 16, tileHeight: 16 });
   const tiles = map.addTilesetImage("mario-tiles");
-  const layer = map.createStaticLayer(0, tiles, 0, 0);
+  const layer = map.createLayer(0, tiles, 0, 0);
 }
 ```
 
@@ -146,9 +146,7 @@ Note: an index that is less than zero is considered an empty tile.
 
 _↳ Check out the [codepen](https://codepen.io/mikewesthad/pen/VdOLge), [live example](https://www.mikewesthad.com/phaser-3-tilemap-blog-posts/post-1/01-array) or the source code [here](https://github.com/mikewesthad/phaser-3-tilemap-blog-posts/blob/master/examples/post-1/01-array/index.js)._
 
-Breaking down that code, we've got three main parts: a [`Tilemap`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.Tilemap.html), a [`Tileset`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.Tileset.html) and a [`StaticTilemapLayer`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.StaticTilemapLayer.html). You create a `Tilemap` through [`this.make.tilemap`](https://photonstorm.github.io/phaser3-docs/Phaser.GameObjects.GameObjectCreator.html#tilemap) (or [`this.add.tilemap`](https://photonstorm.github.io/phaser3-docs/Phaser.GameObjects.GameObjectFactory.html#tilemap)). This isn't a display object, rather, it holds data about the map and allows you to add tilesets & tilemap layers.
-
-A map can have one or more layers, which are the display objects that actually render tiles from a `Tileset`. They come in two flavors: `StaticTilemapLayer` & `DynamicTilemapLayer`. A `StaticTilemapLayer` is super fast, but the tiles in that layer can't be modified and can't render per-tile effects like flipping or tint. A `DynamicTilemapLayer` trades some speed for the flexibility and power of manipulating individual tiles. For this post, we'll stick to static layers, but next time, we'll dive into dynamic layers.
+Breaking down that code, we've got three main parts: a [`Tilemap`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.Tilemap.html), a [`Tileset`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.Tileset.html) and a [`TilemapLayer`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.TilemapLayer.html). You create a `Tilemap` through [`this.make.tilemap`](https://photonstorm.github.io/phaser3-docs/Phaser.GameObjects.GameObjectCreator.html#tilemap) (or [`this.add.tilemap`](https://photonstorm.github.io/phaser3-docs/Phaser.GameObjects.GameObjectFactory.html#tilemap)) - you can think of this as a container for tilesets & tilemap layers. A tileset stores information about each tile in the map. A map can then be composed of one or more layers (`TilemapLayer` instances), which are the display objects that actually render tiles from a `Tileset`. 
 
 ## Loading from a File: CSV
 
@@ -164,7 +162,7 @@ function create() {
   // When loading a CSV map, make sure to specify the tileWidth and tileHeight!
   const map = this.make.tilemap({ key: "map", tileWidth: 16, tileHeight: 16 });
   const tileset = map.addTilesetImage("tiles");
-  const layer = map.createStaticLayer(0, tileset, 0, 0); // layer index, tileset, x, y
+  const layer = map.createLayer(0, tileset, 0, 0); // layer index, tileset, x, y
 }
 ```
 
@@ -206,8 +204,6 @@ _↳ Embedding a tileset AFTER creating it_
 
 _↳ Changing the tilemap format_
 
-Important note! A recent release of Tiled (version 1.2) changed the map export format in a way that breaks Phaser's map importing. If you are running into problems loading your maps (especially if collision info isn't loading), make sure you are using at least Phaser 3.14.0.
-
 ## Loading a Tiled Map
 
 Using the `tilemapTiledJSON` loader method, we can load up and display a tilemap that we've exported from Tiled:
@@ -226,9 +222,9 @@ function create() {
   const tileset = map.addTilesetImage("tuxmon-sample-32px-extruded", "tiles");
 
   // Parameters: layer name (or index) from Tiled, tileset, x, y
-  const belowLayer = map.createStaticLayer("Below Player", tileset, 0, 0);
-  const worldLayer = map.createStaticLayer("World", tileset, 0, 0);
-  const aboveLayer = map.createStaticLayer("Above Player", tileset, 0, 0);
+  const belowLayer = map.createLayer("Below Player", tileset, 0, 0);
+  const worldLayer = map.createLayer("World", tileset, 0, 0);
+  const aboveLayer = map.createLayer("Above Player", tileset, 0, 0);
 }
 ```
 
