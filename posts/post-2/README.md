@@ -4,7 +4,7 @@ Author: [Mike Hadley](https://www.mikewesthad.com/)
 
 Reading this on GitHub? Check out the [Medium Post](https://medium.com/@michaelwesthadley/modular-game-worlds-in-phaser-3-tilemaps-2-dynamic-platformer-3d68e73d494a)
 
-This is a series of blog posts about creating modular worlds with tilemaps in the [Phaser 3](http://phaser.io/) game engine. If you haven't, check out the first [post](https://medium.com/@michaelwesthadley/modular-game-worlds-in-phaser-3-tilemaps-1-958fc7e6bbd6) where we used static tilemaps to create a Pokémon-style game world. In this post, we'll dive into dynamic tilemaps and create a puzzle-y platformer where you can draw platforms to help get around obstacles:
+This is a series of blog posts about creating modular worlds with tilemaps in the [Phaser 3](http://phaser.io/) game engine. If you haven't, check out the first [post](https://medium.com/@michaelwesthadley/modular-game-worlds-in-phaser-3-tilemaps-1-958fc7e6bbd6) where we learned about tilemaps and used them to create a top-down, Pokémon-style game world. In this post, we'll dive into manipulating tilemaps dynamically and create a puzzle-y platformer where you can draw platforms to help get around obstacles:
 
 ![](./images/paint-platformer-demo-optimized.gif)
 
@@ -12,7 +12,7 @@ _↳ Final example that we'll create_
 
 The next [post](https://medium.com/@michaelwesthadley/modular-game-worlds-in-phaser-3-tilemaps-3-procedural-dungeon-3bc19b841cd) covers creating a procedural dungeon world, and the one after that will cover integrating [Matter.js](http://brm.io/matter-js/) to create a wall-jumping platformer.
 
-Before we dive in, all the source code and assets that go along with this post can be found in [this repository](https://github.com/mikewesthad/phaser-3-tilemap-blog-posts/tree/master/examples/post-2). These tutorials use the latest version of Phaser (v3.16.2) and Tiled (v1.2.2) as of 02/26/19. Some pairings of older versions of Phaser and Tiled don't get along well, so I recommend using these two version.
+Before we dive in, all the code that goes along with this post is in [this repository](https://github.com/mikewesthad/phaser-3-tilemap-blog-posts/tree/master/examples/post-1). These tutorials use the latest version of Phaser (v3.55.2) as of 08/13/21.
 
 ## Intended Audience
 
@@ -26,28 +26,24 @@ Before we build the platformer, let's start with a bird's-eye view of the tilema
 
 - [`Tilemap`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.Tilemap.html)
 - [`Tileset`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.Tileset.html)
-- [`StaticTilemapLayer`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.StaticTilemapLayer.html)
+- [`TilemapLayer`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.TilemapLayer.html)
 
-In this post, we'll dive into two new pieces of the API:
+In this post, we'll dive into two pieces of the API:
 
-- [`DynamicTilemapLayer`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.DynamicTilemapLayer.html)
+- [`TilemapLayer`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.TilemapLayer.html)
 - [`Tile`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.Tile.html)
 
-A `Tilemap` isn't a display object. It holds data about the map and can contain one or more layers, which are the display objects that actually render `Tile` objects. They come in two flavors: `StaticTilemapLayer` & `DynamicTilemapLayer`. A `StaticTilemapLayer` is fast, but the tiles in that layer can't be modified and can't render per-tile effects like flipping or tint. A `DynamicTilemapLayer` trades some speed for the flexibility and power of manipulating individual tiles.
-
-Static and dynamic layers share much of the same API. They both have methods for checking whether a tile exists (e.g. `hasTileAt`). They both have methods for getting access to tiles in the map (`getTileAt`,`findTile`, `forEachTile`, etc.). Dynamic layers have a set of additional methods for adding, removing, randomizing, etc. tiles within the layer (e.g. `putTileAt`, `removeTileAt`, `randomize`, etc.).
-
-The tilemap API is flexible, so you can choose the right tool for the job. You can mix static and dynamic layers together in the same map. You can also convert a dynamic layer into a static layer, allowing you to generate a level on the fly and then optimize it.
+A `Tilemap` isn't a display object. It holds data about the map and can contain one or more layers (`TilemapLayer` instances), which are the display objects that actually render `Tile` objects.
 
 ## Painting Tiles
 
-For the first example, we'll load up a level made with Tiled and then paint & erase tiles on the fly. We couldn't use static layers here, so we'll need to reach for dynamic layers.
+For the first example, we'll load up a level made with Tiled and then paint & erase tiles on the fly.
 
 ![](./images/paint-tiles-demo.gif)
 
 _↳ Tileset by 0x72 under CC-0, https://0x72.itch.io/16x16-industrial-tileset_
 
-We set up dynamic layers in the same way as static layers, except using [`map.createDynamicLayer`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.Tilemap.html#createDynamicLayer__anchor) instead of [`map.createStaticLayer`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.Tilemap.html#createStaticLayer__anchor):
+The setup will look similar to what we did in the previous post:
 
 ```js
 let groundLayer;
@@ -61,15 +57,15 @@ function create() {
   const map = this.make.tilemap({ key: "map" });
   const tiles = map.addTilesetImage("0x72-industrial-tileset-32px-extruded", "tiles");
 
-  map.createDynamicLayer("Background", tiles);
-  groundLayer = map.createDynamicLayer("Ground", tiles);
-  map.createDynamicLayer("Foreground", tiles);
+  map.createLayer("Background", tiles);
+  groundLayer = map.createLayer("Ground", tiles);
+  map.createLayer("Foreground", tiles);
 }
 ```
 
 <!-- https://gist.github.com/mikewesthad/1ec0d8bfdb27d52b5fb29d67fc1aee9a -->
 
-Once you've got a dynamic layer loaded up, you can start manipulating tiles using the [DynamicTilemapLayer API](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.DynamicTilemapLayer.html):
+Once you've got a dynamic layer loaded up, you can start manipulating tiles using the [Tilemap Layer API](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.TilemapLayer.html):
 
 ```js
 // Put tile index 1 at tile grid location (20, 10) within layer
@@ -82,7 +78,7 @@ groundLayer.putTileAtWorldXY(2, 200, 50);
 
 <!-- https://gist.github.com/mikewesthad/376bb39c3de856cd93b22f970bd765c8 -->
 
-The tilemap layer (and tilemap) methods that get or manipulate tiles often come in pairs. One method - like [`putTileAt`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.DynamicTilemapLayer.html#putTileAt__anchor) - will operate on tile grid units, e.g. (0, 2) would correspond to the first column and third row of the layer. The other method - like [`putTileAtWorldXY`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.DynamicTilemapLayer.html#putTileAtWorldXY__anchor) - will operate in world pixel units, making it easier to do things like find which tile is under the mouse. There are also methods for converting from tile grid units to world pixel coordinates and vice versa: [`worldToTileXY`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.DynamicTilemapLayer.html#worldToTileXY__anchor), [`tileToWorldXY`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.DynamicTilemapLayer.html#tileToWorldXY__anchor).
+The tilemap layer (and tilemap) methods that get or manipulate tiles often come in pairs. One method - like [`putTileAt`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.TilemapLayer.html#putTileAt__anchor) - will operate on tile grid units, e.g. (0, 2) would correspond to the first column and third row of the layer. The other method - like [`putTileAtWorldXY`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.TilemapLayer.html#putTileAtWorldXY__anchor) - will operate in world pixel units, making it easier to do things like find which tile is under the mouse. There are also methods for converting from tile grid units to world pixel coordinates and vice versa: [`worldToTileXY`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.TilemapLayer.html#worldToTileXY__anchor), [`tileToWorldXY`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.TilemapLayer.html#tileToWorldXY__anchor).
 
 Putting these methods together with Phaser input, we can draw tiles in a layer with the mouse:
 
@@ -242,7 +238,7 @@ Tilemaps have methods for turning Tiled objects and tiles into sprites: [`create
 
 _↳ The left side is the Phaser example running in the browser and the right side is Tiled. Note how width/height/flip etc. are copied over to the animated coin sprites._
 
-In the context of our code, turning spikes into sprites is a little more complicated, so we can roll our own custom version of tile → sprite logic by looping over all the `Tile` objects in a layer using [`forEachTile`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.DynamicTilemapLayer.html#forEachTile__anchor):
+In the context of our code, turning spikes into sprites is a little more complicated, so we can roll our own custom version of tile → sprite logic by looping over all the `Tile` objects in a layer using [`forEachTile`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.TilemapLayer.html#forEachTile__anchor):
 
 ```js
 // platformer-scene.js, inside of setup:
