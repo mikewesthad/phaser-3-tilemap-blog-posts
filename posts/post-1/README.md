@@ -308,7 +308,7 @@ Which will look like this:
 Once we've got tiles marked as colliding, we can add physics. In our game's config, we can turn on the arcade physics engine by doing the following:
 
 ```js
-var config = {
+const config = {
   // ... (rest of the config from earlier)
   physics: {
     default: "arcade",
