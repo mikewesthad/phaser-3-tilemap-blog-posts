@@ -21,12 +21,12 @@ const config = {
   plugins: {
     scene: [
       {
-        plugin: PhaserMatterCollisionPlugin, // The plugin class
+        plugin: PhaserMatterCollisionPlugin.default, // The plugin class
         key: "matterCollision", // Where to store in Scene.Systems, e.g. scene.sys.matterCollision
-        mapping: "matterCollision" // Where to store in the Scene, e.g. scene.matterCollision
-      }
-    ]
-  }
+        mapping: "matterCollision", // Where to store in the Scene, e.g. scene.matterCollision
+      },
+    ],
+  },
 };
 
 const game = new Phaser.Game(config);

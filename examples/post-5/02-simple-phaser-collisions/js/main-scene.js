@@ -16,8 +16,8 @@ export default class MainScene extends Phaser.Scene {
   create() {
     const map = this.make.tilemap({ key: "map" });
     const tileset = map.addTilesetImage("kenney-tileset-64px-extruded");
-    const groundLayer = map.createDynamicLayer("Ground", tileset, 0, 0);
-    const lavaLayer = map.createDynamicLayer("Lava", tileset, 0, 0);
+    const groundLayer = map.createLayer("Ground", tileset, 0, 0);
+    const lavaLayer = map.createLayer("Lava", tileset, 0, 0);
 
     // Set colliding tiles before converting the layer to Matter bodies
     groundLayer.setCollisionByProperty({ collides: true });
@@ -46,13 +46,16 @@ export default class MainScene extends Phaser.Scene {
     // Create an angry emoji => grimace emoji animation
     this.anims.create({
       key: "angry",
-      frames: [{ key: "emoji", frame: "1f92c" }, { key: "emoji", frame: "1f62c" }],
+      frames: [
+        { key: "emoji", frame: "1f92c" },
+        { key: "emoji", frame: "1f62c" },
+      ],
       frameRate: 8,
-      repeat: 0
+      repeat: 0,
     });
 
-    this.matter.world.on("collisionstart", event => {
-      event.pairs.forEach(pair => {
+    this.matter.world.on("collisionstart", (event) => {
+      event.pairs.forEach((pair) => {
         const { bodyA, bodyB } = pair;
         const gameObjectA = bodyA.gameObject;
         const gameObjectB = bodyB.gameObject;
@@ -71,8 +74,8 @@ export default class MainScene extends Phaser.Scene {
       });
     });
 
-    this.matter.world.on("collisionend", event => {
-      event.pairs.forEach(pair => {
+    this.matter.world.on("collisionend", (event) => {
+      event.pairs.forEach((pair) => {
         const { bodyA, bodyB } = pair;
         const gameObjectA = bodyA.gameObject;
         const gameObjectB = bodyB.gameObject;
@@ -97,7 +100,7 @@ export default class MainScene extends Phaser.Scene {
       right: cursors.right,
       up: cursors.up,
       down: cursors.down,
-      speed: 0.5
+      speed: 0.5,
     };
     this.controls = new Phaser.Cameras.Controls.FixedKeyControl(controlConfig);
 
@@ -106,7 +109,7 @@ export default class MainScene extends Phaser.Scene {
       fontSize: "18px",
       padding: { x: 10, y: 5 },
       backgroundColor: "#ffffff",
-      fill: "#000000"
+      fill: "#000000",
     });
     help.setScrollFactor(0).setDepth(1000);
   }

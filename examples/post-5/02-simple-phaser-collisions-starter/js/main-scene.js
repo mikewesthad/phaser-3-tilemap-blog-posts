@@ -16,8 +16,8 @@ export default class MainScene extends Phaser.Scene {
   create() {
     const map = this.make.tilemap({ key: "map" });
     const tileset = map.addTilesetImage("kenney-tileset-64px-extruded");
-    const groundLayer = map.createDynamicLayer("Ground", tileset, 0, 0);
-    const lavaLayer = map.createDynamicLayer("Lava", tileset, 0, 0);
+    const groundLayer = map.createLayer("Ground", tileset, 0, 0);
+    const lavaLayer = map.createLayer("Lava", tileset, 0, 0);
 
     // Set colliding tiles before converting the layer to Matter bodies
     groundLayer.setCollisionByProperty({ collides: true });
@@ -47,7 +47,7 @@ export default class MainScene extends Phaser.Scene {
       right: cursors.right,
       up: cursors.up,
       down: cursors.down,
-      speed: 0.5
+      speed: 0.5,
     };
     this.controls = new Phaser.Cameras.Controls.FixedKeyControl(controlConfig);
   }

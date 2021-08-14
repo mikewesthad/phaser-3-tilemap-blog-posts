@@ -10,13 +10,13 @@ export default class Player {
       key: "player-idle",
       frames: anims.generateFrameNumbers("player", { start: 0, end: 3 }),
       frameRate: 3,
-      repeat: -1
+      repeat: -1,
     });
     anims.create({
       key: "player-run",
       frames: anims.generateFrameNumbers("player", { start: 8, end: 15 }),
       frameRate: 12,
-      repeat: -1
+      repeat: -1,
     });
 
     // Create the physics-based sprite that we will move around and animate
@@ -49,13 +49,16 @@ export default class Player {
     this.sensors = {
       bottom: Bodies.rectangle(0, h * 0.5, w * 0.25, 2, { isSensor: true }),
       left: Bodies.rectangle(-w * 0.35, 0, 2, h * 0.5, { isSensor: true }),
-      right: Bodies.rectangle(w * 0.35, 0, 2, h * 0.5, { isSensor: true })
+      right: Bodies.rectangle(w * 0.35, 0, 2, h * 0.5, { isSensor: true }),
     };
     const compoundBody = Body.create({
       parts: [mainBody, this.sensors.bottom, this.sensors.left, this.sensors.right],
       frictionStatic: 0,
       frictionAir: 0.02,
-      friction: 0.1
+      friction: 0.1,
+      // The offset here allows us to control where the sprite is placed relative to the
+      // matter body's x and y - here we want the sprite centered over the matter body.
+      render: { sprite: { xOffset: 0.5, yOffset: 0.5 } },
     });
     this.sprite
       .setExistingBody(compoundBody)
@@ -76,12 +79,12 @@ export default class Player {
     scene.matterCollision.addOnCollideStart({
       objectA: [this.sensors.bottom, this.sensors.left, this.sensors.right],
       callback: this.onSensorCollide,
-      context: this
+      context: this,
     });
     scene.matterCollision.addOnCollideActive({
       objectA: [this.sensors.bottom, this.sensors.left, this.sensors.right],
       callback: this.onSensorCollide,
-      context: this
+      context: this,
     });
 
     // Track the keys
@@ -171,7 +174,7 @@ export default class Player {
       this.canJump = false;
       this.jumpCooldownTimer = this.scene.time.addEvent({
         delay: 250,
-        callback: () => (this.canJump = true)
+        callback: () => (this.canJump = true),
       });
     }
 
