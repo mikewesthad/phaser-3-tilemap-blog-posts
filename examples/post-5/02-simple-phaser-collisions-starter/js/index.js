@@ -16,7 +16,7 @@ const config = {
   backgroundColor: "#000c1f",
   parent: "game-container",
   scene: MainScene,
-  physics: { default: "matter" }
+  physics: { default: "matter" },
 };
 
 const game = new Phaser.Game(config);

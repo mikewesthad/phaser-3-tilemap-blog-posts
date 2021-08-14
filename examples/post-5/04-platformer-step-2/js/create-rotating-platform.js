@@ -9,7 +9,7 @@ export default function createRotatingPlatform(scene, x, y, numTiles = 5) {
     friction: 0.2, // A little extra friction so the player sticks better
     // Density sets the mass and inertia based on area - 0.001 is the default. We're going lower
     // here so that the platform tips/rotates easily
-    density: 0.0005
+    density: 0.0005,
   });
 
   // Alias the native Matter.js API
@@ -20,7 +20,7 @@ export default function createRotatingPlatform(scene, x, y, numTiles = 5) {
   const constraint = Constraint.create({
     pointA: { x: platform.x, y: platform.y },
     bodyB: platform.body,
-    length: 0
+    length: 0,
   });
 
   // We need to add the constraint to the Matter world to activate it
