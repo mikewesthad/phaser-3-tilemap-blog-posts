@@ -17,7 +17,7 @@ If you haven't checked out the previous posts in the series, here are the links:
 
 In the next post in the series, we'll investigate using [Matter.js](http://brm.io/matter-js/) with tilemaps.
 
-Before we dive in, all the source code and assets that go along with this post can be found in [this repository](https://github.com/mikewesthad/phaser-3-tilemap-blog-posts/tree/master/examples/post-3). These tutorials use the latest version of Phaser (v3.16.2) and Tiled (v1.2.2) as of 02/26/19. Some pairings of older versions of Phaser and Tiled don't get along well, so I recommend using these two version.
+Before we dive in, all the code that goes along with this post is in [this repository](https://github.com/mikewesthad/phaser-3-tilemap-blog-posts/tree/master/examples/post-1). These tutorials use the latest version of Phaser (v3.55.2) as of 08/13/21.
 
 ## Intended Audience
 
@@ -27,7 +27,7 @@ Alright, Let's get into it!
 
 ## Overview
 
-This post builds on the idea of static vs dynamic tilemap layers that we talked about [last time](https://medium.com/@michaelwesthadley/modular-game-worlds-in-phaser-3-tilemaps-2-dynamic-platformer-3d68e73d494a). The code we're going to build in this post is based on one of my contributions to [Phaser Labs](https://labs.phaser.io/). It was definitely the example I had the most fun making, and it conveniently covers a lot of additional parts of the dynamic tilemap layer API that we haven't covered yet - from randomizing tiles to using per-tile transparency to create shadows.
+This post builds on the ideas of tilemap layers that we talked about [last time](https://medium.com/@michaelwesthadley/modular-game-worlds-in-phaser-3-tilemaps-2-dynamic-platformer-3d68e73d494a). The code we're going to build in this post is based on one of my contributions to [Phaser Labs](https://labs.phaser.io/). It was definitely the example I had the most fun making, and it conveniently covers a lot of additional parts of the dynamic tilemap layer API that we haven't covered yet - from randomizing tiles to using per-tile transparency to create shadows.
 
 We'll start by getting comfortable with a dungeon generator library using vanilla HTML & JS. From there, we'll start bringing in Phaser and progressively building out our endless dungeon world.
 
@@ -101,7 +101,7 @@ On to the first example. Our directory structure looks like this:
 
 ![](./images/file-structure.png)
 
-"index.js" is the entry point for our code. This file kicks off things off by creating the Phaser game with arcade physics enabled and loading our custom scene:
+`index.js` is the entry point for our code. This file kicks off things off by creating the Phaser game with arcade physics enabled and loading our custom scene:
 
 ```js
 import DungeonScene from "./dungeon-scene.js";
@@ -127,9 +127,9 @@ const game = new Phaser.Game(config);
 
 <!-- https://gist.github.com/mikewesthad/193ed96b8dc9ffe3a954f0561ede0ddc -->
 
-"dungeon-scene.js" is a module that exports a single `class` called `DungeonScene`. It extends [`Phaser.Scene`](https://photonstorm.github.io/phaser3-docs/Phaser.Scene.html), which means it has access to a bunch of Phaser functionality via properties (e.g. `this.add` for accessing the game object factory). The scene loads up some assets in `preload`, creates the dungeon and player in `create` and updates the player each frame inside of `update`.
+`dungeon-scene.js` is a module that exports a single `class` called `DungeonScene`. It extends [`Phaser.Scene`](https://photonstorm.github.io/phaser3-docs/Phaser.Scene.html), which means it has access to a bunch of Phaser functionality via properties (e.g. `this.add` for accessing the game object factory). The scene loads up some assets in `preload`, creates the dungeon and player in `create` and updates the player each frame inside of `update`.
 
-Once we've created a `dungeon` like we did in the last example, we can set up a tilemap with a blank layer using [`createBlankDynamicLayer`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.Tilemap.html#createBlankDynamicLayer__anchor):
+Once we've created a `dungeon` like we did in the last example, we can set up a tilemap with a blank layer using [`createBlankLayer`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.Tilemap.html#createBlankLayer__anchor):
 
 ```js
 const dungeon = new Dungeon({
@@ -154,12 +154,12 @@ const map = this.make.tilemap({
 const tileset = map.addTilesetImage("tiles", null, 48, 48, 1, 2);
 
 // Create an empty layer and give it the name "Layer 1"
-const layer = map.createBlankDynamicLayer("Layer 1", tileset);
+const layer = map.createBlankLayer("Layer 1", tileset);
 ```
 
 <!-- https://gist.github.com/mikewesthad/a66d44f433a38ea5a86fd72cd61f3a3a -->
 
-`Dungeon` comes with an easy way to get a 2D array of tiles via `dungeon.getMappedTiles`, and Phaser has an easy way to insert an array of tiles into a layer via [`putTilesAt`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.DynamicTilemapLayer.html#putTilesAt__anchor):
+`Dungeon` comes with an easy way to get a 2D array of tiles via `dungeon.getMappedTiles`, and Phaser has an easy way to insert an array of tiles into a layer via [`putTilesAt`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.TilemapLayer.html#putTilesAt__anchor):
 
 ```js
 // Turn the dungeon into a 2D array of tiles where each of the four types of tiles is mapped to a
@@ -256,15 +256,15 @@ export default class DungeonScene extends Phaser.Scene {
       height: this.dungeon.height
     });
     const tileset = map.addTilesetImage("tiles", null, 48, 48, 1, 2); // 1px margin, 2px spacing
-    this.groundLayer = map.createBlankDynamicLayer("Ground", tileset); // Wall & floor
-    this.stuffLayer = map.createBlankDynamicLayer("Stuff", tileset); // Chest, stairs, etc.
+    this.groundLayer = map.createBlankLayer("Ground", tileset); // Wall & floor
+    this.stuffLayer = map.createBlankLayer("Stuff", tileset); // Chest, stairs, etc.
   }
 }
 ```
 
 <!-- https://gist.github.com/mikewesthad/827bccb91f9bed20297d47c19c196256 -->
 
-We're going to be using the dynamic layer's [`fill`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.DynamicTilemapLayer.html#fill__anchor), [`putTileAt`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.DynamicTilemapLayer.html#putTileAt__anchor), [`putTilesAt`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.DynamicTilemapLayer.html#putTilesAt__anchor) and [`weightedRandomize`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.DynamicTilemapLayer.html#weightedRandomize__anchor) methods to build out our map. Let's start with `fill` and `weightedRandomize` to make an initial pass at placing the floor and walls:
+We're going to be using the dynamic layer's [`fill`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.TilemapLayer.html#fill__anchor), [`putTileAt`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.TilemapLayer.html#putTileAt__anchor), [`putTilesAt`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.TilemapLayer.html#putTilesAt__anchor) and [`weightedRandomize`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.TilemapLayer.html#weightedRandomize__anchor) methods to build out our map. Let's start with `fill` and `weightedRandomize` to make an initial pass at placing the floor and walls:
 
 ```js
 export default class DungeonScene extends Phaser.Scene {
@@ -282,10 +282,10 @@ export default class DungeonScene extends Phaser.Scene {
 
       // Fill the room (minus the walls) with mostly clean floor tiles (90% of the time), but
       // occasionally place a dirty tile (10% of the time).
-      this.groundLayer.weightedRandomize(x + 1, y + 1, width - 2, height - 2, [
-        { index: 6, weight: 9 }, // 9/10 times, use index 6
-        { index: [7, 8, 26], weight: 1 } // 1/10 times, randomly pick 7, 8 or 26
-      ]);
+      this.groundLayer.weightedRandomize([
+        { index: 6, weight: 9 },              // 9/10 times, use index 6
+        { index: [7, 8, 26], weight: 1 }      // 1/10 times, randomly pick 7, 8 or 26
+      ], x + 1, y + 1, width - 2, height - 2);
 
       // Place the room corners tiles
       this.groundLayer.putTileAt(3, left, top);
@@ -311,7 +311,7 @@ And we'll end up with a character trapped in a door-less world:
 
 `fill` is straight forward. You can just pass in an index to fill the whole layer, or you can pass in `x`, `y`, `width` & `height` parameters to fill a specific region.
 
-`weightedRandomize` might be new if you haven't used weighted probabilities. The first four parameters define the region we want to randomize (`x`, `y`, `width`, `height`). The last parameter describes which tiles to place and their probabilities. It's an array of objects that contains an index (or an array of indices) and a weight. The probability of any given index being used is: `(the index's weight) / (sum of all weights for all indices)`.
+`weightedRandomize` might be new if you haven't used weighted probabilities. The last four parameters define the region we want to randomize (`x`, `y`, `width`, `height`). The first parameter describes which tiles to place and their probabilities. It's an array of objects that contains an index (or an array of indices) and a weight. The probability of any given index being used is: `(the index's weight) / (sum of all weights for all indices)`.
 
 We've got something working, but the code is a bit hard to read. You have to mentally keep track of what the tile indices mean. Instead, let's create a `tile-mapping.js` module that does that for us:
 
@@ -395,8 +395,8 @@ export default class DungeonScene extends Phaser.Scene {
 
       // Dungeons have rooms that are connected with doors. Each door has an x & y relative to the
       // room's location. Each direction has a different door to tile mapping.
-      var doors = room.getDoorLocations(); // → Returns an array of {x, y} objects
-      for (var i = 0; i < doors.length; i++) {
+      const doors = room.getDoorLocations(); // → Returns an array of {x, y} objects
+      for (let i = 0; i < doors.length; i++) {
         if (doors[i].y === 0) {
           this.groundLayer.putTilesAt(TILES.DOOR.TOP, x + doors[i].x - 1, y + doors[i].y);
         } else if (doors[i].y === room.height - 1) {
@@ -446,7 +446,7 @@ This is starting to feel more complete, so let's kick it up by randomly placing 
 For adding stuff, we're going to want another layer:
 
 ```js
-this.stuffLayer = map.createBlankDynamicLayer("Stuff", tileset);
+this.stuffLayer = map.createBlankLayer("Stuff", tileset);
 this.stuffLayer.fill(TILES.BLANK);
 ```
 
@@ -473,7 +473,7 @@ this.stuffLayer.putTileAt(TILES.STAIRS, endRoom.centerX, endRoom.centerY);
 
 // Place stuff in the 90% "otherRooms"
 otherRooms.forEach(room => {
-  var rand = Math.random();
+  const rand = Math.random();
   if (rand <= 0.25) {
     // 25% chance of chest
     this.stuffLayer.putTileAt(TILES.CHEST, room.centerX, room.centerY);
@@ -503,20 +503,20 @@ Then once you activate collision on the new `stuffLayer`, you'll end up with:
 
 ![](./images/stuff-demo-optimized.gif)
 
-And what would a rougelike dungeon be like without some sort of lighting effect? We're going to go with something easy to show off the dynamic layer API, but you could implement something fun like a [ray casting approach](https://www.redblobgames.com/articles/visibility/) on your own.
+And what would a rougelike dungeon be like without some sort of lighting effect? We're going to go with something easy to show off the tilemap layer API, but you could implement something fun like a [ray casting approach](https://www.redblobgames.com/articles/visibility/) on your own.
 
-Unlike static map layers, dynamic layers can have per tile effects like tint and alpha. We're going to take advantage of that by create a third tilemap layer which will just have blank, black tiles everywhere. They will start out completely opaque, but when a player enters a room, we'll make the tiles "above" the room transparent so that the player can see. When they leave a room, we'll "fog" the old room by making the black overlay of tiles semi-opaque.
+Tilemap layers can have per tile effects like tint and alpha. We're going to take advantage of that by create a third tilemap layer which will just have blank, black tiles everywhere. They will start out completely opaque, but when a player enters a room, we'll make the tiles "above" the room transparent so that the player can see. When they leave a room, we'll "fog" the old room by making the black overlay of tiles semi-opaque.
 
 Inside of our scene's `create`, we'll start by creating a new tilemap layer filled with black tiles and handing it off to a yet-to-be-created new module:
 
 ```js
-const shadowLayer = map.createBlankDynamicLayer("Shadow", tileset).fill(TILES.BLANK);
+const shadowLayer = map.createBlankLayer("Shadow", tileset).fill(TILES.BLANK);
 this.tilemapVisibility = new TilemapVisibility(shadowLayer);
 ```
 
 <!-- https://gist.github.com/mikewesthad/7dc582ff806602ae9e409097e8980d83 -->
 
-Inside of "tilemap-visibility.js", we'll create a new class that keeps track of the currently active room and dims/brightens rooms as needed:
+Inside of `tilemap-visibility.js`, we'll create a new class that keeps track of the currently active room and dims/brightens rooms as needed:
 
 ```js
 export default class TilemapVisibility {
@@ -578,7 +578,7 @@ _↳ Check out the [CodeSandbox](https://codesandbox.io/s/3r0nvw2z2p?hidenavigat
 
 ## Extras Bits: Descending the Stairs
 
-In that last code example, I added a couple extra bits. Using tile index callbacks, we can detect when the player has reached the stairs and restart the scene to let the player enter a new dungeon. [`setTileIndexCallback`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.DynamicTilemapLayer.html#setTileIndexCallback__anchor) will set up a callback to run whenever an arcade body intersects a tile with the given index. It's useful in a situation like our game where we only have one moving body (the player). The relevant code inside of `create` looks like this:
+In that last code example, I added a couple extra bits. Using tile index callbacks, we can detect when the player has reached the stairs and restart the scene to let the player enter a new dungeon. [`setTileIndexCallback`](https://photonstorm.github.io/phaser3-docs/Phaser.Tilemaps.TilemapLayer.html#setTileIndexCallback__anchor) will set up a callback to run whenever an arcade body intersects a tile with the given index. It's useful in a situation like our game where we only have one moving body (the player). The relevant code inside of `create` looks like this:
 
 ```js
 this.stuffLayer.setTileIndexCallback(TILES.STAIRS, () => {
