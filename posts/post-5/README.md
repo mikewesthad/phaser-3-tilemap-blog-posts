@@ -17,7 +17,7 @@ If you haven't checked out the previous posts in the series, here are the links:
 3.  [Dynamic tilemaps & Procedural Dungeons](https://medium.com/@michaelwesthadley/modular-game-worlds-in-phaser-3-tilemaps-3-procedural-dungeon-3bc19b841cd)
 4.  [Meet Matter.js](https://medium.com/@michaelwesthadley/modular-game-worlds-in-phaser-3-tilemaps-4-meet-matter-js-abf4dfa65ca1)
 
-Before we dive in, all the source code and assets that go along with this post can be found in [this repository](https://github.com/mikewesthad/phaser-3-tilemap-blog-posts/tree/master/examples/post-5). These tutorials use the latest version of Phaser (v3.16.2) and Tiled (v1.2.2) as of 02/26/19. Some pairings of older versions of Phaser and Tiled don't get along well, so I recommend using these two version.
+Before we dive in, all the code that goes along with this post is in [this repository](https://github.com/mikewesthad/phaser-3-tilemap-blog-posts/tree/master/examples/post-1). These tutorials use the latest version of Phaser (v3.55.2) as of 08/13/21.
 
 ## Intended Audience
 
@@ -315,11 +315,11 @@ this.matterCollision.addOnCollideStart({
 });
 ```
 
-There are some other useful features - check out [the docs](https://www.mikewesthad.com/phaser-matter-collision-plugin/docs/manual/README.html) if you want to learn more. We'll be using it, and unpacking how it works, as we go.
+There are some other useful features - check out [the docs](https://mikewesthad.github.io/phaser-matter-collision-plugin/docs/) if you want to learn more. We'll be using it, and unpacking how it works, as we go.
 
 Phaser's plugin system allows us to hook into the game engine in a structured way and add additional features. The collision plugin is a scene plugin (vs a global plugin, see [docs](https://photonstorm.github.io/phaser3-docs/Phaser.Plugins.PluginManager.html)), so an instance will be accessible on each scene after we've installed it via `this.matterCollision`.
 
-Here's a [CodeSandbox starter project](https://codesandbox.io/s/316pq9j541?module=%2Fjs%2Findex.js) for coding along. It has the dependencies - Phaser and PhaserMatterCollisionPlugin - already installed as dependencies. (There are additional instructions [here](https://www.mikewesthad.com/phaser-matter-collision-plugin/docs/manual/README.html#installation) on how to load the plugin from a CDN or install it locally.)
+Here's a [CodeSandbox starter project](https://codesandbox.io/s/316pq9j541?module=%2Fjs%2Findex.js) for coding along. It has the dependencies - Phaser and PhaserMatterCollisionPlugin - already installed as dependencies. (There are additional instructions [here](https://mikewesthad.github.io/phaser-matter-collision-plugin/docs/#installation) on how to load the plugin from a CDN or install it locally.)
 
 Inside of index.js, we can load up the game with the plugin installed:
 
@@ -337,7 +337,7 @@ const config = {
   plugins: {
     scene: [
       {
-        plugin: PhaserMatterCollisionPlugin, // The plugin class
+        plugin: PhaserMatterCollisionPlugin.default, // The plugin class
         key: "matterCollision", // Where to store in Scene.Systems, e.g. scene.sys.matterCollision
         mapping: "matterCollision" // Where to store in the Scene, e.g. scene.matterCollision
       }
@@ -402,7 +402,7 @@ Now that we've got the fundamentals of collisions under our belts, we can tackle
 
 Here's the last [starter CodeSandbox project](https://codesandbox.io/s/pmkmj7r8lm?module=%2Fjs%2Fplayer.js) which you can use to code along for the rest of the post. It already has a map loaded up with collisions and has empty files for the different modules we'll be creating.
 
-We're going to start by creating our platforming "player.js" file. One of the challenges that comes with realistic physics engines like Matter is that they can be hard to control in predictable way in a game context. In contrast to our platformer from [post two](https://itnext.io/modular-game-worlds-in-phaser-3-tilemaps-2-dynamic-platformer-3d68e73d494a) which had a single rectangle body, this character will have a compound body with four parts:
+We're going to start by creating our platforming `player.js` file. One of the challenges that comes with realistic physics engines like Matter is that they can be hard to control in predictable way in a game context. In contrast to our platformer from [post two](https://itnext.io/modular-game-worlds-in-phaser-3-tilemaps-2-dynamic-platformer-3d68e73d494a) which had a single rectangle body, this character will have a compound body with four parts:
 
 ![](./images/player-bodies.png)
 
@@ -430,7 +430,10 @@ export default class Player {
       parts: [mainBody, this.sensors.bottom, this.sensors.left, this.sensors.right],
       frictionStatic: 0,
       frictionAir: 0.02,
-      friction: 0.1
+      friction: 0.1,
+      // The offset here allows us to control where the sprite is placed relative to the
+      // matter body's x and y - here we want the sprite centered over the matter body.
+      render: { sprite: { xOffset: 0.5, yOffset: 0.5 } },
     });
     this.sprite
       .setExistingBody(compoundBody)
