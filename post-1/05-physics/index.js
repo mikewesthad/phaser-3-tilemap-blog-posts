@@ -13,14 +13,14 @@ const config = {
   physics: {
     default: "arcade",
     arcade: {
-      gravity: { y: 0 }
-    }
+      gravity: { y: 0 },
+    },
   },
   scene: {
     preload: preload,
     create: create,
-    update: update
-  }
+    update: update,
+  },
 };
 
 const game = new Phaser.Game(config);
@@ -48,9 +48,9 @@ function create() {
   const tileset = map.addTilesetImage("tuxmon-sample-32px-extruded", "tiles");
 
   // Parameters: layer name (or index) from Tiled, tileset, x, y
-  const belowLayer = map.createStaticLayer("Below Player", tileset, 0, 0);
-  const worldLayer = map.createStaticLayer("World", tileset, 0, 0);
-  const aboveLayer = map.createStaticLayer("Above Player", tileset, 0, 0);
+  const belowLayer = map.createLayer("Below Player", tileset, 0, 0);
+  const worldLayer = map.createLayer("World", tileset, 0, 0);
+  const aboveLayer = map.createLayer("Above Player", tileset, 0, 0);
 
   worldLayer.setCollisionByProperty({ collides: true });
 
@@ -61,7 +61,7 @@ function create() {
 
   // Object layers in Tiled let you embed extra info into a map - like a spawn point or custom
   // collision shapes. In the tmx file, there's an object layer with a point named "Spawn Point"
-  const spawnPoint = map.findObject("Objects", obj => obj.name === "Spawn Point");
+  const spawnPoint = map.findObject("Objects", (obj) => obj.name === "Spawn Point");
 
   // Create a sprite with physics enabled via the physics system. The image used for the sprite has
   // a bit of whitespace, so I'm using setSize & setOffset to control the size of the player's body.
@@ -78,27 +78,47 @@ function create() {
   const anims = this.anims;
   anims.create({
     key: "misa-left-walk",
-    frames: anims.generateFrameNames("atlas", { prefix: "misa-left-walk.", start: 0, end: 3, zeroPad: 3 }),
+    frames: anims.generateFrameNames("atlas", {
+      prefix: "misa-left-walk.",
+      start: 0,
+      end: 3,
+      zeroPad: 3,
+    }),
     frameRate: 10,
-    repeat: -1
+    repeat: -1,
   });
   anims.create({
     key: "misa-right-walk",
-    frames: anims.generateFrameNames("atlas", { prefix: "misa-right-walk.", start: 0, end: 3, zeroPad: 3 }),
+    frames: anims.generateFrameNames("atlas", {
+      prefix: "misa-right-walk.",
+      start: 0,
+      end: 3,
+      zeroPad: 3,
+    }),
     frameRate: 10,
-    repeat: -1
+    repeat: -1,
   });
   anims.create({
     key: "misa-front-walk",
-    frames: anims.generateFrameNames("atlas", { prefix: "misa-front-walk.", start: 0, end: 3, zeroPad: 3 }),
+    frames: anims.generateFrameNames("atlas", {
+      prefix: "misa-front-walk.",
+      start: 0,
+      end: 3,
+      zeroPad: 3,
+    }),
     frameRate: 10,
-    repeat: -1
+    repeat: -1,
   });
   anims.create({
     key: "misa-back-walk",
-    frames: anims.generateFrameNames("atlas", { prefix: "misa-back-walk.", start: 0, end: 3, zeroPad: 3 }),
+    frames: anims.generateFrameNames("atlas", {
+      prefix: "misa-back-walk.",
+      start: 0,
+      end: 3,
+      zeroPad: 3,
+    }),
     frameRate: 10,
-    repeat: -1
+    repeat: -1,
   });
 
   const camera = this.cameras.main;
@@ -113,25 +133,22 @@ function create() {
       font: "18px monospace",
       fill: "#000000",
       padding: { x: 20, y: 10 },
-      backgroundColor: "#ffffff"
+      backgroundColor: "#ffffff",
     })
     .setScrollFactor(0)
     .setDepth(30);
 
   // Debug graphics
-  this.input.keyboard.once("keydown_D", event => {
+  this.input.keyboard.once("keydown-D", (event) => {
     // Turn on physics debugging to show player's hitbox
     this.physics.world.createDebugGraphic();
 
     // Create worldLayer collision graphic above the player, but below the help text
-    const graphics = this.add
-      .graphics()
-      .setAlpha(0.75)
-      .setDepth(20);
+    const graphics = this.add.graphics().setAlpha(0.75).setDepth(20);
     worldLayer.renderDebug(graphics, {
       tileColor: null, // Color of non-colliding tiles
       collidingTileColor: new Phaser.Display.Color(243, 134, 48, 255), // Color of colliding tiles
-      faceColor: new Phaser.Display.Color(40, 39, 37, 255) // Color of colliding face edges
+      faceColor: new Phaser.Display.Color(40, 39, 37, 255), // Color of colliding face edges
     });
   });
 }

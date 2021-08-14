@@ -13,7 +13,7 @@ export default class DungeonScene extends Phaser.Scene {
         frameWidth: 64,
         frameHeight: 64,
         margin: 1,
-        spacing: 2
+        spacing: 2,
       }
     );
   }
@@ -26,8 +26,8 @@ export default class DungeonScene extends Phaser.Scene {
       rooms: {
         width: { min: 7, max: 15 },
         height: { min: 7, max: 15 },
-        maxRooms: 12
-      }
+        maxRooms: 12,
+      },
     });
 
     // Create a blank tilemap with dimensions matching the dungeon
@@ -35,10 +35,10 @@ export default class DungeonScene extends Phaser.Scene {
       tileWidth: 48,
       tileHeight: 48,
       width: dungeon.width,
-      height: dungeon.height
+      height: dungeon.height,
     });
     const tileset = map.addTilesetImage("tiles", null, 48, 48, 1, 2); // 1px margin, 2px spacing
-    const layer = map.createBlankDynamicLayer("Layer 1", tileset);
+    const layer = map.createBlankLayer("Layer 1", tileset);
 
     // Get a 2D array of tile indices (using -1 to not render empty tiles) and place them into the
     // blank layer
@@ -64,7 +64,7 @@ export default class DungeonScene extends Phaser.Scene {
         font: "18px monospace",
         fill: "#000000",
         padding: { x: 20, y: 10 },
-        backgroundColor: "#ffffff"
+        backgroundColor: "#ffffff",
       })
       .setScrollFactor(0);
   }

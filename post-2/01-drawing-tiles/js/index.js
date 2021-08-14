@@ -14,8 +14,8 @@ const config = {
   scene: {
     preload: preload,
     create: create,
-    update: update
-  }
+    update: update,
+  },
 };
 
 const game = new Phaser.Game(config);
@@ -34,9 +34,9 @@ function create() {
   const tiles = map.addTilesetImage("0x72-industrial-tileset-32px-extruded", "tiles");
 
   // Same setup as static layers
-  map.createDynamicLayer("Background", tiles);
-  groundLayer = map.createDynamicLayer("Ground", tiles);
-  map.createDynamicLayer("Foreground", tiles);
+  map.createLayer("Background", tiles);
+  groundLayer = map.createLayer("Ground", tiles);
+  map.createLayer("Foreground", tiles);
 
   shiftKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT);
 
@@ -48,7 +48,7 @@ function create() {
     right: cursors.right,
     up: cursors.up,
     down: cursors.down,
-    speed: 0.5
+    speed: 0.5,
   };
   controls = new Phaser.Cameras.Controls.FixedKeyControl(controlConfig);
 
@@ -68,7 +68,7 @@ function create() {
       font: "18px monospace",
       fill: "#000000",
       padding: { x: 20, y: 10 },
-      backgroundColor: "#ffffff"
+      backgroundColor: "#ffffff",
     })
     .setScrollFactor(0);
 }

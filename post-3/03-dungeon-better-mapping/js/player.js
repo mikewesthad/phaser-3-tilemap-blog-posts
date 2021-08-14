@@ -12,19 +12,16 @@ export default class Player {
       key: "player-walk",
       frames: anims.generateFrameNumbers("characters", { start: 46, end: 49 }),
       frameRate: 8,
-      repeat: -1
+      repeat: -1,
     });
     anims.create({
       key: "player-walk-back",
       frames: anims.generateFrameNumbers("characters", { start: 65, end: 68 }),
       frameRate: 8,
-      repeat: -1
+      repeat: -1,
     });
 
-    this.sprite = scene.physics.add
-      .sprite(x, y, "characters", 0)
-      .setSize(22, 33)
-      .setOffset(23, 27);
+    this.sprite = scene.physics.add.sprite(x, y, "characters", 0).setSize(22, 33).setOffset(23, 27);
 
     this.sprite.anims.play("player-walk-back");
 

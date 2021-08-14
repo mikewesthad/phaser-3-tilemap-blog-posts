@@ -20,7 +20,7 @@ export default class TilemapVisibility {
   // Helper to set the alpha on all tiles within a room
   setRoomAlpha(room, alpha) {
     this.shadowLayer.forEachTile(
-      t => (t.alpha = alpha),
+      (t) => (t.alpha = alpha),
       this,
       room.x,
       room.y,

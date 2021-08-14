@@ -13,13 +13,13 @@ export default class Player {
       key: "player-idle",
       frames: anims.generateFrameNumbers("player", { start: 0, end: 3 }),
       frameRate: 3,
-      repeat: -1
+      repeat: -1,
     });
     anims.create({
       key: "player-run",
       frames: anims.generateFrameNumbers("player", { start: 8, end: 15 }),
       frameRate: 12,
-      repeat: -1
+      repeat: -1,
     });
 
     // Create the physics-based sprite that we will move around and animate
@@ -36,7 +36,7 @@ export default class Player {
       up: UP,
       w: W,
       a: A,
-      d: D
+      d: D,
     });
   }
 

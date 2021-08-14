@@ -21,9 +21,10 @@ const config = {
     default: "matter",
     matter: {
       gravity: { y: 1 },
-      enableSleep: true
-    }
-  }
+      debug: true,
+      enableSleep: true,
+    },
+  },
 };
 
 const game = new Phaser.Game(config);

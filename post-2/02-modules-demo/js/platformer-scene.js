@@ -12,7 +12,7 @@ export default class PlatformerScene extends Phaser.Scene {
         frameWidth: 32,
         frameHeight: 32,
         margin: 1,
-        spacing: 2
+        spacing: 2,
       }
     );
     this.load.image("tiles", "../assets/tilesets/0x72-industrial-tileset-32px-extruded.png");
@@ -23,14 +23,14 @@ export default class PlatformerScene extends Phaser.Scene {
     const map = this.make.tilemap({ key: "map" });
     const tiles = map.addTilesetImage("0x72-industrial-tileset-32px-extruded", "tiles");
 
-    map.createDynamicLayer("Background", tiles);
-    this.groundLayer = map.createDynamicLayer("Ground", tiles);
-    map.createDynamicLayer("Foreground", tiles);
+    map.createLayer("Background", tiles);
+    this.groundLayer = map.createLayer("Ground", tiles);
+    map.createLayer("Foreground", tiles);
 
     // Instantiate a player instance at the location of the "Spawn Point" object in the Tiled map.
     // Note: instead of storing the player in a global variable, it's stored as a property of the
     // scene.
-    const spawnPoint = map.findObject("Objects", obj => obj.name === "Spawn Point");
+    const spawnPoint = map.findObject("Objects", (obj) => obj.name === "Spawn Point");
     this.player = new Player(this, spawnPoint.x, spawnPoint.y);
 
     // Collide the player against the ground layer - here we are grabbing the sprite property from
@@ -47,7 +47,7 @@ export default class PlatformerScene extends Phaser.Scene {
         font: "18px monospace",
         fill: "#000000",
         padding: { x: 20, y: 10 },
-        backgroundColor: "#ffffff"
+        backgroundColor: "#ffffff",
       })
       .setScrollFactor(0);
   }

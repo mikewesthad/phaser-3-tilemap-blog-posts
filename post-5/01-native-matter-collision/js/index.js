@@ -4,7 +4,7 @@
 
 // Matter is structured around modules that contain object creation factories and methods that can
 // manipulate those objects - e.g. Body.create and Body.applyForce
-const { Engine, Render, World, Bodies, Body, Events } = Matter;
+const { Engine, Render, World, Bodies, Body, Events, Runner } = Matter;
 
 // A few math/random helpers
 const DEGREES_TO_RADIANS = Math.PI / 180;
@@ -21,8 +21,8 @@ const render = Render.create({
     width: 800,
     height: 600,
     wireframes: false,
-    background: "#f4f4f8"
-  }
+    background: "#f4f4f8",
+  },
 });
 
 // Create some simple physics bodies, horizontally centered & above the top edge of the canvas. The
@@ -39,7 +39,7 @@ const horizontalPart = Bodies.rectangle(400, 0, 20, 150);
 const cross = Body.create({
   parts: [verticalPart, horizontalPart],
   friction: 0,
-  restitution: 1
+  restitution: 1,
 });
 
 // Create slippery, static floors and walls. The walls are positioned off screen. A static body
@@ -54,7 +54,7 @@ const obstacle2 = Bodies.polygon(400, 400, 3, 75, {
   isStatic: true,
   angle: 90 * DEGREES_TO_RADIANS,
   friction: 0,
-  restitution: 1
+  restitution: 1,
 });
 const obstacle3 = Bodies.circle(650, 200, 85, { isStatic: true, friction: 0, restitution: 1 });
 
@@ -69,7 +69,7 @@ World.add(engine.world, [
   obstacle2,
   obstacle3,
   leftWall,
-  rightWall
+  rightWall,
 ]);
 
 // Listen for mouse presses on the canvas and add a bunch of new bodies to the world
@@ -81,14 +81,14 @@ document.querySelector("canvas").addEventListener("mousedown", () => {
     const sides = randomIntInRange(3, 6);
     const body = Bodies.polygon(x, y, sides, radius, {
       friction: 0,
-      restitution: 0.5
+      restitution: 0.5,
     });
     World.add(engine.world, body);
   }
 });
 
-Events.on(engine, "collisionStart", event => {
-  event.pairs.forEach(pair => {
+Events.on(engine, "collisionStart", (event) => {
+  event.pairs.forEach((pair) => {
     const { bodyA, bodyB } = pair;
 
     bodyA.render.opacity = 0.75;
@@ -114,8 +114,8 @@ Events.on(engine, "collisionStart", event => {
   });
 });
 
-Events.on(engine, "collisionEnd", event => {
-  event.pairs.forEach(pair => {
+Events.on(engine, "collisionEnd", (event) => {
+  event.pairs.forEach((pair) => {
     const { bodyA, bodyB } = pair;
 
     bodyA.render.opacity = 1;
@@ -124,5 +124,6 @@ Events.on(engine, "collisionEnd", event => {
 });
 
 // Kick off the simulation and the render loops
-Engine.run(engine);
 Render.run(render);
+const runner = Runner.create();
+Runner.run(runner, engine);

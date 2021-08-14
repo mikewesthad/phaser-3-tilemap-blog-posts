@@ -13,8 +13,8 @@ const config = {
   scene: {
     preload: preload,
     create: create,
-    update: update
-  }
+    update: update,
+  },
 };
 
 const game = new Phaser.Game(config);
@@ -33,9 +33,9 @@ function create() {
   const tileset = map.addTilesetImage("tuxmon-sample-32px-extruded", "tiles");
 
   // Parameters: layer name (or index) from Tiled, tileset, x, y
-  const belowLayer = map.createStaticLayer("Below Player", tileset, 0, 0);
-  const worldLayer = map.createStaticLayer("World", tileset, 0, 0);
-  const aboveLayer = map.createStaticLayer("Above Player", tileset, 0, 0);
+  const belowLayer = map.createLayer("Below Player", tileset, 0, 0);
+  const worldLayer = map.createLayer("World", tileset, 0, 0);
+  const aboveLayer = map.createLayer("Above Player", tileset, 0, 0);
 
   // Phaser supports multiple cameras, but you can access the default camera like this:
   const camera = this.cameras.main;
@@ -48,7 +48,7 @@ function create() {
     right: cursors.right,
     up: cursors.up,
     down: cursors.down,
-    speed: 0.5
+    speed: 0.5,
   });
 
   // Constrain the camera so that it isn't allowed to move outside the width/height of tilemap
@@ -60,7 +60,7 @@ function create() {
       font: "18px monospace",
       fill: "#ffffff",
       padding: { x: 20, y: 10 },
-      backgroundColor: "#000000"
+      backgroundColor: "#000000",
     })
     .setScrollFactor(0);
 }

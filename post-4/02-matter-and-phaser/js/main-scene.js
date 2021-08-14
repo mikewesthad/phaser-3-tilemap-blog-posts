@@ -16,8 +16,8 @@ export default class MainScene extends Phaser.Scene {
   create() {
     const map = this.make.tilemap({ key: "map" });
     const tileset = map.addTilesetImage("kenney-tileset-64px-extruded");
-    const groundLayer = map.createDynamicLayer("Ground", tileset, 0, 0);
-    const lavaLayer = map.createDynamicLayer("Lava", tileset, 0, 0);
+    const groundLayer = map.createLayer("Ground", tileset, 0, 0);
+    const lavaLayer = map.createLayer("Lava", tileset, 0, 0);
 
     // Set colliding tiles before converting the layer to Matter bodies - same as we've done before
     // with AP. See post #1 for more on setCollisionByProperty.
@@ -51,7 +51,8 @@ export default class MainScene extends Phaser.Scene {
 
     // Drop some more emojis when the mouse is pressed. To randomize the frame, we'll grab all the
     // frame names from the atlas.
-    const frameNames = Object.keys(this.cache.json.get("emoji").frames);
+    // TODO: doesn't exclude the base frame!
+    const frameNames = this.textures.get("emoji").getFrameNames();
     this.input.on("pointerdown", () => {
       const worldPoint = this.input.activePointer.positionToCamera(this.cameras.main);
       for (let i = 0; i < 4; i++) {
@@ -70,9 +71,8 @@ export default class MainScene extends Phaser.Scene {
     // Normally, we could just set the "debug" property to true in our game config, but we'll do
     // something a little more complicated here toggle the debug graphics on the fly. It's worth
     // noting that the debug renderer is slow!
-    this.matter.world.createDebugGraphic();
     this.matter.world.drawDebug = false;
-    this.input.keyboard.on("keydown_D", event => {
+    this.input.keyboard.on("keydown-D", (event) => {
       this.matter.world.drawDebug = !this.matter.world.drawDebug;
       this.matter.world.debugGraphic.clear();
     });
@@ -86,7 +86,7 @@ export default class MainScene extends Phaser.Scene {
       right: cursors.right,
       up: cursors.up,
       down: cursors.down,
-      speed: 0.5
+      speed: 0.5,
     };
     this.controls = new Phaser.Cameras.Controls.FixedKeyControl(controlConfig);
 
@@ -95,7 +95,7 @@ export default class MainScene extends Phaser.Scene {
       fontSize: "18px",
       padding: { x: 10, y: 5 },
       backgroundColor: "#ffffff",
-      fill: "#000000"
+      fill: "#000000",
     });
     help.setScrollFactor(0).setDepth(1000);
   }

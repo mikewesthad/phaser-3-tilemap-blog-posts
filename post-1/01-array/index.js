@@ -13,8 +13,8 @@ const config = {
   parent: "game-container",
   scene: {
     preload: preload,
-    create: create
-  }
+    create: create,
+  },
 };
 
 const game = new Phaser.Game(config);
@@ -25,6 +25,7 @@ function preload() {
 
 function create() {
   // Load a map from a 2D array of tile indices
+  // prettier-ignore
   const level = [
     [  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 ],
     [  0,  1,  2,  3,  0,  0,  0,  1,  2,  3,  0 ],
@@ -42,5 +43,5 @@ function create() {
   // When loading from an array, make sure to specify the tileWidth and tileHeight
   const map = this.make.tilemap({ data: level, tileWidth: 16, tileHeight: 16 });
   const tiles = map.addTilesetImage("tiles");
-  const layer = map.createStaticLayer(0, tiles, 0, 0);
+  const layer = map.createLayer(0, tiles, 0, 0);
 }
