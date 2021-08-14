@@ -22,7 +22,7 @@ export default class DungeonScene extends Phaser.Scene {
         frameWidth: 64,
         frameHeight: 64,
         margin: 1,
-        spacing: 2
+        spacing: 2,
       }
     );
   }
@@ -41,9 +41,9 @@ export default class DungeonScene extends Phaser.Scene {
       doorPadding: 2,
       rooms: {
         width: { min: 7, max: 15, onlyOdd: true },
-        height: { min: 7, max: 15, onlyOdd: true }
+        height: { min: 7, max: 15, onlyOdd: true },
       },
-      maxRooms: 10
+      maxRooms: 10,
     });
 
     // Creating a blank tilemap with dimensions matching the dungeon
@@ -51,12 +51,12 @@ export default class DungeonScene extends Phaser.Scene {
       tileWidth: 48,
       tileHeight: 48,
       width: this.dungeon.width,
-      height: this.dungeon.height
+      height: this.dungeon.height,
     });
     const tileset = map.addTilesetImage("tiles", null, 48, 48, 1, 2); // 1px margin, 2px spacing
-    this.groundLayer = map.createBlankDynamicLayer("Ground", tileset);
-    this.stuffLayer = map.createBlankDynamicLayer("Stuff", tileset).setVisible(false);
-    this.shadowLayer = map.createBlankDynamicLayer("Shadow", tileset).setVisible(false);
+    this.groundLayer = map.createBlankLayer("Ground", tileset);
+    this.stuffLayer = map.createBlankLayer("Stuff", tileset).setVisible(false);
+    this.shadowLayer = map.createBlankLayer("Shadow", tileset).setVisible(false);
 
     // Fill the ground and shadow with black tiles
     this.shadowLayer.fill(20);
@@ -67,7 +67,7 @@ export default class DungeonScene extends Phaser.Scene {
 
     // Use the array of rooms generated to place tiles in the map
     // Note: using an arrow function here so that "this" still refers to our scene
-    this.dungeon.rooms.forEach(room => {
+    this.dungeon.rooms.forEach((room) => {
       // These room properties are all in grid units (not pixels units)
       const { x, y, width, height, left, right, top, bottom } = room;
 
@@ -75,7 +75,7 @@ export default class DungeonScene extends Phaser.Scene {
       // occasionally place a dirty tile (10% of the time).
       this.groundLayer.weightedRandomize(x + 1, y + 1, width - 2, height - 2, [
         { index: 6, weight: 9 },
-        { index: [7, 8, 26], weight: 1 }
+        { index: [7, 8, 26], weight: 1 },
       ]);
 
       // Place the room corners tiles
@@ -113,10 +113,10 @@ export default class DungeonScene extends Phaser.Scene {
     //   this.groundLayer.weightedRandomize(left, top + 1, 1, height - 2, TILES.WALL.LEFT);
     //   this.groundLayer.weightedRandomize(right, top + 1, 1, height - 2, TILES.WALL.RIGHT);
 
-    //   // Dunegons have rooms that are connected with doors. Each door has an x & y relative to the
+    //   // Dungeons have rooms that are connected with doors. Each door has an x & y relative to the
     //   // room's location
-    //   var doors = room.getDoorLocations();
-    //   for (var i = 0; i < doors.length; i++) {
+    //   const doors = room.getDoorLocations();
+    //   for (let i = 0; i < doors.length; i++) {
     //     if (doors[i].y === 0) {
     //       this.groundLayer.putTilesAt(TILES.DOOR.TOP, x + doors[i].x - 1, y + doors[i].y);
     //     } else if (doors[i].y === room.height - 1) {
@@ -135,9 +135,9 @@ export default class DungeonScene extends Phaser.Scene {
     const otherRooms = Phaser.Utils.Array.Shuffle(rooms).slice(0, rooms.length * 0.9);
     this.stuffLayer.putTileAt(TILES.STAIRS, endRoom.centerX - 2, endRoom.centerY);
 
-    otherRooms.forEach(room => {
+    otherRooms.forEach((room) => {
       // Place some random stuff in rooms occasionally
-      var rand = Math.random();
+      const rand = Math.random();
       if (rand <= 0.25) {
         this.stuffLayer.putTileAt(TILES.CHEST, room.centerX, room.centerY);
       } else if (rand <= 0.5) {
@@ -192,7 +192,7 @@ export default class DungeonScene extends Phaser.Scene {
     camera.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
     camera.startFollow(this.player.sprite);
 
-    this.shadowLayer.forEachTile(tile => (tile.alpha = 1));
+    this.shadowLayer.forEachTile((tile) => (tile.alpha = 1));
     this.setRoomAlpha(startRoom, 0);
     this.activeRoom = startRoom;
 
@@ -202,7 +202,7 @@ export default class DungeonScene extends Phaser.Scene {
         font: "18px monospace",
         fill: "#000000",
         padding: { x: 20, y: 10 },
-        backgroundColor: "#ffffff"
+        backgroundColor: "#ffffff",
       })
       .setScrollFactor(0)
       .setVisible(false);
@@ -229,7 +229,7 @@ export default class DungeonScene extends Phaser.Scene {
 
   setRoomAlpha(room, alpha) {
     this.shadowLayer.forEachTile(
-      t => (t.alpha = alpha),
+      (t) => (t.alpha = alpha),
       this,
       room.x,
       room.y,
