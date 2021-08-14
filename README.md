@@ -1,6 +1,6 @@
 # Tilemaps in Phaser 3
 
-A tutorial series on the ways you can build modular game worlds using tilemaps in Phaser 3.
+A tutorial series on the ways you can build modular game worlds using tilemaps in Phaser 3. It has been updated as of 8/13/21 to use the latest version of Phaser v3.55.2 (and other libraries). 
 
 - Post #1 Static Maps: [link](https://medium.com/@michaelwesthadley/modular-game-worlds-in-phaser-3-tilemaps-1-958fc7e6bbd6)
 - Post #2 Dynamic Platformer: [link](https://medium.com/@michaelwesthadley/modular-game-worlds-in-phaser-3-tilemaps-2-dynamic-platformer-3d68e73d494a)
