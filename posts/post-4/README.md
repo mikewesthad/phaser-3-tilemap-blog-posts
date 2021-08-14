@@ -18,7 +18,7 @@ If you haven't checked out the previous posts in the series, here are the links:
 2.  [Dynamic tilemaps & puzzle-y platformer](https://medium.com/@michaelwesthadley/modular-game-worlds-in-phaser-3-tilemaps-2-dynamic-platformer-3d68e73d494a)
 3.  [Dynamic tilemaps & Procedural Dungeons](https://medium.com/@michaelwesthadley/modular-game-worlds-in-phaser-3-tilemaps-3-procedural-dungeon-3bc19b841cd)
 
-Before we dive in, all the source code and assets that go along with this post can be found in [this repository](https://github.com/mikewesthad/phaser-3-tilemap-blog-posts/tree/master/examples/post-4). These tutorials use the latest version of Phaser (v3.16.2) and Tiled (v1.2.2) as of 02/26/19.
+Before we dive in, all the code that goes along with this post is in [this repository](https://github.com/mikewesthad/phaser-3-tilemap-blog-posts/tree/master/examples/post-1). These tutorials use the latest version of Phaser (v3.55.2) as of 08/13/21.
 
 ## Intended Audience
 
@@ -54,11 +54,11 @@ Matter is structured around modules that contain factory functions for creating 
 
 ```js
 // If you are following along in codesandbox, or using modules locally:
-import { Engine, Render, World, Bodies, Body } from Matter;
+import { Engine, Render, World, Bodies, Body, Runner } from Matter;
 
 // Or, if you are using Matter loaded via a script (like in the GitHub repository associated with
 // this post):
-const { Engine, Render, World, Bodies, Body } = Matter;
+const { Engine, Render, World, Bodies, Body, Runner } = Matter;
 ```
 
 <!-- https://gist.github.com/mikewesthad/3c00d06d5dca1a71c33abab44c126741 -->
@@ -94,8 +94,9 @@ const floor = Bodies.rectangle(400, 575, 800, 50, { isStatic: true });
 World.add(engine.world, [rectangle, floor]);
 
 // Kick off the simulation and the render loops
-Engine.run(engine);
 Render.run(render);
+const runner = Runner.create();
+Runner.run(runner, engine);
 ```
 
 <!-- https://gist.github.com/mikewesthad/884c98937e4817999a65d56689b44fc7 -->
@@ -232,7 +233,12 @@ const config = {
   physics: {
     default: "matter",
     matter: {
-      gravity: { y: 1 } // This is the default value, so we could omit this
+      gravity: { y: 1 }, // This is the default value, so we could omit this
+      
+      // Enable debug graphics, so we can see the bounds of each physics 
+      // object in our scene. Note: this can slow things down, so be sure 
+      // to turn it off when you aren't debugging
+      debug: true
     }
   }
 };
@@ -262,8 +268,8 @@ export default class MainScene extends Phaser.Scene {
     // Create the 2-layer map
     const map = this.make.tilemap({ key: "map" });
     const tileset = map.addTilesetImage("kenney-tileset-64px-extruded");
-    const groundLayer = map.createDynamicLayer("Ground", tileset, 0, 0);
-    const lavaLayer = map.createDynamicLayer("Lava", tileset, 0, 0);
+    const groundLayer = map.createLayer("Ground", tileset, 0, 0);
+    const lavaLayer = map.createLayer("Lava", tileset, 0, 0);
 
     // Set colliding tiles before converting the layer to Matter bodies - same as we've done before
     // with AP. See post #1 for more on setCollisionByProperty.
@@ -275,10 +281,6 @@ export default class MainScene extends Phaser.Scene {
     // rectangle body (similar to AP).
     this.matter.world.convertTilemapLayer(groundLayer);
     this.matter.world.convertTilemapLayer(lavaLayer);
-
-    // Visualize all the matter bodies in the world. Note: this will be slow so go ahead and comment
-    // it out after you've seen what the bodies look like.
-    this.matter.world.createDebugGraphic();
 }
 ```
 
@@ -319,7 +321,7 @@ Like the Matter example from the previous section, we can add in some emojis eve
 
 ```js
 // To randomize which emoji we'll use, we'll grab all the atlas's frame names
-const frameNames = Object.keys(this.cache.json.get("emoji").frames);
+const frameNames = this.textures.get("emoji").getFrameNames();
 
 this.input.on("pointerdown", () => {
   const worldPoint = this.input.activePointer.positionToCamera(this.cameras.main);
@@ -407,7 +409,7 @@ Save the tileset, re-export the map and we'll have:
 
 ![](./images/mapping-small-emoji.gif)
 
-_↳ This isn't the same map we were using before -it's just a small demo to show the tiles we just mapped. Note, the debug rendering for the compound bodies - the sign and lava - also renders a convex hull. We'll talk about that more next time._
+_↳ This isn't the same map we were using before - it's just a small demo to show the tiles we just mapped. Note, the debug rendering for the compound bodies - the sign and lava - also renders a convex hull. We'll talk about that more next time._
 
 In the codesandbox, I mapped out the rest of the tiles we're using and exported the new map. No real need to change anything in the code to load up these new bodies:
 

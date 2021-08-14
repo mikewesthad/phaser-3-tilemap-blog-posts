@@ -23,7 +23,9 @@ const config = {
       // This is the default value
       gravity: { y: 1 },
 
-      // Enable debug by default, then toggle it on/off in the scene
+      // Enable debug graphics, so we can see the bounds of each physics
+      // object in our scene. Note: this can slow things down, so be sure
+      // to turn it off when you aren't debugging
       debug: true,
 
       // You can also pass in Matter.Engine config properties:
