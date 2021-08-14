@@ -51,7 +51,6 @@ export default class MainScene extends Phaser.Scene {
 
     // Drop some more emojis when the mouse is pressed. To randomize the frame, we'll grab all the
     // frame names from the atlas.
-    // TODO: doesn't exclude the base frame!
     const frameNames = this.textures.get("emoji").getFrameNames();
     this.input.on("pointerdown", () => {
       const worldPoint = this.input.activePointer.positionToCamera(this.cameras.main);

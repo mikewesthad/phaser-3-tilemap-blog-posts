@@ -49,10 +49,10 @@ Here's a [CodeSandbox starter project](https://codesandbox.io/s/kw73yy6375?modul
 To start listening for collisions, we need to add a new module alias at the top of the file, `Events`:
 
 ```js
-import { Engine, Render, World, Bodies, Body, Events } from "matter-js";
+import { Engine, Render, World, Bodies, Body, Runner, Events } from "matter-js";
 
 // Or when using Matter globally as a script:
-// const { Engine, Render, World, Bodies, Body, Events } = Matter;
+// const { Engine, Render, World, Bodies, Body, Runner, Events } = Matter;
 ```
 
 <!-- https://gist.github.com/mikewesthad/dfa0c1ccd23cdaa5e0d0ed2884ba5c39 -->
