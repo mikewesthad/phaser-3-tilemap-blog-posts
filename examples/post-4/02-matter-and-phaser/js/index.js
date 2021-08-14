@@ -23,11 +23,14 @@ const config = {
       // This is the default value
       gravity: { y: 1 },
 
+      // Enable debug by default, then toggle it on/off in the scene
+      debug: true,
+
       // You can also pass in Matter.Engine config properties:
       //  http://brm.io/matter-js/docs/classes/Engine.html#properties
-      enableSleep: true
-    }
-  }
+      enableSleep: true,
+    },
+  },
 };
 
 const game = new Phaser.Game(config);
