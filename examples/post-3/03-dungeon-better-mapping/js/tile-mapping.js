@@ -9,13 +9,32 @@ const TILE_MAPPING = {
     TOP_RIGHT: 4,
     BOTTOM_RIGHT: 23,
     BOTTOM_LEFT: 22,
-    TOP: [{ index: 39, weight: 4 }, { index: [57, 58, 59], weight: 1 }],
-    LEFT: [{ index: 21, weight: 4 }, { index: [76, 95, 114], weight: 1 }],
-    RIGHT: [{ index: 19, weight: 4 }, { index: [77, 96, 115], weight: 1 }],
-    BOTTOM: [{ index: 1, weight: 4 }, { index: [78, 79, 80], weight: 1 }]
+    TOP: [
+      { index: 39, weight: 4 },
+      { index: [57, 58, 59], weight: 1 },
+    ],
+    LEFT: [
+      { index: 21, weight: 4 },
+      { index: [76, 95, 114], weight: 1 },
+    ],
+    RIGHT: [
+      { index: 19, weight: 4 },
+      { index: [77, 96, 115], weight: 1 },
+    ],
+    BOTTOM: [
+      { index: 1, weight: 4 },
+      { index: [78, 79, 80], weight: 1 },
+    ],
   },
-  FLOOR: [{ index: 6, weight: 9 }, { index: [7, 8, 26], weight: 1 }],
-  POT: [{ index: 13, weight: 1 }, { index: 32, weight: 1 }, { index: 51, weight: 1 }],
+  FLOOR: [
+    { index: 6, weight: 9 },
+    { index: [7, 8, 26], weight: 1 },
+  ],
+  POT: [
+    { index: 13, weight: 1 },
+    { index: 32, weight: 1 },
+    { index: 51, weight: 1 },
+  ],
   DOOR: {
     TOP: [40, 6, 38],
     // prettier-ignore
@@ -30,7 +49,7 @@ const TILE_MAPPING = {
       [38], 
       [6], 
       [0]
-    ]
+    ],
   },
   CHEST: 166,
   STAIRS: 81,
@@ -38,7 +57,7 @@ const TILE_MAPPING = {
   TOWER: [
     [186],
     [205]
-  ]
+  ],
 };
 
 export default TILE_MAPPING;

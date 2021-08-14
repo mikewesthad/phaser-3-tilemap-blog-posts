@@ -11,18 +11,18 @@ const dungeon = new Dungeon({
     // Random range for the width of a room (grid units)
     width: {
       min: 5,
-      max: 10
+      max: 10,
     },
     // Random range for the height of a room (grid units)
     height: {
       min: 8,
-      max: 20
+      max: 20,
     },
     // Cap the area of a room - e.g. this will prevent large rooms like 10 x 20
     maxArea: 150,
     // Max rooms to place
-    maxRooms: 10
-  }
+    maxRooms: 10,
+  },
 });
 
 // To see what we've got, let's dump the map into an HTML fragment that we can insert into the page.
@@ -34,7 +34,7 @@ const html = dungeon.drawToHtml({
   floor: "☁️",
   door: "🚪",
   floorAttributes: { style: "opacity: 0.25" },
-  containerAttributes: { class: "dungeon", style: "line-height: 1" }
+  containerAttributes: { class: "dungeon", style: "line-height: 1" },
 });
 document.getElementById("centered-container").appendChild(html);
 
@@ -47,6 +47,6 @@ document.getElementById("centered-container").appendChild(html);
 //   floorAttributes: { style: "color: #d2e9ef" },
 //   wallAttributes: { style: "color: #950fe2" },
 //   doorAttributes: { style: "color: #f900c3; font-weight: 700;" },
-//   containerAttributes: { class: "dungeon" }
+//   containerAttributes: { class: "dungeon" },
 // });
-// document.getElementById("dungeon-container").appendChild(alternateHtml);
+// document.getElementById("centered-container").appendChild(alternateHtml);

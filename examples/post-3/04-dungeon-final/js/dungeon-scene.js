@@ -20,7 +20,7 @@ export default class DungeonScene extends Phaser.Scene {
         frameWidth: 64,
         frameHeight: 64,
         margin: 1,
-        spacing: 2
+        spacing: 2,
       }
     );
   }
@@ -39,8 +39,8 @@ export default class DungeonScene extends Phaser.Scene {
       doorPadding: 2,
       rooms: {
         width: { min: 7, max: 15, onlyOdd: true },
-        height: { min: 7, max: 15, onlyOdd: true }
-      }
+        height: { min: 7, max: 15, onlyOdd: true },
+      },
     });
 
     this.dungeon.drawToConsole();
@@ -50,23 +50,22 @@ export default class DungeonScene extends Phaser.Scene {
       tileWidth: 48,
       tileHeight: 48,
       width: this.dungeon.width,
-      height: this.dungeon.height
+      height: this.dungeon.height,
     });
     const tileset = map.addTilesetImage("tiles", null, 48, 48, 1, 2); // 1px margin, 2px spacing
-    this.groundLayer = map.createBlankDynamicLayer("Ground", tileset).fill(TILES.BLANK);
-    this.stuffLayer = map.createBlankDynamicLayer("Stuff", tileset);
-    const shadowLayer = map.createBlankDynamicLayer("Shadow", tileset).fill(TILES.BLANK);
+    this.groundLayer = map.createBlankLayer("Ground", tileset).fill(TILES.BLANK);
+    this.stuffLayer = map.createBlankLayer("Stuff", tileset);
+    const shadowLayer = map.createBlankLayer("Shadow", tileset).fill(TILES.BLANK);
 
     this.tilemapVisibility = new TilemapVisibility(shadowLayer);
 
     // Use the array of rooms generated to place tiles in the map
     // Note: using an arrow function here so that "this" still refers to our scene
-    this.dungeon.rooms.forEach(room => {
+    this.dungeon.rooms.forEach((room) => {
       const { x, y, width, height, left, right, top, bottom } = room;
 
-      // Fill the floor with mostly clean tiles, but occasionally place a dirty tile
-      // See "Weighted Randomize" example for more information on how to use weightedRandomize.
-      this.groundLayer.weightedRandomize(x + 1, y + 1, width - 2, height - 2, TILES.FLOOR);
+      // Fill the floor with mostly clean tiles
+      this.groundLayer.weightedRandomize(TILES.FLOOR, x + 1, y + 1, width - 2, height - 2);
 
       // Place the room corners tiles
       this.groundLayer.putTileAt(TILES.WALL.TOP_LEFT, left, top);
@@ -74,16 +73,16 @@ export default class DungeonScene extends Phaser.Scene {
       this.groundLayer.putTileAt(TILES.WALL.BOTTOM_RIGHT, right, bottom);
       this.groundLayer.putTileAt(TILES.WALL.BOTTOM_LEFT, left, bottom);
 
-      // Fill the walls with mostly clean tiles, but occasionally place a dirty tile
-      this.groundLayer.weightedRandomize(left + 1, top, width - 2, 1, TILES.WALL.TOP);
-      this.groundLayer.weightedRandomize(left + 1, bottom, width - 2, 1, TILES.WALL.BOTTOM);
-      this.groundLayer.weightedRandomize(left, top + 1, 1, height - 2, TILES.WALL.LEFT);
-      this.groundLayer.weightedRandomize(right, top + 1, 1, height - 2, TILES.WALL.RIGHT);
+      // Fill the walls with mostly clean tiles
+      this.groundLayer.weightedRandomize(TILES.WALL.TOP, left + 1, top, width - 2, 1);
+      this.groundLayer.weightedRandomize(TILES.WALL.BOTTOM, left + 1, bottom, width - 2, 1);
+      this.groundLayer.weightedRandomize(TILES.WALL.LEFT, left, top + 1, 1, height - 2);
+      this.groundLayer.weightedRandomize(TILES.WALL.RIGHT, right, top + 1, 1, height - 2);
 
       // Dungeons have rooms that are connected with doors. Each door has an x & y relative to the
       // room's location. Each direction has a different door to tile mapping.
-      var doors = room.getDoorLocations(); // → Returns an array of {x, y} objects
-      for (var i = 0; i < doors.length; i++) {
+      const doors = room.getDoorLocations(); // → Returns an array of {x, y} objects
+      for (let i = 0; i < doors.length; i++) {
         if (doors[i].y === 0) {
           this.groundLayer.putTilesAt(TILES.DOOR.TOP, x + doors[i].x - 1, y + doors[i].y);
         } else if (doors[i].y === room.height - 1) {
@@ -109,8 +108,8 @@ export default class DungeonScene extends Phaser.Scene {
     this.stuffLayer.putTileAt(TILES.STAIRS, endRoom.centerX, endRoom.centerY);
 
     // Place stuff in the 90% "otherRooms"
-    otherRooms.forEach(room => {
-      var rand = Math.random();
+    otherRooms.forEach((room) => {
+      const rand = Math.random();
       if (rand <= 0.25) {
         // 25% chance of chest
         this.stuffLayer.putTileAt(TILES.CHEST, room.centerX, room.centerY);
@@ -173,7 +172,7 @@ export default class DungeonScene extends Phaser.Scene {
         font: "18px monospace",
         fill: "#000000",
         padding: { x: 20, y: 10 },
-        backgroundColor: "#ffffff"
+        backgroundColor: "#ffffff",
       })
       .setScrollFactor(0);
   }
