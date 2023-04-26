@@ -16,7 +16,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "browser-sync": "^2.27.5",
+    "browser-sync": "^2.29.1",
     "gh-pages": "^3.2.3",
     "prettier": "^2.3.2"
   },
